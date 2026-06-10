@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>β-Endorphin — Conservation and Endogenous Opioid Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-light: #EEEDFE;
+    --purple-mid:   #7F77DD;
+    --purple-dark:  #3C3489;
+    --purple-text:  #26215C;
+    --teal-light:   #E1F5EE;
+    --teal-mid:     #1D9E75;
+    --teal-dark:    #0F6E56;
+    --coral-light:  #FAECE7;
+    --coral-mid:    #D85A30;
+    --amber-light:  #FAEEDA;
+    --amber-mid:    #BA7517;
+    --blue-light:   #E6F1FB;
+    --blue-mid:     #185FA5;
+    --blue-dark:    #042C53;
+    --gray-light:   #F1EFE8;
+    --gray-mid:     #888780;
+    --text-primary: #1a1917;
+    --text-secondary: #5a5854;
+    --bg: #fdfcfa;
+    --border: rgba(0,0,0,0.1);
+    --section-max: 820px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.75;
+  }
+
+  nav {
+    background: var(--purple-dark);
+    padding: 12px 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    flex-wrap: wrap;
+  }
+  nav a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  nav a:hover { color: #fff; }
+  nav .sep { opacity: 0.4; }
+  nav .current { color: #fff; font-weight: 600; }
+
+  .site-strip {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+  }
+  .site-strip-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .site-note { font-size: 13px; color: var(--text-secondary); }
+  .sphere-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--purple-mid);
+    color: var(--purple-dark);
+    background: var(--purple-light);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sphere-link:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(60,52,137,0.12); }
+
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, #534AB7 100%);
+    color: #fff;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 15px; opacity: 0.75; margin-bottom: 28px; }
+  .hero-summary {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.85;
+    opacity: 0.92;
+    font-style: italic;
+    font-family: 'Merriweather', serif;
+    font-weight: 300;
+  }
+
+  .page-body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .diagram-section {
+    padding: 48px 0 32px;
+    text-align: center;
+  }
+  .diagram-section h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--purple-dark);
+  }
+  .diagram-section p { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  .diagram-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: inline-block;
+    width: 100%;
+    max-width: 700px;
+  }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  .d-node { cursor: pointer; transition: opacity 0.15s; }
+  .d-node:hover { opacity: 0.78; }
+  .d-center rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 1.5; }
+  .d-center text { fill: #26215C; }
+  .d-blue rect  { fill: #E6F1FB; stroke: #185FA5; stroke-width: 1.5; }
+  .d-blue text  { fill: #042C53; }
+  .d-teal rect  { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 1.5; }
+  .d-teal text  { fill: #085041; }
+  .d-amber rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 1.5; }
+  .d-amber text { fill: #412402; }
+  .d-coral rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 1.5; }
+  .d-coral text { fill: #4A1B0C; }
+
+  .functions-intro {
+    padding: 16px 0 40px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .fn-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    scroll-margin-top: 24px;
+  }
+  .fn-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fn-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .fn-title {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 18px; color: var(--text-primary);
+  }
+  .fn-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .fn-body { padding: 28px 28px 32px; }
+  .fn-body h3 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--purple-dark);
+    margin: 24px 0 8px;
+  }
+  .fn-body h3:first-child { margin-top: 0; }
+  .fn-body p {
+    font-size: 15px; line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    max-width: var(--section-max);
+  }
+
+  .fn-highlight {
+    background: var(--gray-light);
+    border-left: 3px solid var(--purple-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px; margin: 16px 0;
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: var(--section-max);
+  }
+
+  .fn-refs {
+    background: var(--gray-light);
+    border-top: 1px solid var(--border);
+    padding: 20px 28px;
+  }
+  .fn-refs h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .fn-refs ol { padding-left: 20px; margin: 0; }
+  .fn-refs li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .fn-refs li a { color: var(--purple-mid); text-decoration: none; word-break: break-all; }
+  .fn-refs li a:hover { text-decoration: underline; }
+
+  .accent-opioid .fn-icon, .accent-analgesia .fn-icon, .accent-shield .fn-icon { background: var(--blue-light); }
+  .accent-stress .fn-icon, .accent-reward .fn-icon { background: var(--purple-light); }
+  .accent-bonding .fn-icon { background: var(--teal-light); }
+  .accent-immune .fn-icon { background: var(--amber-light); }
+
+  .accent-opioid .fn-header, .accent-analgesia .fn-header, .accent-shield .fn-header { border-left: 4px solid var(--blue-mid); }
+  .accent-stress .fn-header, .accent-reward .fn-header { border-left: 4px solid var(--purple-mid); }
+  .accent-bonding .fn-header { border-left: 4px solid var(--teal-mid); }
+  .accent-immune .fn-header { border-left: 4px solid var(--amber-mid); }
+
+  .back-top {
+    display: block; text-align: center;
+    padding: 10px 0 0;
+    font-size: 13px;
+    color: var(--purple-mid);
+    text-decoration: none; cursor: pointer;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .back-top:hover { color: var(--purple-dark); background: var(--gray-light); }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: var(--gray-mid);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--purple-mid); text-decoration: none; }
+  footer a:hover { color: var(--purple-dark); text-decoration: underline; }
+
+  .section-diagram{margin:24px 0;background:var(--gray-light);border-radius:10px;padding:16px;overflow-x:auto;}
+  .section-diagram svg{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;}
+  .section-diagram .caption{font-size:12px;color:var(--gray-mid);text-align:center;margin-top:8px;font-style:italic;}
+
+
+
+  /* Compact above-the-fold resource layout */
+  html { scroll-behavior: smooth; }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 8px 24px;
+    min-height: 38px;
+  }
+  .site-strip { padding: 7px 24px; }
+  .site-strip-inner { max-width: 1080px; }
+  .site-note { font-size: 12px; line-height: 1.35; }
+  .sphere-link { padding: 5px 11px; font-size: 12px; }
+  .hero {
+    padding: 24px 28px 22px;
+  }
+  .hero-label { font-size: 10.5px; margin-bottom: 8px; letter-spacing: 0.18em; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 4px; }
+  .hero-sub { font-size: 12px; margin-bottom: 13px; }
+  .hero-summary {
+    max-width: 780px;
+    font-size: 13.5px;
+    line-height: 1.58;
+  }
+  .page-body { max-width: 1080px; padding: 0 24px 64px; }
+
+  .resource-dashboard {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 20px;
+  }
+  .resource-dashboard-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .resource-kicker {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .resource-dashboard h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    color: var(--purple-dark);
+    text-align: center;
+  }
+  .resource-dashboard p.resource-intro {
+    margin: 0 auto 14px;
+    max-width: 780px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .resource-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .resource-card {
+    display: block;
+    min-height: 96px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--gray-light);
+    padding: 13px 14px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    border-color: rgba(60,52,137,0.25);
+  }
+  .resource-card strong {
+    display: block;
+    color: var(--purple-dark);
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+  .resource-card span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .resource-card em {
+    display: inline-block;
+    margin-top: 9px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--purple-mid);
+    font-size: 12px;
+  }
+
+  .diagram-collapser {
+    margin: 20px auto 24px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 860px;
+    overflow: hidden;
+  }
+  .diagram-collapser summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 18px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    background: var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .diagram-collapser summary::-webkit-details-marker { display: none; }
+  .diagram-collapser summary:after { content: 'Show'; color: var(--gray-mid); font-size: 12px; }
+  .diagram-collapser[open] summary:after { content: 'Hide'; }
+  .diagram-collapser .diagram-section { padding: 20px 18px 22px; }
+  .diagram-section { padding: 22px 0 18px; }
+  .diagram-section h2 { font-size: 19px; margin-bottom: 4px; }
+  .diagram-section p { font-size: 12.5px; margin-bottom: 14px; }
+  .diagram-wrap { padding: 14px; max-width: 640px; }
+  .functions-intro {
+    padding: 0 0 18px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .fn-section { scroll-margin-top: 54px; margin-bottom: 24px; }
+  .fn-header { padding: 15px 22px; }
+  .fn-body { padding: 22px 24px 26px; }
+  .fn-refs { padding: 16px 24px; }
+  .back-top { padding: 8px 0 0; }
+
+  .hub-section { padding: 20px 0 12px; }
+  .hub-intro { margin-bottom: 14px; }
+  .hub-intro h2 { font-size: 21px; }
+  .hub-intro p { font-size: 13.5px; line-height: 1.45; }
+  .hub-card-row { gap: 12px; }
+  .hub-card { min-height: 132px; padding: 15px 16px 14px; }
+  .hub-card h3 { font-size: 18px; }
+  .hub-card p { font-size: 12.5px; line-height: 1.42; }
+
+  @media (max-width: 720px) {
+    nav { padding: 8px 14px; }
+    .site-strip { padding: 8px 14px; }
+    .hero { padding: 22px 18px 20px; }
+    .hero-summary { font-size: 13px; }
+    .resource-dashboard { padding: 16px 16px 18px; }
+    .resource-card-grid { grid-template-columns: 1fr; }
+    .page-body { padding-left: 16px; padding-right: 16px; }
+  }
+
+  @media (max-width: 720px) {
+    nav { padding: 10px 16px; }
+    .hero { padding: 48px 20px 40px; }
+    .page-body { padding: 0 16px 72px; }
+    .site-strip { padding: 14px 16px; }
+    .fn-header, .fn-body, .fn-refs { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="sphere.html#map">← Back to Sphere</a>
+  <span class="sep">›</span>
+  <a href="pomc-resource.html">POMC Family</a>
+  <span class="sep">·</span>
+  <a href="acth-resource.html">ACTH</a>
+  <span class="sep">·</span>
+  <span class="current">β-Endorphin</span>
+  <span class="sep">·</span>
+  <a href="alpha-msh-resource.html">α-MSH</a>
+</nav>
+
+<div class="site-strip">
+  <div class="site-strip-inner">
+    <div class="site-note">Part of the Metastrophe interactive teaching system: the biological resource layer behind the affective sphere.</div>
+    <a class="sphere-link" href="sphere.html#map">Back to Sphere</a>
+  </div>
+</div>
+
+<div class="hero" id="top">
+  <div class="hero-label">POMC-derived conservation peptide</div>
+  <h1>β-Endorphin</h1>
+  <div class="hero-sub">31-amino acid endogenous opioid peptide · POMC derivative · high-affinity μ-opioid receptor agonist</div>
+  <p class="hero-summary">
+    β-Endorphin is the principal conservation signal in the POMC family. It is an endogenous opioid peptide involved in analgesia,
+    endurance, reward, stress buffering, social comfort, and protective withdrawal. In the Metastrophe framework, β-endorphin is
+    the regulatory fuel of conservation: the peptide economy that lets the organism reduce demand, shield itself from pain, endure
+    what cannot yet be changed, and survive periods when action is impossible or too costly.
+  </p>
+</div>
+
+<section class="resource-dashboard" aria-label="Clickable research options">
+  <div class="resource-dashboard-inner">
+    <div class="resource-kicker">Clickable research map</div>
+    <h2>β-Endorphin functions at a glance</h2>
+    <p class="resource-intro">Click a function below to jump directly to its explanation and references. The larger diagram is available below without taking over the first screen.</p>
+    <div class="resource-card-grid">
+      <a class="resource-card" href="#sec-opioid"><strong>POMC Processing and Opioid Signaling</strong><span>POMC → β-lipotropin → β-endorphin · μ-opioid receptor signaling</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-analgesia"><strong>Analgesia and Pain Gating</strong><span>Endogenous opioid inhibition · pain reduction · capacity to endure</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-shield"><strong>Protective Withdrawal and Shielding</strong><span>Demand reduction · shutdown with protection · dissociative distance</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-stress"><strong>Stress Buffering and Endurance</strong><span>Co-release context · persistence under load · homeostasis-restoring behavior</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-reward"><strong>Reward, Relief, and Opioid Saturation</strong><span>Relief as reinforcement · endogenous opioid reward · bliss at the opportunity edge</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-bonding"><strong>Social Comfort and Bonding</strong><span>μ-opioid signaling · social connection · soothing and attachment</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-immune"><strong>Immune and Neuroinflammatory Crosstalk</strong><span>Opioid receptors in immune contexts · inflammation, stress, and brain energy metabolism</span><em>Open section ↓</em></a>
+    </div>
+  </div>
+</section>
+
+<div class="page-body">
+
+  <details class="diagram-collapser">
+    <summary>Full regulatory diagram</summary>
+    <div class="diagram-section">
+    <h2>Regulatory roles at a glance</h2>
+    <p>Click any box to jump to the full explanation below.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <line x1="320" y1="92"  x2="320" y2="218" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="320" y1="276" x2="320" y2="438" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="168" x2="228" y2="244" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="322" x2="228" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="452" y1="168" x2="412" y2="244" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="452" y1="322" x2="412" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-opioid')">
+          <rect x="230" y="220" width="180" height="56" rx="10"/>
+          <text font-family="'Merriweather',serif" font-weight="700" font-size="14" x="320" y="244" text-anchor="middle" dominant-baseline="central">β-Endorphin</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="263" text-anchor="middle" dominant-baseline="central">conservation fuel</text>
+        </g>
+
+        <g class="d-node d-blue" onclick="jumpTo('sec-analgesia')">
+          <rect x="230" y="40" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="58" text-anchor="middle" dominant-baseline="central">Analgesia</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="76" text-anchor="middle" dominant-baseline="central">pain reduction · MOR signaling</text>
+        </g>
+
+        <g class="d-node d-blue" onclick="jumpTo('sec-shield')">
+          <rect x="230" y="440" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="458" text-anchor="middle" dominant-baseline="central">Protective shutdown</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="476" text-anchor="middle" dominant-baseline="central">shielding · endurance · withdrawal</text>
+        </g>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-stress')">
+          <rect x="20" y="140" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="158" text-anchor="middle" dominant-baseline="central">Stress buffering</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="177" text-anchor="middle" dominant-baseline="central">coping · persistence · HPA context</text>
+        </g>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-reward')">
+          <rect x="20" y="296" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="314" text-anchor="middle" dominant-baseline="central">Reward &amp; relief</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="333" text-anchor="middle" dominant-baseline="central">well-being · satiety · reinforcement</text>
+        </g>
+
+        <g class="d-node d-teal" onclick="jumpTo('sec-bonding')">
+          <rect x="452" y="140" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="158" text-anchor="middle" dominant-baseline="central">Social comfort</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="177" text-anchor="middle" dominant-baseline="central">connection · soothing · attachment</text>
+        </g>
+
+        <g class="d-node d-amber" onclick="jumpTo('sec-immune')">
+          <rect x="452" y="296" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="314" text-anchor="middle" dominant-baseline="central">Immune effects</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="333" text-anchor="middle" dominant-baseline="central">opioid-immune crosstalk</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+    </div>
+  </details>
+
+  <p class="functions-intro">Each section below corresponds to a function in the diagram above. References are listed at the bottom of each section.</p>
+
+  <div class="fn-section accent-opioid" id="sec-opioid">
+    <div class="fn-header">
+      <div class="fn-icon">🧬</div>
+      <div>
+        <div class="fn-title">POMC Processing and Opioid Signaling</div>
+        <div class="fn-subtitle">POMC → β-lipotropin → β-endorphin · μ-opioid receptor signaling</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="55" y="80" width="150" height="56" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="130" y="102" text-anchor="middle">POMC</text>
+          <text font-family="sans-serif" font-size="11" x="130" y="121" text-anchor="middle">precursor protein</text>
+          <line x1="205" y1="108" x2="285" y2="108" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b1)"/>
+          <text font-family="sans-serif" font-size="11" x="245" y="96" text-anchor="middle" fill="#888">PC1 / PC2</text>
+          <rect x="285" y="80" width="150" height="56" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="360" y="102" text-anchor="middle">β-Lipotropin</text>
+          <text font-family="sans-serif" font-size="11" x="360" y="121" text-anchor="middle">intermediate peptide</text>
+          <line x1="435" y1="108" x2="515" y2="108" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b1)"/>
+          <rect x="515" y="80" width="120" height="56" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="575" y="102" text-anchor="middle">β-Endorphin</text>
+          <text font-family="sans-serif" font-size="11" x="575" y="121" text-anchor="middle">31 amino acids</text>
+          <line x1="575" y1="136" x2="575" y2="210" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b1)"/>
+          <rect x="475" y="210" width="200" height="56" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="575" y="232" text-anchor="middle">Opioid receptors</text>
+          <text font-family="sans-serif" font-size="11" x="575" y="251" text-anchor="middle">especially μ-opioid receptor</text>
+        </svg>
+        <p class="caption">β-Endorphin is produced by POMC processing and acts through endogenous opioid receptor systems, especially μ-opioid signaling.</p>
+      </div>
+
+      <h3>Where β-endorphin comes from</h3>
+      <p>β-Endorphin is produced through proteolytic processing of POMC, especially through β-lipotropin as an intermediate. It is expressed in pituitary and hypothalamic POMC systems, and it can act as a neuromodulator, endocrine signal, and immune-linked peptide depending on context.</p>
+
+      <h3>The endogenous opioid branch of POMC</h3>
+      <p>Unlike ACTH, which primarily drives adrenal mobilization, β-endorphin belongs to the endogenous opioid system. Its most familiar action is analgesia, but its larger regulatory role is broader: it reduces pain, supports endurance, contributes to reward and relief, and helps the organism tolerate situations in which direct action is unavailable or too costly.</p>
+
+      <div class="fn-highlight">In the Metastrophe framework, β-endorphin is not simply a “pleasure chemical.” It is the conservation fuel: the peptide economy that lets the organism lower demand, protect itself, and endure.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Sprouse-Blum AS et al. (2010). Understanding endorphins and their importance in pain management. <em>Hawaii Med J</em>, 69(3), 70–71. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3104618/" target="_blank">PMC3104618</a></li>
+        <li>Pilozzi A, Carro C, Huang X (2021). Roles of β-Endorphin in Stress, Behavior, Neuroinflammation, and Brain Energy Metabolism. <em>Int J Mol Sci</em>, 22(1), 338. <a href="https://doi.org/10.3390/ijms22010338" target="_blank">https://doi.org/10.3390/ijms22010338</a></li>
+        <li>Chaudhry SR & Rahimi N (2025). Biochemistry, Endorphin. <em>StatPearls</em>. <a href="https://www.ncbi.nlm.nih.gov/books/NBK470306/" target="_blank">NCBI Bookshelf</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-analgesia" id="sec-analgesia">
+    <div class="fn-header">
+      <div class="fn-icon">🛡️</div>
+      <div>
+        <div class="fn-title">Analgesia and Pain Gating</div>
+        <div class="fn-subtitle">Endogenous opioid inhibition · pain reduction · capacity to endure</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="250" y="20" width="180" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle">Pain / injury / exertion</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="59" text-anchor="middle">threat to continuity</text>
+          <line x1="340" y1="72" x2="340" y2="132" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+          <rect x="230" y="132" width="220" height="52" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="154" text-anchor="middle">β-Endorphin release</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="171" text-anchor="middle">opioid signaling increases</text>
+          <line x1="285" y1="184" x2="150" y2="242" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+          <line x1="395" y1="184" x2="530" y2="242" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b2)"/>
+          <rect x="55" y="242" width="190" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="263" text-anchor="middle">Pain signal reduced</text>
+          <text font-family="sans-serif" font-size="11" x="150" y="280" text-anchor="middle">nociception dampened</text>
+          <rect x="435" y="242" width="190" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="263" text-anchor="middle">Endurance supported</text>
+          <text font-family="sans-serif" font-size="11" x="530" y="280" text-anchor="middle">organism can persist</text>
+        </svg>
+        <p class="caption">β-Endorphin reduces pain and supports persistence when pain would otherwise stop action or overwhelm the system.</p>
+      </div>
+
+      <h3>Analgesia as conservation</h3>
+      <p>β-Endorphin is classically associated with analgesia. By acting on opioid receptors, it can reduce pain perception and alter the emotional salience of pain. In conservation terms, this protects the organism from being completely captured by injury, exhaustion, or overwhelming stress.</p>
+
+      <h3>Why pain reduction matters functionally</h3>
+      <p>Pain normally demands attention and action. When action is impossible or too costly, pain itself can become a regulatory burden. β-Endorphin helps lower that burden. It does not solve the external problem; it changes what the organism can tolerate while the problem remains unsolved.</p>
+
+      <div class="fn-highlight">This is the key bridge to dissociation in the affective sphere: sufficient conservation fuel allows the system to create protective distance from pain, threat, or overwhelming demand.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Sprouse-Blum AS et al. (2010). Understanding endorphins and their importance in pain management. <em>Hawaii Med J</em>, 69(3), 70–71. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3104618/" target="_blank">PMC3104618</a></li>
+        <li>Holden JE, Jeong Y, Forrest JM (2005). The endogenous opioid system and clinical pain management. <em>AACN Clin Issues</em>, 16(3), 291–301. <a href="https://doi.org/10.1097/00044067-200507000-00005" target="_blank">https://doi.org/10.1097/00044067-200507000-00005</a></li>
+        <li>Millan MJ (2002). Descending control of pain. <em>Prog Neurobiol</em>, 66(6), 355–474. <a href="https://doi.org/10.1016/S0301-0082(02)00009-6" target="_blank">https://doi.org/10.1016/S0301-0082(02)00009-6</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-shield" id="sec-shield">
+    <div class="fn-header">
+      <div class="fn-icon">🫥</div>
+      <div>
+        <div class="fn-title">Protective Withdrawal and Shielding</div>
+        <div class="fn-subtitle">Demand reduction · shutdown with protection · dissociative distance</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="b3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="240" y="25" width="200" height="52" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="47" text-anchor="middle">Action too costly</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="64" text-anchor="middle">threat cannot be neutralized</text>
+          <line x1="340" y1="77" x2="340" y2="138" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b3)"/>
+          <rect x="230" y="138" width="220" height="52" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="160" text-anchor="middle">Conservation demand</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="177" text-anchor="middle">lower output and protect continuity</text>
+          <line x1="340" y1="190" x2="180" y2="250" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b3)"/>
+          <line x1="340" y1="190" x2="500" y2="250" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b3)"/>
+          <rect x="60" y="250" width="240" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="180" y="271" text-anchor="middle">Sufficient β-endorphin</text>
+          <text font-family="sans-serif" font-size="11" x="180" y="288" text-anchor="middle">shielding / dissociative protection</text>
+          <rect x="380" y="250" width="240" height="52" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="500" y="271" text-anchor="middle">Insufficient β-endorphin</text>
+          <text font-family="sans-serif" font-size="11" x="500" y="288" text-anchor="middle">shutdown without protection</text>
+        </svg>
+        <p class="caption">The conservation problem: with enough β-endorphin, shutdown can become protective; without enough, shutdown remains exposed.</p>
+      </div>
+
+      <h3>Conservation is not simply collapse</h3>
+      <p>Conservation is a legitimate regulatory mode. When action would waste energy or increase danger, the organism may need to reduce output, limit pain, narrow awareness, and endure. β-Endorphin supplies the opioid component of that protective economy.</p>
+
+      <h3>Dissociation versus depression in the sphere</h3>
+      <p>On the threat face, both dissociation and depression are conservation states. The difference is supply. With sufficient β-endorphin economy, conservation can create a shield: numbness, distance, analgesia, and protection. With insufficient β-endorphin economy, conservation becomes shutdown without adequate protection: reduced output, but continued exposure.</p>
+
+      <div class="fn-highlight">In this model, β-endorphin supply helps distinguish protective conservation from depleted conservation. That is why dissociation and depression belong near one another, but are not the same state.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Pilozzi A, Carro C, Huang X (2021). Roles of β-Endorphin in Stress, Behavior, Neuroinflammation, and Brain Energy Metabolism. <em>Int J Mol Sci</em>, 22(1), 338. <a href="https://doi.org/10.3390/ijms22010338" target="_blank">https://doi.org/10.3390/ijms22010338</a></li>
+        <li>Akil H et al. (1984). Endogenous opioids: biology and function. <em>Annu Rev Neurosci</em>, 7, 223–255. <a href="https://doi.org/10.1146/annurev.ne.07.030184.001255" target="_blank">https://doi.org/10.1146/annurev.ne.07.030184.001255</a></li>
+        <li>van der Kolk BA (2014). <em>The Body Keeps the Score</em>. Viking.</li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-stress" id="sec-stress">
+    <div class="fn-header">
+      <div class="fn-icon">🌊</div>
+      <div>
+        <div class="fn-title">Stress Buffering and Endurance</div>
+        <div class="fn-subtitle">Co-release context · persistence under load · homeostasis-restoring behavior</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>β-endorphin rises in stress contexts</h3>
+      <p>β-Endorphin is released in contexts of stress, pain, intense exertion, and strong affective demand. It often appears alongside other POMC-derived responses, but it does a different job from ACTH: it buffers distress and helps the system persist.</p>
+
+      <h3>Endurance is a conservation function</h3>
+      <p>Endurance is not the same as mobilization. Mobilization spends; endurance keeps the organism intact while expenditure continues or while action is impossible. β-Endorphin is therefore not only about pleasure or analgesia. It helps the organism remain coherent under load.</p>
+
+      <h3>Clinical meaning</h3>
+      <p>When β-endorphin is sufficient, the patient may be able to create distance from overwhelming material. When it is insufficient, the patient may shut down without relief. In treatment terms, this distinction matters: the task is not simply to “activate” the patient, but to determine whether conservation is protective, depleted, or rigidly overused.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Pilozzi A, Carro C, Huang X (2021). Roles of β-Endorphin in Stress, Behavior, Neuroinflammation, and Brain Energy Metabolism. <em>Int J Mol Sci</em>, 22(1), 338. <a href="https://doi.org/10.3390/ijms22010338" target="_blank">https://doi.org/10.3390/ijms22010338</a></li>
+        <li>Tsigos C & Chrousos GP (2002). Hypothalamic–pituitary–adrenal axis, neuroendocrine factors and stress. <em>J Psychosom Res</em>, 53(4), 865–871. <a href="https://doi.org/10.1016/S0022-3999(02)00429-4" target="_blank">https://doi.org/10.1016/S0022-3999(02)00429-4</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-reward" id="sec-reward">
+    <div class="fn-header">
+      <div class="fn-icon">✨</div>
+      <div>
+        <div class="fn-title">Reward, Relief, and Opioid Saturation</div>
+        <div class="fn-subtitle">Relief as reinforcement · endogenous opioid reward · bliss at the opportunity edge</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="b4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" height="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="70" y="110" width="170" height="58" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="155" y="132" text-anchor="middle">Pain / demand falls</text>
+          <text font-family="sans-serif" font-size="11" x="155" y="151" text-anchor="middle">relief becomes salient</text>
+          <line x1="240" y1="139" x2="310" y2="139" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b4)"/>
+          <rect x="310" y="110" width="160" height="58" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="390" y="132" text-anchor="middle">Opioid reward</text>
+          <text font-family="sans-serif" font-size="11" x="390" y="151" text-anchor="middle">comfort, safety, saturation</text>
+          <line x1="470" y1="139" x2="540" y2="139" stroke="#888" stroke-dasharray="4 3" marker-end="url(#b4)"/>
+          <rect x="540" y="110" width="90" height="58" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="585" y="132" text-anchor="middle">Bliss</text>
+          <text font-family="sans-serif" font-size="11" x="585" y="151" text-anchor="middle">oversupply edge</text>
+        </svg>
+        <p class="caption">Relief is itself reinforcing: reduced pain and demand can become an opioid reward state.</p>
+      </div>
+
+      <h3>Relief is not just the absence of pain</h3>
+      <p>When pain, stress, or isolation drops, endogenous opioid signaling can make relief feel positively rewarding. That matters because conservation can become attractive, not only defensive. The organism may seek the state that lowers demand and restores comfort.</p>
+
+      <h3>Opportunity conservation</h3>
+      <p>On the opportunity face of the sphere, conservation is not shutdown under threat. It can become rest, safety, satisfaction, intimacy, or bliss. When the conserving/opioid economy is oversupplied, this region moves toward opioid saturation — the heroin-like edge of the model.</p>
+
+      <div class="fn-highlight">β-Endorphin therefore has two clinical faces: protective conservation under threat and pleasurable conservation under opportunity. Both belong to the same conserving economy.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Chaudhry SR & Rahimi N (2025). Biochemistry, Endorphin. <em>StatPearls</em>. <a href="https://www.ncbi.nlm.nih.gov/books/NBK470306/" target="_blank">NCBI Bookshelf</a></li>
+        <li>Berridge KC & Kringelbach ML (2015). Pleasure systems in the brain. <em>Neuron</em>, 86(3), 646–664. <a href="https://doi.org/10.1016/j.neuron.2015.02.018" target="_blank">https://doi.org/10.1016/j.neuron.2015.02.018</a></li>
+        <li>Panksepp J (1998). <em>Affective Neuroscience</em>. Oxford University Press.</li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-bonding" id="sec-bonding">
+    <div class="fn-header">
+      <div class="fn-icon">🤝</div>
+      <div>
+        <div class="fn-title">Social Comfort and Bonding</div>
+        <div class="fn-subtitle">μ-opioid signaling · social connection · soothing and attachment</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>Opioids and social connection</h3>
+      <p>The endogenous μ-opioid system is increasingly studied as part of social connection, soothing, and attachment. Human evidence includes pharmacologic and neuroimaging work implicating μ-opioid signaling in the affective value of social contact and social comfort.</p>
+
+      <h3>Why bonding belongs with conservation</h3>
+      <p>Social comfort reduces regulatory demand. Being held, recognized, soothed, or safely joined can lower the need for defensive mobilization. In that sense, social connection is not merely interpersonal; it is metabolically and affectively conserving.</p>
+
+      <h3>Metastrophe bridge</h3>
+      <p>In the sphere, this helps explain why some conserving states are pathological while others are restorative. Conservation under threat can become dissociation or depression. Conservation under opportunity can become contentment, bonding, and bliss.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Machin AJ & Dunbar RIM (2011). The brain opioid theory of social attachment. <em>Neurosci Biobehav Rev</em>, 35(4), 985–998. <a href="https://doi.org/10.1016/j.neubiorev.2010.10.001" target="_blank">https://doi.org/10.1016/j.neubiorev.2010.10.001</a></li>
+        <li>Inagaki TK (2018). Opioids and social connection. <em>Curr Dir Psychol Sci</em>, 27(2), 85–90. <a href="https://doi.org/10.1177/0963721417735531" target="_blank">https://doi.org/10.1177/0963721417735531</a></li>
+        <li>van Steenbergen H et al. (2024). Endogenous mu-opioid modulation of social connection in humans: a systematic review and meta-analysis. <em>Transl Psychiatry</em>, 14, 398. <a href="https://doi.org/10.1038/s41398-024-03088-3" target="_blank">https://doi.org/10.1038/s41398-024-03088-3</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-immune" id="sec-immune">
+    <div class="fn-header">
+      <div class="fn-icon">🧩</div>
+      <div>
+        <div class="fn-title">Immune and Neuroinflammatory Crosstalk</div>
+        <div class="fn-subtitle">Opioid receptors in immune contexts · inflammation, stress, and brain energy metabolism</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>Opioid signaling is not only neural</h3>
+      <p>β-Endorphin and opioid receptors are discussed not only in pain and reward circuits but also in immune and inflammatory contexts. Immune cells can express opioid receptors, and β-endorphin has been studied in relation to neuroinflammation, stress-related disorders, and brain energy metabolism.</p>
+
+      <h3>Conservation and immune tradeoffs</h3>
+      <p>From the Metastrophe perspective, this makes sense: conservation is never just psychological withdrawal. It is a body-wide shift in demand management. Pain, immune activity, energy expenditure, and affective distress all compete for budget. β-Endorphin participates in the economy that lowers some demands so the organism can persist.</p>
+
+      <div class="fn-highlight">This is why the β-endorphin page belongs beside ACTH and α-MSH. The three POMC outputs are not merely “mood chemicals”; they are regulatory economies spanning brain, body, immune function, and behavior.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Pilozzi A, Carro C, Huang X (2021). Roles of β-Endorphin in Stress, Behavior, Neuroinflammation, and Brain Energy Metabolism. <em>Int J Mol Sci</em>, 22(1), 338. <a href="https://doi.org/10.3390/ijms22010338" target="_blank">https://doi.org/10.3390/ijms22010338</a></li>
+        <li>Fischer EG & Falke NE (1984). Beta-endorphin modulates immune functions. A review. <em>Psychother Psychosom</em>, 42(1–4), 195–204. <a href="https://doi.org/10.1159/000287845" target="_blank">https://doi.org/10.1159/000287845</a></li>
+        <li>Stein C (2016). Opioid receptors. <em>Annu Rev Med</em>, 67, 433–451. <a href="https://doi.org/10.1146/annurev-med-062613-093100" target="_blank">https://doi.org/10.1146/annurev-med-062613-093100</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+</div>
+
+<footer>
+  Part of the Metastrophe interactive teaching system &nbsp;·&nbsp;
+  <a href="sphere.html#map">Back to Sphere</a> &nbsp;·&nbsp;
+  <a href="pomc-resource.html">POMC hub</a>
+</footer>
+
+<script>
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
+
+</body>
+</html>

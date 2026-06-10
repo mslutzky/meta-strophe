@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACTH — Adrenocorticotropic Hormone</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-light: #EEEDFE;
+    --purple-mid:   #7F77DD;
+    --purple-dark:  #3C3489;
+    --purple-text:  #26215C;
+    --teal-light:   #E1F5EE;
+    --teal-mid:     #1D9E75;
+    --teal-dark:    #0F6E56;
+    --coral-light:  #FAECE7;
+    --coral-mid:    #D85A30;
+    --amber-light:  #FAEEDA;
+    --amber-mid:    #BA7517;
+    --blue-light:   #E6F1FB;
+    --blue-mid:     #185FA5;
+    --gray-light:   #F1EFE8;
+    --gray-mid:     #888780;
+    --text-primary: #1a1917;
+    --text-secondary: #5a5854;
+    --bg: #fdfcfa;
+    --border: rgba(0,0,0,0.1);
+    --section-max: 820px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.75;
+  }
+
+  nav {
+    background: var(--purple-dark);
+    padding: 12px 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    flex-wrap: wrap;
+  }
+  nav a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  nav a:hover { color: #fff; }
+  nav .sep { opacity: 0.4; }
+  nav .current { color: #fff; font-weight: 600; }
+
+  .site-strip {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+  }
+  .site-strip-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .site-note { font-size: 13px; color: var(--text-secondary); }
+  .sphere-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--purple-mid);
+    color: var(--purple-dark);
+    background: var(--purple-light);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sphere-link:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(60,52,137,0.12); }
+
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, #534AB7 100%);
+    color: #fff;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 15px; opacity: 0.75; margin-bottom: 28px; }
+  .hero-summary {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.85;
+    opacity: 0.92;
+    font-style: italic;
+    font-family: 'Merriweather', serif;
+    font-weight: 300;
+  }
+
+  .page-body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .diagram-section {
+    padding: 48px 0 32px;
+    text-align: center;
+  }
+  .diagram-section h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--purple-dark);
+  }
+  .diagram-section p { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  .diagram-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: inline-block;
+    width: 100%;
+    max-width: 700px;
+  }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  .d-node { cursor: pointer; transition: opacity 0.15s; }
+  .d-node:hover { opacity: 0.78; }
+  .d-center rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 1.5; }
+  .d-center text { fill: #26215C; }
+  .d-coral rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 1.5; }
+  .d-coral text { fill: #4A1B0C; }
+  .d-teal rect  { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 1.5; }
+  .d-teal text  { fill: #085041; }
+  .d-blue rect  { fill: #E6F1FB; stroke: #185FA5; stroke-width: 1.5; }
+  .d-blue text  { fill: #042C53; }
+  .d-amber rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 1.5; }
+  .d-amber text { fill: #412402; }
+
+  .functions-intro {
+    padding: 16px 0 40px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .fn-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    scroll-margin-top: 24px;
+  }
+  .fn-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fn-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .fn-title {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 18px; color: var(--text-primary);
+  }
+  .fn-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .fn-body { padding: 28px 28px 32px; }
+  .fn-body h3 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--purple-dark);
+    margin: 24px 0 8px;
+  }
+  .fn-body h3:first-child { margin-top: 0; }
+  .fn-body p {
+    font-size: 15px; line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    max-width: var(--section-max);
+  }
+
+  .fn-highlight {
+    background: var(--gray-light);
+    border-left: 3px solid var(--purple-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px; margin: 16px 0;
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: var(--section-max);
+  }
+
+  .fn-refs {
+    background: var(--gray-light);
+    border-top: 1px solid var(--border);
+    padding: 20px 28px;
+  }
+  .fn-refs h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .fn-refs ol { padding-left: 20px; margin: 0; }
+  .fn-refs li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .fn-refs li a { color: var(--purple-mid); text-decoration: none; word-break: break-all; }
+  .fn-refs li a:hover { text-decoration: underline; }
+
+  .accent-axis .fn-icon, .accent-adrenal .fn-icon, .accent-immune .fn-icon { background: var(--coral-light); }
+  .accent-metabolic .fn-icon, .accent-alert .fn-icon { background: var(--teal-light); }
+  .accent-feedback .fn-icon { background: var(--purple-light); }
+
+  .accent-axis .fn-header, .accent-adrenal .fn-header, .accent-immune .fn-header { border-left: 4px solid var(--coral-mid); }
+  .accent-metabolic .fn-header, .accent-alert .fn-header { border-left: 4px solid var(--teal-mid); }
+  .accent-feedback .fn-header { border-left: 4px solid var(--purple-mid); }
+
+  .back-top {
+    display: block; text-align: center;
+    padding: 10px 0 0;
+    font-size: 13px;
+    color: var(--purple-mid);
+    text-decoration: none; cursor: pointer;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .back-top:hover { color: var(--purple-dark); background: var(--gray-light); }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: var(--gray-mid);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--purple-mid); text-decoration: none; }
+  footer a:hover { color: var(--purple-dark); text-decoration: underline; }
+
+  .section-diagram{margin:24px 0;background:var(--gray-light);border-radius:10px;padding:16px;overflow-x:auto;}
+  .section-diagram svg{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;}
+  .section-diagram .caption{font-size:12px;color:var(--gray-mid);text-align:center;margin-top:8px;font-style:italic;}
+
+
+
+  /* Compact above-the-fold resource layout */
+  html { scroll-behavior: smooth; }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 8px 24px;
+    min-height: 38px;
+  }
+  .site-strip { padding: 7px 24px; }
+  .site-strip-inner { max-width: 1080px; }
+  .site-note { font-size: 12px; line-height: 1.35; }
+  .sphere-link { padding: 5px 11px; font-size: 12px; }
+  .hero {
+    padding: 24px 28px 22px;
+  }
+  .hero-label { font-size: 10.5px; margin-bottom: 8px; letter-spacing: 0.18em; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 4px; }
+  .hero-sub { font-size: 12px; margin-bottom: 13px; }
+  .hero-summary {
+    max-width: 780px;
+    font-size: 13.5px;
+    line-height: 1.58;
+  }
+  .page-body { max-width: 1080px; padding: 0 24px 64px; }
+
+  .resource-dashboard {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 20px;
+  }
+  .resource-dashboard-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .resource-kicker {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .resource-dashboard h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    color: var(--purple-dark);
+    text-align: center;
+  }
+  .resource-dashboard p.resource-intro {
+    margin: 0 auto 14px;
+    max-width: 780px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .resource-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .resource-card {
+    display: block;
+    min-height: 96px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--gray-light);
+    padding: 13px 14px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    border-color: rgba(60,52,137,0.25);
+  }
+  .resource-card strong {
+    display: block;
+    color: var(--purple-dark);
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+  .resource-card span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .resource-card em {
+    display: inline-block;
+    margin-top: 9px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--purple-mid);
+    font-size: 12px;
+  }
+
+  .diagram-collapser {
+    margin: 20px auto 24px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 860px;
+    overflow: hidden;
+  }
+  .diagram-collapser summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 18px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    background: var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .diagram-collapser summary::-webkit-details-marker { display: none; }
+  .diagram-collapser summary:after { content: 'Show'; color: var(--gray-mid); font-size: 12px; }
+  .diagram-collapser[open] summary:after { content: 'Hide'; }
+  .diagram-collapser .diagram-section { padding: 20px 18px 22px; }
+  .diagram-section { padding: 22px 0 18px; }
+  .diagram-section h2 { font-size: 19px; margin-bottom: 4px; }
+  .diagram-section p { font-size: 12.5px; margin-bottom: 14px; }
+  .diagram-wrap { padding: 14px; max-width: 640px; }
+  .functions-intro {
+    padding: 0 0 18px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .fn-section { scroll-margin-top: 54px; margin-bottom: 24px; }
+  .fn-header { padding: 15px 22px; }
+  .fn-body { padding: 22px 24px 26px; }
+  .fn-refs { padding: 16px 24px; }
+  .back-top { padding: 8px 0 0; }
+
+  .hub-section { padding: 20px 0 12px; }
+  .hub-intro { margin-bottom: 14px; }
+  .hub-intro h2 { font-size: 21px; }
+  .hub-intro p { font-size: 13.5px; line-height: 1.45; }
+  .hub-card-row { gap: 12px; }
+  .hub-card { min-height: 132px; padding: 15px 16px 14px; }
+  .hub-card h3 { font-size: 18px; }
+  .hub-card p { font-size: 12.5px; line-height: 1.42; }
+
+  @media (max-width: 720px) {
+    nav { padding: 8px 14px; }
+    .site-strip { padding: 8px 14px; }
+    .hero { padding: 22px 18px 20px; }
+    .hero-summary { font-size: 13px; }
+    .resource-dashboard { padding: 16px 16px 18px; }
+    .resource-card-grid { grid-template-columns: 1fr; }
+    .page-body { padding-left: 16px; padding-right: 16px; }
+  }
+
+  @media (max-width: 720px) {
+    nav { padding: 10px 16px; }
+    .hero { padding: 48px 20px 40px; }
+    .page-body { padding: 0 16px 72px; }
+    .site-strip { padding: 14px 16px; }
+    .fn-header, .fn-body, .fn-refs { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="sphere.html#map">← Back to Sphere</a>
+  <span class="sep">›</span>
+  <a href="pomc-resource.html">POMC Family</a>
+  <span class="sep">·</span>
+  <span class="current">ACTH</span>
+  <span class="sep">·</span>
+  <a href="beta-endorphin-resource.html">β-Endorphin</a>
+  <span class="sep">·</span>
+  <a href="alpha-msh-resource.html">α-MSH</a>
+</nav>
+
+<div class="site-strip">
+  <div class="site-strip-inner">
+    <div class="site-note">Part of the Metastrophe interactive teaching system: the biological resource layer behind the affective sphere.</div>
+    <a class="sphere-link" href="sphere.html#map">Back to Sphere</a>
+  </div>
+</div>
+
+<div class="hero" id="top">
+  <div class="hero-label">POMC-derived mobilization peptide</div>
+  <h1>ACTH</h1>
+  <div class="hero-sub">Adrenocorticotropic hormone · 39-amino acid pituitary peptide · primary ligand for MC2R</div>
+  <p class="hero-summary">
+    ACTH is the principal mobilization signal in the POMC family. It activates the adrenal cortex, drives cortisol synthesis,
+    increases glucose availability, supports cardiovascular and behavioral readiness, and helps the organism act under pressure.
+    In the Metastrophe framework, ACTH is the regulatory fuel of mobilization: the peptide economy that powers approach, attack,
+    urgent effort, and other high-demand responses when the system judges that action is required.
+  </p>
+</div>
+
+<section class="resource-dashboard" aria-label="Clickable research options">
+  <div class="resource-dashboard-inner">
+    <div class="resource-kicker">Clickable research map</div>
+    <h2>ACTH functions at a glance</h2>
+    <p class="resource-intro">Click a function below to jump directly to its explanation and references. The larger diagram is available below without taking over the first screen.</p>
+    <div class="resource-card-grid">
+      <a class="resource-card" href="#sec-axis"><strong>HPA Axis Signaling</strong><span>CRH from hypothalamus · ACTH from anterior pituitary · adrenal activation</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-adrenal"><strong>Adrenal Cortex and Steroidogenesis</strong><span>MC2R · cAMP signaling · cortisol synthesis</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-metabolic"><strong>Metabolic Mobilization</strong><span>Glucose availability · energy redistribution · fuel for effort</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-alert"><strong>Action Readiness and Alerting</strong><span>Effort allocation · vigilance · circulation and performance support</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-feedback"><strong>Feedback, Chronic Load, and Clinical Meaning</strong><span>Negative feedback · overuse costs · mobilization mismatch</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-immune"><strong>Chronic Load and Immune Tradeoffs</strong><span>Short-term support vs long-term cost</span><em>Open section ↓</em></a>
+    </div>
+  </div>
+</section>
+
+<div class="page-body">
+
+  <details class="diagram-collapser">
+    <summary>Full regulatory diagram</summary>
+    <div class="diagram-section">
+    <h2>Regulatory roles at a glance</h2>
+    <p>Click any box to jump to the full explanation below.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 530" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <line x1="320" y1="92"  x2="320" y2="220" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="320" y1="278" x2="320" y2="436" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="180" y1="160" x2="228" y2="242" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="180" y1="328" x2="228" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="460" y1="160" x2="412" y2="242" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="460" y1="328" x2="412" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-axis')">
+          <rect x="230" y="220" width="180" height="56" rx="10"/>
+          <text font-family="'Merriweather',serif" font-weight="700" font-size="14" x="320" y="244" text-anchor="middle" dominant-baseline="central">ACTH</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="263" text-anchor="middle" dominant-baseline="central">mobilization fuel</text>
+        </g>
+
+        <g class="d-node d-coral" onclick="jumpTo('sec-axis')">
+          <rect x="230" y="40" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="58" text-anchor="middle" dominant-baseline="central">HPA axis signaling</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="76" text-anchor="middle" dominant-baseline="central">CRH → ACTH → adrenal cortex</text>
+        </g>
+
+        <g class="d-node d-teal" onclick="jumpTo('sec-metabolic')">
+          <rect x="230" y="440" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="458" text-anchor="middle" dominant-baseline="central">Metabolic mobilization</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="476" text-anchor="middle" dominant-baseline="central">cortisol, glucose, fuel availability</text>
+        </g>
+
+        <g class="d-node d-coral" onclick="jumpTo('sec-adrenal')">
+          <rect x="20" y="132" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="150" text-anchor="middle" dominant-baseline="central">Adrenal cortex</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="169" text-anchor="middle" dominant-baseline="central">MC2R, steroidogenesis</text>
+        </g>
+
+        <g class="d-node d-teal" onclick="jumpTo('sec-alert')">
+          <rect x="20" y="300" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="318" text-anchor="middle" dominant-baseline="central">Action readiness</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="337" text-anchor="middle" dominant-baseline="central">effort, vigilance, circulation</text>
+        </g>
+
+        <g class="d-node d-amber" onclick="jumpTo('sec-feedback')">
+          <rect x="452" y="132" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="150" text-anchor="middle" dominant-baseline="central">Negative feedback</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="169" text-anchor="middle" dominant-baseline="central">cortisol restrains ACTH</text>
+        </g>
+
+        <g class="d-node d-blue" onclick="jumpTo('sec-immune')">
+          <rect x="452" y="300" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="318" text-anchor="middle" dominant-baseline="central">Chronic load</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="337" text-anchor="middle" dominant-baseline="central">tradeoffs, suppression, strain</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+    </div>
+  </details>
+
+  <p class="functions-intro">Each section below corresponds to a function in the diagram above. References are listed at the bottom of each section.</p>
+
+  <div class="fn-section accent-axis" id="sec-axis">
+    <div class="fn-header">
+      <div class="fn-icon">📡</div>
+      <div>
+        <div class="fn-title">HPA Axis Signaling</div>
+        <div class="fn-subtitle">CRH from hypothalamus · ACTH from anterior pituitary · adrenal activation</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="50" y="90" width="160" height="60" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="130" y="112" text-anchor="middle">Hypothalamus</text>
+          <text font-family="sans-serif" font-size="11" x="130" y="132" text-anchor="middle">CRH released</text>
+          <line x1="210" y1="120" x2="280" y2="120" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a1)"/>
+          <text font-family="sans-serif" font-size="11" x="245" y="110" text-anchor="middle" fill="#888">portal blood</text>
+          <rect x="280" y="90" width="160" height="60" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="360" y="112" text-anchor="middle">Anterior pituitary</text>
+          <text font-family="sans-serif" font-size="11" x="360" y="132" text-anchor="middle">corticotrophs cleave POMC → ACTH</text>
+          <line x1="440" y1="120" x2="510" y2="120" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a1)"/>
+          <text font-family="sans-serif" font-size="11" x="475" y="110" text-anchor="middle" fill="#888">systemic blood</text>
+          <rect x="510" y="90" width="120" height="60" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="570" y="112" text-anchor="middle">Adrenal cortex</text>
+          <text font-family="sans-serif" font-size="11" x="570" y="132" text-anchor="middle">MC2R target</text>
+        </svg>
+        <p class="caption">Core HPA pathway: hypothalamic CRH drives pituitary ACTH release, which stimulates the adrenal cortex.</p>
+      </div>
+
+      <h3>From stress appraisal to endocrine output</h3>
+      <p>ACTH is produced by corticotroph cells in the anterior pituitary through cleavage of POMC. In most textbook accounts it sits within the hypothalamic–pituitary–adrenal, or HPA, axis: hypothalamic corticotropin-releasing hormone (CRH) stimulates pituitary corticotrophs, which release ACTH into the bloodstream, and ACTH then acts on the adrenal cortex.</p>
+
+      <h3>Why ACTH matters in this model</h3>
+      <p>In the Metastrophe framework, this is not just an endocrine relay. It is the mobilization arm of the POMC grammar. ACTH is the peptide economy that signals, in effect: action is required; resources must be recruited; the organism must increase output.</p>
+
+      <div class="fn-highlight">ACTH is treated here as a regulatory fuel, not merely a laboratory value. Its central significance is that it helps convert urgency into mobilizable bodily capacity.</div>
+
+      <h3>Pulsatile and state-sensitive release</h3>
+      <p>ACTH is released in circadian and ultradian pulses, with a strong morning peak in humans and rapid additional increases under physical or psychological stress. This pulsed architecture helps explain why mobilization is dynamic rather than continuous: ACTH is built for episodic recruitment of effort, not for a constant high-output state.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Bornstein SR et al. (2016). Diagnosis and Treatment of Primary Adrenal Insufficiency: An Endocrine Society Clinical Practice Guideline. <em>J Clin Endocrinol Metab</em>, 101(2), 364–389. <a href="https://doi.org/10.1210/jc.2015-1710" target="_blank">https://doi.org/10.1210/jc.2015-1710</a></li>
+        <li>Tsigos C & Chrousos GP (2002). Hypothalamic–pituitary–adrenal axis, neuroendocrine factors and stress. <em>J Psychosom Res</em>, 53(4), 865–871. <a href="https://doi.org/10.1016/S0022-3999(02)00429-4" target="_blank">https://doi.org/10.1016/S0022-3999(02)00429-4</a></li>
+        <li>Lightman SL & Conway-Campbell BL (2010). The crucial role of pulsatile activity of the HPA axis for continuous dynamic equilibration. <em>Nat Rev Neurosci</em>, 11, 710–718. <a href="https://doi.org/10.1038/nrn2914" target="_blank">https://doi.org/10.1038/nrn2914</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-adrenal" id="sec-adrenal">
+    <div class="fn-header">
+      <div class="fn-icon">🧪</div>
+      <div>
+        <div class="fn-title">Adrenal Cortex and Steroidogenesis</div>
+        <div class="fn-subtitle">MC2R · cAMP signaling · cortisol synthesis</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="235" y="20" width="210" height="50" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="41" text-anchor="middle">ACTH binds MC2R</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="58" text-anchor="middle">zona fasciculata / adrenal cortex</text>
+          <line x1="340" y1="70" x2="340" y2="118" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+          <rect x="235" y="118" width="210" height="50" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="139" text-anchor="middle">cAMP / PKA signaling</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="156" text-anchor="middle">StAR and steroidogenic enzymes activated</text>
+          <line x1="340" y1="168" x2="340" y2="216" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+          <rect x="235" y="216" width="210" height="50" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="237" text-anchor="middle">Cortisol output</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="254" text-anchor="middle">cholesterol → glucocorticoids</text>
+        </svg>
+        <p class="caption">ACTH’s canonical cellular action: MC2R activation in the adrenal cortex stimulates steroidogenesis and cortisol release.</p>
+      </div>
+
+      <h3>MC2R is ACTH’s defining receptor</h3>
+      <p>Among the melanocortin receptors, ACTH has a unique dependence on melanocortin 2 receptor, or MC2R, located primarily in the adrenal cortex. Binding at MC2R stimulates cAMP production and protein kinase A signaling, increasing cholesterol transport into mitochondria and activating the steroidogenic machinery needed for cortisol synthesis.</p>
+
+      <h3>Cortisol is the downstream amplifier</h3>
+      <p>ACTH does not mobilize the body mainly by itself; it mobilizes through the adrenal glucocorticoid response it triggers. Cortisol extends ACTH’s reach, influencing liver, muscle, adipose tissue, immune tissues, and brain. That is one reason ACTH functions so effectively as a mobilization signal: a relatively compact pituitary output can recruit a large distributed bodily economy.</p>
+
+      <h3>A brief endocrine grammar</h3>
+      <p>In the language of this model, ACTH says the organism must be made action-capable. Cortisol is one of the major downstream means by which that command becomes metabolically real.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Clark AJL & Chan LF (2015). Adrenocorticotropic hormone and the adrenal cortex. <em>Front Horm Res</em>, 43, 1–8. <a href="https://doi.org/10.1159/000360543" target="_blank">https://doi.org/10.1159/000360543</a></li>
+        <li>Xing Y et al. (2010). StAR, steroidogenesis, and adrenal regulation. <em>Mol Cell Endocrinol</em>, 315(1–2), 15–23. <a href="https://doi.org/10.1016/j.mce.2009.07.013" target="_blank">https://doi.org/10.1016/j.mce.2009.07.013</a></li>
+        <li>Gallo-Payet N & Battista MC (2014). Steroidogenesis-adrenal physiology and MC2R signaling. <em>Compr Physiol</em>, 4(3), 889–964. <a href="https://doi.org/10.1002/cphy.c130050" target="_blank">https://doi.org/10.1002/cphy.c130050</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-metabolic" id="sec-metabolic">
+    <div class="fn-header">
+      <div class="fn-icon">⚡</div>
+      <div>
+        <div class="fn-title">Metabolic Mobilization</div>
+        <div class="fn-subtitle">Glucose availability · energy redistribution · fuel for effort</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="260" y="20" width="160" height="50" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="41" text-anchor="middle">ACTH / cortisol</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="58" text-anchor="middle">mobilization command</text>
+          <line x1="340" y1="70" x2="145" y2="138" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <line x1="340" y1="70" x2="340" y2="138" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <line x1="340" y1="70" x2="535" y2="138" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <rect x="50" y="138" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="145" y="159" text-anchor="middle">Liver</text>
+          <text font-family="sans-serif" font-size="11" x="145" y="176" text-anchor="middle">gluconeogenesis / glycogenolysis</text>
+          <rect x="245" y="138" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="159" text-anchor="middle">Adipose tissue</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="176" text-anchor="middle">lipolysis / substrate release</text>
+          <rect x="440" y="138" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="535" y="159" text-anchor="middle">Muscle</text>
+          <text font-family="sans-serif" font-size="11" x="535" y="176" text-anchor="middle">protein turnover / available fuel</text>
+          <line x1="145" y1="192" x2="340" y2="260" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <line x1="340" y1="192" x2="340" y2="260" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <line x1="535" y1="192" x2="340" y2="260" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a3)"/>
+          <rect x="220" y="260" width="240" height="50" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="281" text-anchor="middle">More usable energy</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="298" text-anchor="middle">the organism becomes action-capable</text>
+        </svg>
+        <p class="caption">ACTH’s downstream metabolic work: redistribute substrates and increase usable fuel for urgent action.</p>
+      </div>
+
+      <h3>Mobilization means expendable fuel</h3>
+      <p>ACTH-driven cortisol increases hepatic gluconeogenesis and glycogen mobilization, alters adipose and muscle metabolism, and shifts the body toward immediate fuel availability. In ordinary language: the system makes it easier to spend.</p>
+
+      <h3>Why this matters clinically</h3>
+      <p>In this model, ACTH supply is not defined only by the hormone concentration in plasma, but by whether the organism has enough mobilization economy to meet the demand. High-demand states with adequate ACTH support tend toward forceful engagement; high-demand states with inadequate support tend toward anxious, strained mobilization.</p>
+
+      <div class="fn-highlight">This is the biological logic behind the distinction between anger and anxiety on the threat face of the sphere: both are mobilization states, but one is relatively resourced and the other relatively under-resourced.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Exton JH (1979). Mechanisms of hormonal regulation of hepatic glucose metabolism. <em>Diabetes Metab Rev</em>, 28, 183–200.</li>
+        <li>de Kloet ER et al. (2005). Stress and the brain: from adaptation to disease. <em>Nat Rev Neurosci</em>, 6, 463–475. <a href="https://doi.org/10.1038/nrn1683" target="_blank">https://doi.org/10.1038/nrn1683</a></li>
+        <li>Sapolsky RM, Romero LM, Munck AU (2000). How do glucocorticoids influence stress responses? <em>Endocr Rev</em>, 21(1), 55–89. <a href="https://doi.org/10.1210/edrv.21.1.0389" target="_blank">https://doi.org/10.1210/edrv.21.1.0389</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-alert" id="sec-alert">
+    <div class="fn-header">
+      <div class="fn-icon">🏃</div>
+      <div>
+        <div class="fn-title">Action Readiness and Alerting</div>
+        <div class="fn-subtitle">Effort allocation · vigilance · circulation and performance support</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="250" y="18" width="180" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="40" text-anchor="middle">Mobilization demand</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="57" text-anchor="middle">threat, challenge, urgency</text>
+          <line x1="340" y1="70" x2="145" y2="135" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a4)"/>
+          <line x1="340" y1="70" x2="340" y2="135" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a4)"/>
+          <line x1="340" y1="70" x2="535" y2="135" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a4)"/>
+          <rect x="50" y="135" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="145" y="156" text-anchor="middle">Vigilance</text>
+          <text font-family="sans-serif" font-size="11" x="145" y="173" text-anchor="middle">arousal and scanning</text>
+          <rect x="245" y="135" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="156" text-anchor="middle">Circulation</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="173" text-anchor="middle">pressure and perfusion support</text>
+          <rect x="440" y="135" width="190" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="535" y="156" text-anchor="middle">Effort</text>
+          <text font-family="sans-serif" font-size="11" x="535" y="173" text-anchor="middle">the body commits to action</text>
+        </svg>
+        <p class="caption">Mobilization is not only biochemical; it is a whole-body readiness state supporting effort, vigilance, and action.</p>
+      </div>
+
+      <h3>Whole-organism mobilization</h3>
+      <p>ACTH’s downstream effects support a larger stress-and-effort package: increased vigilance, facilitation of cardiovascular output through glucocorticoid and sympathetic interactions, and better support for sustained action. ACTH therefore belongs to the same biological family as action, urgency, pressure tolerance, and forward drive.</p>
+
+      <h3>Threat and opportunity both use mobilization</h3>
+      <p>The same mobilization economy can appear in threat or opportunity. Under threat it may underwrite anger, attack, resistance, or escape. Under opportunity it may support anticipation, exuberant approach, or high-investment effort. ACTH does not decide valence by itself; it powers the demand to act.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Ulrich-Lai YM & Herman JP (2009). Neural regulation of endocrine and autonomic stress responses. <em>Nat Rev Neurosci</em>, 10, 397–409. <a href="https://doi.org/10.1038/nrn2647" target="_blank">https://doi.org/10.1038/nrn2647</a></li>
+        <li>Chrousos GP (2009). Stress and disorders of the stress system. <em>Nat Rev Endocrinol</em>, 5, 374–381. <a href="https://doi.org/10.1038/nrendo.2009.106" target="_blank">https://doi.org/10.1038/nrendo.2009.106</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-feedback" id="sec-feedback">
+    <div class="fn-header">
+      <div class="fn-icon">🔁</div>
+      <div>
+        <div class="fn-title">Feedback, Chronic Load, and Clinical Meaning</div>
+        <div class="fn-subtitle">Negative feedback · overuse costs · mobilization mismatch</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="260" y="20" width="160" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle">ACTH</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="59" text-anchor="middle">mobilization fuel</text>
+          <line x1="340" y1="72" x2="340" y2="124" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a5)"/>
+          <rect x="260" y="124" width="160" height="52" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="146" text-anchor="middle">Cortisol</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="163" text-anchor="middle">limits inflammation, closes loop</text>
+          <path d="M260 150 C190 150, 185 70, 250 54" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a5)"/>
+          <text font-family="sans-serif" font-size="11" x="160" y="100" fill="#888">negative feedback</text>
+          <line x1="300" y1="176" x2="180" y2="245" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a5)"/>
+          <line x1="380" y1="176" x2="500" y2="245" stroke="#888" stroke-dasharray="4 3" marker-end="url(#a5)"/>
+          <rect x="60" y="245" width="220" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="170" y="266" text-anchor="middle">Adaptive mobilization</text>
+          <text font-family="sans-serif" font-size="10" x="170" y="283" text-anchor="middle">short-lived, resourced, effective</text>
+          <rect x="400" y="245" width="220" height="52" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="510" y="266" text-anchor="middle">Chronic load</text>
+          <text font-family="sans-serif" font-size="10" x="510" y="283" text-anchor="middle">wear, immune tradeoffs, dysregulation</text>
+        </svg>
+        <p class="caption">ACTH is adaptive when it is timely and contained; when chronically recruited, its costs become part of the disorder picture.</p>
+      </div>
+
+      <h3>Feedback restrains mobilization</h3>
+      <p>Cortisol feeds back to hypothalamus and pituitary, reducing CRH and ACTH release. In healthy regulation, mobilization rises when needed and falls when the challenge is over. This is what keeps ACTH from becoming a permanently locked-on state.</p>
+
+      <h3>The cost of chronic recruitment</h3>
+      <p>When ACTH–cortisol signaling is excessive or prolonged, the system pays for it: immune suppression, sleep disruption, catabolic strain, mood destabilization, and the gradual wear that the stress literature often calls allostatic load. Mobilization is adaptive in bursts and costly when overused.</p>
+
+      <h3>Theoretical bridge to affect</h3>
+      <p>In Metastrophe Theory, ACTH helps explain why some affective states feel charged, effortful, aggressive, urgent, or restless. It is the biology behind mobilization demand. The question is never simply whether ACTH is present. The question is whether its supply is sufficient, excessive, or insufficient relative to what the organism is trying to do.</p>
+
+      <div class="fn-highlight">ACTH is therefore part of the architecture of diagnosis and treatment in this model. Diagnosis tracks recurrent mobilization patterns and mismatches. Treatment aims not only to reduce symptoms but to restore the capacity to regulate mobilization without exhausting the system.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>McEwen BS (2007). Physiology and neurobiology of stress and adaptation: central role of the brain. <em>Physiol Rev</em>, 87(3), 873–904. <a href="https://doi.org/10.1152/physrev.00041.2006" target="_blank">https://doi.org/10.1152/physrev.00041.2006</a></li>
+        <li>Juster RP, McEwen BS, Lupien SJ (2010). Allostatic load biomarkers of chronic stress and impact on health and cognition. <em>Neurosci Biobehav Rev</em>, 35(1), 2–16. <a href="https://doi.org/10.1016/j.neubiorev.2009.10.002" target="_blank">https://doi.org/10.1016/j.neubiorev.2009.10.002</a></li>
+        <li>Sapolsky RM (2004). <em>Why Zebras Don’t Get Ulcers</em>. Henry Holt.</li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <div class="fn-section accent-immune" id="sec-immune">
+    <div class="fn-header">
+      <div class="fn-icon">🧩</div>
+      <div>
+        <div class="fn-title">Chronic Load and Immune Tradeoffs</div>
+        <div class="fn-subtitle">Short-term support vs long-term cost</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>Mobilization has a price</h3>
+      <p>ACTH-driven mobilization is designed to prioritize immediate action. In the short term that can be lifesaving. Over time, however, the same axis can suppress or distort other regulatory priorities: immune activity, tissue repair, metabolic flexibility, and restorative rest. This is one reason ACTH must be understood within the larger POMC family rather than in isolation.</p>
+
+      <h3>Why the family view matters</h3>
+      <p>The POMC perspective makes clear that chronic dominance of ACTH can crowd out other peptide economies. If mobilization monopolizes regulation, recalibration becomes harder to access and conservation may arrive only after depletion. That biological asymmetry is part of the logic of the affective sphere.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Silverman MN & Sternberg EM (2012). Glucocorticoid regulation of inflammation and its functional correlates. <em>J Allergy Clin Immunol</em>, 130(5), 1039–1048. <a href="https://doi.org/10.1016/j.jaci.2012.08.006" target="_blank">https://doi.org/10.1016/j.jaci.2012.08.006</a></li>
+        <li>Chrousos GP (1995). The hypothalamic-pituitary-adrenal axis and immune-mediated inflammation. <em>NEJM</em>, 332, 1351–1362. <a href="https://doi.org/10.1056/NEJM199505183322008" target="_blank">https://doi.org/10.1056/NEJM199505183322008</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+</div>
+
+<footer>
+  Part of the Metastrophe interactive teaching system &nbsp;·&nbsp;
+  <a href="sphere.html#map">Back to Sphere</a> &nbsp;·&nbsp;
+  <a href="pomc-resource.html">POMC hub</a>
+</footer>
+
+<script>
+function jumpTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
+
+</body>
+</html>

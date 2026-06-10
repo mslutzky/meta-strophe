@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POMC — Proopiomelanocortin Precursor System</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-light: #EEEDFE;
+    --purple-mid:   #7F77DD;
+    --purple-dark:  #3C3489;
+    --purple-text:  #26215C;
+    --teal-light:   #E1F5EE;
+    --teal-mid:     #1D9E75;
+    --teal-dark:    #0F6E56;
+    --coral-light:  #FAECE7;
+    --coral-mid:    #D85A30;
+    --amber-light:  #FAEEDA;
+    --amber-mid:    #BA7517;
+    --gray-light:   #F1EFE8;
+    --gray-mid:     #888780;
+    --text-primary: #1a1917;
+    --text-secondary: #5a5854;
+    --bg: #fdfcfa;
+    --border: rgba(0,0,0,0.1);
+    --section-max: 820px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--purple-dark);
+    padding: 12px 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  nav a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  nav a:hover { color: #fff; }
+  nav .sep { opacity: 0.4; }
+  nav .current { color: #fff; font-weight: 600; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, #534AB7 100%);
+    color: #fff;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 15px; opacity: 0.75; margin-bottom: 28px; }
+  .hero-summary {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.85;
+    opacity: 0.92;
+    font-style: italic;
+    font-family: 'Merriweather', serif;
+    font-weight: 300;
+  }
+
+  /* PAGE WRAPPER */
+  .page-body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* DIAGRAM SECTION */
+  .diagram-section {
+    padding: 48px 0 32px;
+    text-align: center;
+  }
+  .diagram-section h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--purple-dark);
+  }
+  .diagram-section p { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  .diagram-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: inline-block;
+    width: 100%;
+    max-width: 700px;
+  }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  /* SVG node styles */
+  .d-node { cursor: pointer; transition: opacity 0.15s; }
+  .d-node:hover { opacity: 0.78; }
+  .d-center rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 1.5; }
+  .d-center text { fill: #26215C; }
+  .d-teal rect  { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 1.5; }
+  .d-teal text  { fill: #085041; }
+  .d-amber rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 1.5; }
+  .d-amber text { fill: #412402; }
+  .d-blue rect  { fill: #E6F1FB; stroke: #185FA5; stroke-width: 1.5; }
+  .d-blue text  { fill: #042C53; }
+  .d-coral rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 1.5; }
+  .d-coral text { fill: #4A1B0C; }
+
+  /* FUNCTION SECTIONS */
+  .functions-intro {
+    padding: 16px 0 40px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .fn-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    scroll-margin-top: 24px;
+  }
+  .fn-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fn-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .fn-title {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 18px; color: var(--text-primary);
+  }
+  .fn-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .fn-body { padding: 28px 28px 32px; }
+  .fn-body h3 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--purple-dark);
+    margin: 24px 0 8px;
+  }
+  .fn-body h3:first-child { margin-top: 0; }
+  .fn-body p {
+    font-size: 15px; line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    max-width: var(--section-max);
+  }
+  .fn-body p:last-child { margin-bottom: 0; }
+
+  .fn-highlight {
+    background: var(--gray-light);
+    border-left: 3px solid var(--purple-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px; margin: 16px 0;
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: var(--section-max);
+  }
+
+  /* REFERENCES */
+  .fn-refs {
+    background: var(--gray-light);
+    border-top: 1px solid var(--border);
+    padding: 20px 28px;
+  }
+  .fn-refs h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .fn-refs ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+  .fn-refs li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .fn-refs li a {
+    color: var(--purple-mid);
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .fn-refs li a:hover { text-decoration: underline; }
+
+  /* Accent colors per section */
+  .accent-pigment  .fn-icon { background: var(--amber-light); }
+  .accent-appetite .fn-icon { background: var(--teal-light);  }
+  .accent-immune   .fn-icon { background: #E6F1FB; }
+  .accent-inflam   .fn-icon { background: var(--coral-light); }
+  .accent-thermo   .fn-icon { background: var(--coral-light); }
+  .accent-cns      .fn-icon { background: var(--purple-light); }
+  .accent-cardio   .fn-icon { background: var(--teal-light);  }
+  .accent-skin     .fn-icon { background: var(--amber-light); }
+
+  .accent-pigment  .fn-header { border-left: 4px solid var(--amber-mid);  }
+  .accent-appetite .fn-header { border-left: 4px solid var(--teal-mid);   }
+  .accent-immune   .fn-header { border-left: 4px solid #185FA5;           }
+  .accent-inflam   .fn-header { border-left: 4px solid var(--coral-mid);  }
+  .accent-thermo   .fn-header { border-left: 4px solid var(--coral-mid);  }
+  .accent-cns      .fn-header { border-left: 4px solid var(--purple-mid); }
+  .accent-cardio   .fn-header { border-left: 4px solid var(--teal-mid);   }
+  .accent-skin     .fn-header { border-left: 4px solid var(--amber-mid);  }
+
+  .back-top {
+    display: block; text-align: center;
+    padding: 10px 0 0;
+    font-size: 13px;
+    color: var(--purple-mid);
+    text-decoration: none; cursor: pointer;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .back-top:hover { color: var(--purple-dark); background: var(--gray-light); }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: var(--gray-mid);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--purple-mid); text-decoration: none; }
+  footer a:hover { color: var(--purple-dark); text-decoration: underline; }
+
+  /* inline section diagrams */
+  .section-diagram{margin:24px 0;background:var(--gray-light);border-radius:10px;padding:16px;overflow-x:auto;}
+  .section-diagram svg{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;}
+  .section-diagram .caption{font-size:12px;color:var(--gray-mid);text-align:center;margin-top:8px;font-style:italic;}
+
+  /* POMC page additions */
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 18px 0 6px;
+    max-width: var(--section-max);
+  }
+  .mini-card {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .mini-card strong { color: var(--purple-dark); display: block; margin-bottom: 4px; }
+  .sequence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 8px;
+    margin: 18px 0;
+    max-width: var(--section-max);
+  }
+  .seq-box {
+    flex: 1 1 135px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .seq-box b { color: var(--purple-dark); }
+  .seq-arrow { align-self: center; color: var(--gray-mid); font-size: 20px; }
+
+
+  /* Hub integration */
+  .site-strip {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+  }
+  .site-strip-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .site-note {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .sphere-link, .hub-card {
+    text-decoration: none;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sphere-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--purple-mid);
+    color: var(--purple-dark);
+    background: var(--purple-light);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .sphere-link:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(60,52,137,0.12); }
+
+  .hub-section {
+    padding: 36px 0 14px;
+  }
+  .hub-intro {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 22px;
+  }
+  .hub-kicker {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .hub-intro h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--purple-dark);
+    margin-bottom: 8px;
+  }
+  .hub-intro p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+  .hub-card-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0 auto 12px;
+    max-width: 900px;
+  }
+  .hub-card {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 18px 16px;
+    min-height: 156px;
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+  }
+  .hub-card:before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .hub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.07);
+    border-color: rgba(60,52,137,0.24);
+  }
+  .hub-card .card-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .hub-card h3 {
+    font-family: 'Merriweather', serif;
+    font-size: 19px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .hub-card .role {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .hub-card p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+  .hub-card .arrow {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .hub-acth:before { background: var(--coral-mid); }
+  .hub-acth h3, .hub-acth .role, .hub-acth .arrow { color: #993C1D; }
+  .hub-beta:before { background: #185FA5; }
+  .hub-beta h3, .hub-beta .role, .hub-beta .arrow { color: #185FA5; }
+  .hub-alpha:before { background: var(--teal-mid); }
+  .hub-alpha h3, .hub-alpha .role, .hub-alpha .arrow { color: var(--teal-dark); }
+  .hub-note {
+    max-width: 780px;
+    margin: 12px auto 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--gray-light);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  @media (max-width: 620px) {
+    nav { padding: 10px 16px; flex-wrap: wrap; }
+    .fn-header { padding: 18px 20px; }
+    .fn-body { padding: 22px 20px 26px; }
+    .seq-arrow { display: none; }
+    .hub-card-row { grid-template-columns: 1fr; }
+    .site-strip { padding: 12px 18px; }
+    .site-strip-inner { align-items: flex-start; }
+  }
+
+
+  /* Compact above-the-fold resource layout */
+  html { scroll-behavior: smooth; }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 8px 24px;
+    min-height: 38px;
+  }
+  .site-strip { padding: 7px 24px; }
+  .site-strip-inner { max-width: 1080px; }
+  .site-note { font-size: 12px; line-height: 1.35; }
+  .sphere-link { padding: 5px 11px; font-size: 12px; }
+  .hero {
+    padding: 24px 28px 22px;
+  }
+  .hero-label { font-size: 10.5px; margin-bottom: 8px; letter-spacing: 0.18em; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 4px; }
+  .hero-sub { font-size: 12px; margin-bottom: 13px; }
+  .hero-summary {
+    max-width: 780px;
+    font-size: 13.5px;
+    line-height: 1.58;
+  }
+  .page-body { max-width: 1080px; padding: 0 24px 64px; }
+
+  .resource-dashboard {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 20px;
+  }
+  .resource-dashboard-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .resource-kicker {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .resource-dashboard h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    color: var(--purple-dark);
+    text-align: center;
+  }
+  .resource-dashboard p.resource-intro {
+    margin: 0 auto 14px;
+    max-width: 780px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .resource-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .resource-card {
+    display: block;
+    min-height: 96px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--gray-light);
+    padding: 13px 14px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    border-color: rgba(60,52,137,0.25);
+  }
+  .resource-card strong {
+    display: block;
+    color: var(--purple-dark);
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+  .resource-card span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .resource-card em {
+    display: inline-block;
+    margin-top: 9px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--purple-mid);
+    font-size: 12px;
+  }
+
+  .diagram-collapser {
+    margin: 20px auto 24px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 860px;
+    overflow: hidden;
+  }
+  .diagram-collapser summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 18px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    background: var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .diagram-collapser summary::-webkit-details-marker { display: none; }
+  .diagram-collapser summary:after { content: 'Show'; color: var(--gray-mid); font-size: 12px; }
+  .diagram-collapser[open] summary:after { content: 'Hide'; }
+  .diagram-collapser .diagram-section { padding: 20px 18px 22px; }
+  .diagram-section { padding: 22px 0 18px; }
+  .diagram-section h2 { font-size: 19px; margin-bottom: 4px; }
+  .diagram-section p { font-size: 12.5px; margin-bottom: 14px; }
+  .diagram-wrap { padding: 14px; max-width: 640px; }
+  .functions-intro {
+    padding: 0 0 18px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .fn-section { scroll-margin-top: 54px; margin-bottom: 24px; }
+  .fn-header { padding: 15px 22px; }
+  .fn-body { padding: 22px 24px 26px; }
+  .fn-refs { padding: 16px 24px; }
+  .back-top { padding: 8px 0 0; }
+
+  .hub-section { padding: 20px 0 12px; }
+  .hub-intro { margin-bottom: 14px; }
+  .hub-intro h2 { font-size: 21px; }
+  .hub-intro p { font-size: 13.5px; line-height: 1.45; }
+  .hub-card-row { gap: 12px; }
+  .hub-card { min-height: 132px; padding: 15px 16px 14px; }
+  .hub-card h3 { font-size: 18px; }
+  .hub-card p { font-size: 12.5px; line-height: 1.42; }
+
+  @media (max-width: 720px) {
+    nav { padding: 8px 14px; }
+    .site-strip { padding: 8px 14px; }
+    .hero { padding: 22px 18px 20px; }
+    .hero-summary { font-size: 13px; }
+    .resource-dashboard { padding: 16px 16px 18px; }
+    .resource-card-grid { grid-template-columns: 1fr; }
+    .page-body { padding-left: 16px; padding-right: 16px; }
+  }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="sphere.html#map">← Back to Sphere</a>
+  <span class="sep">·</span>
+  <span class="current">POMC Family</span>
+  <span class="sep">›</span>
+  <a href="acth-resource.html">ACTH</a>
+  <span class="sep">·</span>
+  <a href="beta-endorphin-resource.html">β-Endorphin</a>
+  <span class="sep">·</span>
+  <a href="alpha-msh-resource.html">α-MSH</a>
+</nav>
+
+<div class="site-strip">
+  <div class="site-strip-inner">
+    <div class="site-note">Part of the Metastrophe interactive teaching system: the biological resource layer behind the affective sphere.</div>
+    <a class="sphere-link" href="sphere.html#map">Back to Sphere</a>
+  </div>
+</div>
+
+<div class="hero" id="top">
+  <div class="hero-label">Prohormone precursor architecture</div>
+  <h1>Proopiomelanocortin</h1>
+  <div class="hero-sub">POMC · vertebrate precursor system · ACTH / MSH peptides / β-endorphin</div>
+  <p class="hero-summary">
+    POMC is not a single-purpose hormone. It is a cleavable precursor system: one genetic and molecular source that can be processed into distinct regulatory peptides depending on tissue, enzyme context, and physiological demand. In the Metastrophe framework, POMC is the biological grammar behind three regulatory fuels — ACTH for mobilization, β-endorphin for conservation, and α-MSH / melanocortin signaling for recalibration.
+  </p>
+</div>
+
+<div class="page-body">
+
+  <section class="hub-section" aria-labelledby="family-resources">
+    <div class="hub-intro">
+      <div class="hub-kicker">Peptide-family resource hub</div>
+      <h2 id="family-resources">POMC is the precursor architecture</h2>
+      <p>The peptides below are its major regulatory outputs in this model: ACTH for mobilization, β-endorphin for conservation, and α-MSH / melanocortin signaling for recalibration.</p>
+    </div>
+
+    <div class="hub-card-row">
+      <a class="hub-card hub-acth" href="acth-resource.html">
+        <div class="card-label">Child resource</div>
+        <h3>ACTH</h3>
+        <div class="role">Mobilization fuel</div>
+        <p>Stress economy, cortisol release, glucose availability, cardiovascular activation, and action under pressure.</p>
+        <span class="arrow">Open ACTH →</span>
+      </a>
+
+      <a class="hub-card hub-beta" href="beta-endorphin-resource.html">
+        <div class="card-label">Child resource</div>
+        <h3>β-Endorphin</h3>
+        <div class="role">Conservation fuel</div>
+        <p>Opioid economy, analgesia, endurance, protective withdrawal, shielding, and conservation under overwhelming demand.</p>
+        <span class="arrow">Open β-Endorphin →</span>
+      </a>
+
+      <a class="hub-card hub-alpha" href="alpha-msh-resource.html">
+        <div class="card-label">Expanded child resource</div>
+        <h3>α-MSH</h3>
+        <div class="role">Recalibration fuel</div>
+        <p>Melanocortin signaling across immune precision, appetite, inflammation, repair, metabolic balance, and approach.</p>
+        <span class="arrow">Open α-MSH →</span>
+      </a>
+    </div>
+
+    <p class="hub-note">This hub keeps POMC at the parent level: a cleavable precursor grammar whose outputs map onto the three regulatory fuels of the affective sphere.</p>
+  </section>
+
+  <details class="diagram-collapser">
+    <summary>Full POMC processing diagram</summary>
+    <div class="diagram-section">
+    <h2>POMC architecture at a glance</h2>
+    <p>Click any box to jump to the full explanation below.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <line x1="340" y1="98" x2="340" y2="218" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="340" y1="280" x2="340" y2="438" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="168" x2="252" y2="238" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="492" y1="168" x2="428" y2="238" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="334" x2="252" y2="268" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="492" y1="334" x2="428" y2="268" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="472" x2="252" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="492" y1="472" x2="428" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-summary')">
+          <rect x="250" y="220" width="180" height="60" rx="10"/>
+          <text font-family="'Merriweather',serif" font-weight="700" font-size="15" x="340" y="244" text-anchor="middle" dominant-baseline="central">POMC</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="340" y="264" text-anchor="middle" dominant-baseline="central">cleavable precursor grammar</text>
+        </g>
+
+        <g class="d-node d-amber" onclick="jumpTo('sec-gene')">
+          <rect x="250" y="42" width="180" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="340" y="62" text-anchor="middle" dominant-baseline="central">Gene &amp; Expression</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="340" y="82" text-anchor="middle" dominant-baseline="central">pituitary · hypothalamus · periphery</text>
+        </g>
+
+        <g class="d-node d-blue" onclick="jumpTo('sec-processing')">
+          <rect x="28" y="140" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="118" y="158" text-anchor="middle" dominant-baseline="central">Tissue Processing</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="118" y="178" text-anchor="middle" dominant-baseline="central">PC1/3 · PC2 · local context</text>
+        </g>
+
+        <g class="d-node d-teal" onclick="jumpTo('sec-outputs')">
+          <rect x="472" y="140" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="562" y="158" text-anchor="middle" dominant-baseline="central">Shared Dispatch</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="562" y="178" text-anchor="middle" dominant-baseline="central">state · demand · affordability</text>
+        </g>
+
+        <g class="d-node d-coral" onclick="jumpTo('sec-acth')">
+          <rect x="28" y="306" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="118" y="324" text-anchor="middle" dominant-baseline="central">ACTH</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="118" y="344" text-anchor="middle" dominant-baseline="central">mobilization fuel</text>
+        </g>
+
+        <g class="d-node d-center" onclick="jumpTo('sec-alpha')">
+          <rect x="472" y="306" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="562" y="324" text-anchor="middle" dominant-baseline="central">α-MSH / MSHs</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="562" y="344" text-anchor="middle" dominant-baseline="central">recalibration fuel</text>
+        </g>
+
+        <g class="d-node d-teal" onclick="jumpTo('sec-beta')">
+          <rect x="250" y="440" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="340" y="458" text-anchor="middle" dominant-baseline="central">β-Endorphin</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="340" y="478" text-anchor="middle" dominant-baseline="central">conservation fuel</text>
+        </g>
+
+        <g class="d-node d-amber" onclick="jumpTo('sec-energy')">
+          <rect x="28" y="444" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="118" y="462" text-anchor="middle" dominant-baseline="central">Energy Balance</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="118" y="482" text-anchor="middle" dominant-baseline="central">POMC neurons · MC4R</text>
+        </g>
+
+        <g class="d-node d-blue" onclick="jumpTo('sec-evolution')">
+          <rect x="472" y="444" width="180" height="58" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="562" y="462" text-anchor="middle" dominant-baseline="central">Evolution</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="562" y="482" text-anchor="middle" dominant-baseline="central">conserved precursor architecture</text>
+        </g>
+      </svg>
+    </div>
+    </div>
+  </details>
+
+  <p class="functions-intro">POMC is the parent page for the peptide-family resource. The sections below explain how one precursor can generate multiple regulatory fuels without collapsing them into one undifferentiated stress signal.</p>
+
+  <!-- SUMMARY -->
+  <div class="fn-section accent-cns" id="sec-summary">
+    <div class="fn-header">
+      <div class="fn-icon">🧬</div>
+      <div>
+        <div class="fn-title">POMC as Precursor Grammar</div>
+        <div class="fn-subtitle">One source · tissue-specific processing · multiple regulatory outputs</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>The core idea</h3>
+      <p>Proopiomelanocortin, or POMC, is a prohormone precursor. It is synthesized as a larger polypeptide and then cleaved by processing enzymes into smaller peptides with distinct biological functions. The same parent molecule can yield ACTH, melanocortin peptides such as α-MSH, β-lipotropin fragments, and β-endorphin, depending on where and how it is processed.</p>
+      <p>That is why POMC is an ideal entry point into affective regulation. It is not simply “stress hormone” biology and not simply “opioid” biology. It is a coordinated precursor architecture that distributes different regulatory products across different tissues and contexts.</p>
+      <div class="fn-highlight">In the Metastrophe model, POMC is the precursor grammar: ACTH supplies mobilization, β-endorphin supplies conservation, and α-MSH / melanocortin signaling supplies recalibration. The three outputs remain distinct, but they belong to one coordinated biological family.</div>
+      <div class="mini-grid">
+        <div class="mini-card"><strong>Mobilize</strong>ACTH and the downstream HPA / cortisol economy prepare the organism to act under pressure.</div>
+        <div class="mini-card"><strong>Conserve</strong>β-endorphin and related opioid signaling reduce pain, support endurance, and shield the organism when action is too costly.</div>
+        <div class="mini-card"><strong>Recalibrate</strong>α-MSH and the melanocortin system modulate appetite, inflammation, immune precision, repair, and update.</div>
+      </div>
+      <h3>Why precursor architecture matters</h3>
+      <p>A single precursor does not mean a single message. POMC allows the organism to generate different messages from one molecular source. Tissue-specific processing determines whether the dominant output is ACTH, α-MSH, β-endorphin, or a combination of intermediate and mature peptides.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+        <li>Bicknell AB. The tissue-specific processing of pro-opiomelanocortin. <em>Journal of Neuroendocrinology</em>. 2008;20(6):692–699. <a href="https://doi.org/10.1111/j.1365-2826.2008.01709.x" target="_blank">https://doi.org/10.1111/j.1365-2826.2008.01709.x</a></li>
+        <li>Smith AI, Funder JW. Proopiomelanocortin processing in the pituitary, central nervous system, and peripheral tissues. <em>Endocrine Reviews</em>. 1988;9(1):159–179. <a href="https://doi.org/10.1210/edrv-9-1-159" target="_blank">https://doi.org/10.1210/edrv-9-1-159</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- GENE -->
+  <div class="fn-section accent-pigment" id="sec-gene">
+    <div class="fn-header">
+      <div class="fn-icon">📍</div>
+      <div>
+        <div class="fn-title">Gene, Expression Sites, and Local Production</div>
+        <div class="fn-subtitle">Pituitary · arcuate nucleus · brainstem · skin · immune and peripheral tissues</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="garr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="255" y="24" width="170" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="46" text-anchor="middle" dominant-baseline="central" fill="#26215C">POMC gene</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="64" text-anchor="middle" dominant-baseline="central" fill="#3C3489">regulated by tissue context</text>
+          <line x1="340" y1="76" x2="340" y2="116" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#garr)"/>
+          <rect x="240" y="116" width="200" height="52" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="136" text-anchor="middle" dominant-baseline="central" fill="#412402">pre-pro-POMC</text>
+          <text font-family="sans-serif" font-size="11" x="340" y="154" text-anchor="middle" dominant-baseline="central" fill="#633806">signal peptide directs secretion pathway</text>
+          <line x1="240" y1="168" x2="120" y2="220" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#garr)"/>
+          <line x1="340" y1="168" x2="340" y2="220" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#garr)"/>
+          <line x1="440" y1="168" x2="560" y2="220" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#garr)"/>
+          <rect x="40" y="220" width="170" height="58" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="125" y="238" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Pituitary</text>
+          <text font-family="sans-serif" font-size="10" x="125" y="258" text-anchor="middle" dominant-baseline="central" fill="#712B13">endocrine stress output</text>
+          <rect x="255" y="220" width="170" height="58" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="238" text-anchor="middle" dominant-baseline="central" fill="#085041">Hypothalamus / CNS</text>
+          <text font-family="sans-serif" font-size="10" x="340" y="258" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">appetite · energy · behavior</text>
+          <rect x="470" y="220" width="170" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="555" y="238" text-anchor="middle" dominant-baseline="central" fill="#042C53">Peripheral tissues</text>
+          <text font-family="sans-serif" font-size="10" x="555" y="258" text-anchor="middle" dominant-baseline="central" fill="#185FA5">skin · immune · placenta</text>
+        </svg>
+        <p class="caption">POMC expression is distributed: the same gene can support endocrine, neural, and local tissue regulation.</p>
+      </div>
+      <h3>Not just pituitary biology</h3>
+      <p>POMC was first characterized through pituitary ACTH biology, but it is not limited to the pituitary. It is highly expressed in anterior pituitary corticotrophs and in hypothalamic POMC neurons, and it is also produced locally in peripheral tissues including skin and immune-related compartments.</p>
+      <h3>Why local production matters</h3>
+      <p>Local POMC expression means the body does not always wait for a central endocrine signal. Skin, immune, and neural tissues can generate POMC-derived signals close to the site where regulation is needed. This allows the same precursor family to operate both as long-range endocrine broadcast and as local paracrine or autocrine regulation.</p>
+      <h3>The regulatory meaning</h3>
+      <p>Because POMC is expressed in central, endocrine, and peripheral contexts, it is well positioned to coordinate organism-wide state while still permitting tissue-specific responses. The same family can participate in stress output, energy balance, pigmentation, inflammation, pain modulation, and behavior.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Bicknell AB. The tissue-specific processing of pro-opiomelanocortin. <em>Journal of Neuroendocrinology</em>. 2008;20(6):692–699. <a href="https://doi.org/10.1111/j.1365-2826.2008.01709.x" target="_blank">https://doi.org/10.1111/j.1365-2826.2008.01709.x</a></li>
+        <li>Slominski A et al. Proopiomelanocortin, the ACTH/melanocortin precursor, is secreted by human epidermal keratinocytes and melanocytes and stimulates melanogenesis. <em>FASEB Journal</em>. 1998. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2253185/" target="_blank">PMC2253185</a></li>
+        <li>Mountjoy KG. Functions for pro-opiomelanocortin-derived peptides in obesity and diabetes. <em>Biochemical Journal</em>. 2010;428(3):305–324. <a href="https://doi.org/10.1042/BJ20091957" target="_blank">https://doi.org/10.1042/BJ20091957</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- PROCESSING -->
+  <div class="fn-section accent-immune" id="sec-processing">
+    <div class="fn-header">
+      <div class="fn-icon">✂️</div>
+      <div>
+        <div class="fn-title">Cleavage and Tissue-Specific Processing</div>
+        <div class="fn-subtitle">PC1/3 · PC2 · paired basic residues · different outputs from one precursor</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="64" width="620" height="54" rx="12" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="13" x="350" y="90" text-anchor="middle" dominant-baseline="central" fill="#26215C">POMC precursor</text>
+          <text font-family="sans-serif" font-size="11" x="350" y="108" text-anchor="middle" dominant-baseline="central" fill="#3C3489">N-terminal peptide · ACTH region · β-LPH / β-endorphin region</text>
+          <line x1="235" y1="52" x2="235" y2="130" stroke="#993C1D" stroke-width="2" stroke-dasharray="5 3"/>
+          <line x1="370" y1="52" x2="370" y2="130" stroke="#993C1D" stroke-width="2" stroke-dasharray="5 3"/>
+          <line x1="500" y1="52" x2="500" y2="130" stroke="#993C1D" stroke-width="2" stroke-dasharray="5 3"/>
+          <text font-family="sans-serif" font-size="11" x="235" y="42" text-anchor="middle" fill="#993C1D">dibasic site</text>
+          <text font-family="sans-serif" font-size="11" x="370" y="42" text-anchor="middle" fill="#993C1D">dibasic site</text>
+          <text font-family="sans-serif" font-size="11" x="500" y="42" text-anchor="middle" fill="#993C1D">dibasic site</text>
+          <rect x="70" y="170" width="170" height="46" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="155" y="190" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Anterior pituitary</text>
+          <text font-family="sans-serif" font-size="10" x="155" y="207" text-anchor="middle" dominant-baseline="central" fill="#712B13">ACTH + β-LPH</text>
+          <rect x="265" y="170" width="170" height="46" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="350" y="190" text-anchor="middle" dominant-baseline="central" fill="#085041">Hypothalamus / IL</text>
+          <text font-family="sans-serif" font-size="10" x="350" y="207" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">α-MSH + β-endorphin</text>
+          <rect x="460" y="170" width="170" height="46" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+          <text font-family="sans-serif" font-weight="600" font-size="12" x="545" y="190" text-anchor="middle" dominant-baseline="central" fill="#042C53">Peripheral tissues</text>
+          <text font-family="sans-serif" font-size="10" x="545" y="207" text-anchor="middle" dominant-baseline="central" fill="#185FA5">local combinations</text>
+        </svg>
+        <p class="caption">Processing enzymes and tissue context determine which POMC-derived peptides dominate.</p>
+      </div>
+      <h3>Cleavage is specific, not random</h3>
+      <p>POMC contains cleavage sites, often paired basic amino acid residues, that are recognized by prohormone convertases. PC1/3 and PC2 are especially important. Different tissues express different processing enzymes, which is why the same precursor can yield different peptide profiles.</p>
+      <h3>Anterior pituitary versus hypothalamic processing</h3>
+      <p>In anterior pituitary corticotrophs, POMC processing is dominated by ACTH and β-lipotropin output. In hypothalamic neurons and in the intermediate lobe of species that retain it prominently, processing is more extensive: ACTH can be further processed toward α-MSH and CLIP, while β-lipotropin can be processed toward β-endorphin.</p>
+      <h3>The important consequence</h3>
+      <p>POMC is therefore not best understood as one substance with one function. It is a conditional processing architecture. The organism can preserve a shared precursor while diversifying outputs according to tissue, developmental state, and physiological demand.</p>
+      <div class="fn-highlight">This is the biological basis for calling POMC a grammar rather than a single signal: its meaning depends on how the precursor is cleaved, where it is cleaved, and which receptors are available to read the resulting peptides.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+        <li>Wardlaw SL. Hypothalamic proopiomelanocortin processing and the regulation of energy balance. <em>European Journal of Pharmacology</em>. 2011;660(1):213–219. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095770/" target="_blank">PMC3095770</a></li>
+        <li>Coll AP et al. The role of proopiomelanocortin (POMC) neurones in feeding behaviour. <em>Nutrition &amp; Metabolism</em>. 2007;4:18. <a href="https://doi.org/10.1186/1743-7075-4-18" target="_blank">https://doi.org/10.1186/1743-7075-4-18</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- OUTPUTS -->
+  <div class="fn-section accent-appetite" id="sec-outputs">
+    <div class="fn-header">
+      <div class="fn-icon">📡</div>
+      <div>
+        <div class="fn-title">Shared Dispatch: State, Demand, and Affordability</div>
+        <div class="fn-subtitle">A theoretical bridge from precursor biology to affective coordinates</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>From peptide profiles to regulatory addresses</h3>
+      <p>Biologically, POMC-derived peptides participate in stress, energy balance, appetite, pain modulation, pigmentation, immune regulation, inflammation, and behavior. The Metastrophe model reads those outputs as a coordinated regulatory dispatch: what state is the organism in, what mode of response is demanded, and does the organism have the budget to meet that demand?</p>
+      <div class="sequence">
+        <div class="seq-box"><b>Valence</b><br>Threat or opportunity: is the state organizing around danger, or around expansion, repair, exploration, and approach?</div>
+        <div class="seq-arrow">→</div>
+        <div class="seq-box"><b>Demand</b><br>Mobilize, conserve, or recalibrate: what type of regulatory work is required?</div>
+        <div class="seq-arrow">→</div>
+        <div class="seq-box"><b>Supply</b><br>Insufficient, matched, or excessive: is the relevant peptide economy able to meet that demand?</div>
+      </div>
+      <h3>Why this belongs on the POMC page</h3>
+      <p>The coordinate system is not a standard biochemical claim. It is the theoretical interpretation that links POMC biology to affective geometry. The standard biology establishes that POMC is a precursor system with multiple tissue-specific outputs. The model proposes that those outputs can be organized functionally as regulatory fuels.</p>
+      <div class="fn-highlight">The page therefore separates established biology from the model claim. Established: POMC is tissue-specifically processed into active peptides. Model claim: those peptides define a coordinate grammar for affective regulation.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+        <li>Bicknell AB. The tissue-specific processing of pro-opiomelanocortin. <em>Journal of Neuroendocrinology</em>. 2008;20(6):692–699. <a href="https://doi.org/10.1111/j.1365-2826.2008.01709.x" target="_blank">https://doi.org/10.1111/j.1365-2826.2008.01709.x</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ACTH -->
+  <div class="fn-section accent-inflam" id="sec-acth">
+    <div class="fn-header">
+      <div class="fn-icon">⚡</div>
+      <div>
+        <div class="fn-title">ACTH: Mobilization Fuel</div>
+        <div class="fn-subtitle">HPA activation · cortisol release · glucose availability · action under pressure</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <div class="section-diagram">
+        <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="actharr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+          <rect x="250" y="20" width="180" height="46" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/><text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="43" text-anchor="middle" dominant-baseline="central" fill="#042C53">CRH / stress signal</text>
+          <line x1="340" y1="66" x2="340" y2="112" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#actharr)"/>
+          <rect x="245" y="112" width="190" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/><text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="132" text-anchor="middle" dominant-baseline="central" fill="#26215C">Pituitary POMC</text><text font-family="sans-serif" font-size="11" x="340" y="150" text-anchor="middle" dominant-baseline="central" fill="#3C3489">processed to ACTH</text>
+          <line x1="340" y1="164" x2="340" y2="210" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#actharr)"/>
+          <rect x="245" y="210" width="190" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/><text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="230" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">ACTH → adrenal cortex</text><text font-family="sans-serif" font-size="11" x="340" y="248" text-anchor="middle" dominant-baseline="central" fill="#712B13">cortisol output</text>
+          <line x1="340" y1="262" x2="130" y2="305" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#actharr)"/>
+          <line x1="340" y1="262" x2="340" y2="305" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#actharr)"/>
+          <line x1="340" y1="262" x2="550" y2="305" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#actharr)"/>
+          <rect x="50" y="305" width="160" height="42" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/><text font-family="sans-serif" font-size="12" font-weight="600" x="130" y="326" text-anchor="middle" dominant-baseline="central" fill="#412402">glucose availability</text>
+          <rect x="260" y="305" width="160" height="42" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/><text font-family="sans-serif" font-size="12" font-weight="600" x="340" y="326" text-anchor="middle" dominant-baseline="central" fill="#412402">vascular readiness</text>
+          <rect x="470" y="305" width="160" height="42" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/><text font-family="sans-serif" font-size="12" font-weight="600" x="550" y="326" text-anchor="middle" dominant-baseline="central" fill="#412402">action under pressure</text>
+        </svg>
+        <p class="caption">ACTH links POMC processing to the HPA axis and organismic mobilization.</p>
+      </div>
+      <h3>ACTH as mobilization output</h3>
+      <p>ACTH is the POMC-derived peptide most directly associated with endocrine stress mobilization. In the HPA axis, hypothalamic CRH stimulates anterior pituitary corticotrophs, which process POMC and release ACTH. ACTH then acts on the adrenal cortex to stimulate glucocorticoid production, especially cortisol in humans.</p>
+      <h3>Why it is a fuel, not just a signal</h3>
+      <p>Mobilization requires spendable capacity: glucose availability, cardiovascular readiness, immune and metabolic reprioritization, and the ability to act under pressure. In this model, ACTH marks the mobilizing economy that makes direct action possible when the organism has enough supply to meet the demand.</p>
+      <h3>Mismatch in threat</h3>
+      <p>When mobilization is demanded but ACTH / downstream stress economy is insufficient, the organism may still activate but cannot effectively neutralize threat. That mismatch is what the sphere labels anxiety. When mobilization has enough supply, the system can move toward the threat; that is the architecture behind anger and attack.</p>
+    </div>
+    <div class="fn-refs"><h4>References</h4><ol>
+      <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+      <li>Bicknell AB. The tissue-specific processing of pro-opiomelanocortin. <em>Journal of Neuroendocrinology</em>. 2008;20(6):692–699. <a href="https://doi.org/10.1111/j.1365-2826.2008.01709.x" target="_blank">https://doi.org/10.1111/j.1365-2826.2008.01709.x</a></li>
+      <li>Hadley ME, Haskell-Luevano C. The proopiomelanocortin system. <em>Annals of the New York Academy of Sciences</em>. 1999;885:1–21.</li>
+    </ol></div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- BETA -->
+  <div class="fn-section accent-cardio" id="sec-beta">
+    <div class="fn-header">
+      <div class="fn-icon">🛡️</div>
+      <div>
+        <div class="fn-title">β-Endorphin: Conservation Fuel</div>
+        <div class="fn-subtitle">Opioid tone · analgesia · endurance · shielding under excessive demand</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>From β-lipotropin to β-endorphin</h3>
+      <p>β-endorphin is produced from the C-terminal region of POMC through processing of β-lipotropin. Its biological identity is opioid: it binds opioid receptors and participates in analgesia, reward, stress adaptation, and endurance.</p>
+      <h3>Conservation as active protection</h3>
+      <p>Conservation is not merely absence of action. It is an active regulatory mode that lowers expenditure and protects the organism when action is impossible, too costly, or dangerous. β-endorphin is therefore treated here as a conservation fuel: it supports pain reduction, withdrawal, endurance, and protective distancing from intolerable demand.</p>
+      <h3>Mismatch in threat</h3>
+      <p>When conservation is demanded and β-endorphin supply is sufficient, shutdown can function as a shield: the organism reduces pain and survives what cannot be changed. When conservation is demanded but opioid supply is insufficient, the system shuts down without adequate protection. That mismatch is the architecture behind depression in the threat face of the sphere.</p>
+      <div class="fn-highlight">In the sphere, dissociation is not simply “too much shutdown.” It is conservation with enough protective fuel to create distance. Depression is conservation without enough protective fuel: lowered action, but continued exposure.</div>
+    </div>
+    <div class="fn-refs"><h4>References</h4><ol>
+      <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+      <li>Smith AI, Funder JW. Proopiomelanocortin processing in the pituitary, central nervous system, and peripheral tissues. <em>Endocrine Reviews</em>. 1988;9(1):159–179. <a href="https://doi.org/10.1210/edrv-9-1-159" target="_blank">https://doi.org/10.1210/edrv-9-1-159</a></li>
+      <li>Akil H et al. Endogenous opioids: biology and function. <em>Annual Review of Neuroscience</em>. 1984;7:223–255.</li>
+    </ol></div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ALPHA -->
+  <div class="fn-section accent-cns" id="sec-alpha">
+    <div class="fn-header">
+      <div class="fn-icon">🔄</div>
+      <div>
+        <div class="fn-title">α-MSH and Melanocortins: Recalibration Fuel</div>
+        <div class="fn-subtitle">Immune precision · appetite · inflammation · repair · update rather than merely react</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>ACTH can become α-MSH in the right processing context</h3>
+      <p>α-MSH is derived from the ACTH region of POMC through further processing. This matters conceptually: recalibration does not replace mobilization from the outside. It is latent within the same precursor architecture, becoming available when processing context allows the mobilizing signal to be refined into melanocortin regulation.</p>
+      <h3>Why α-MSH receives the expanded resource page</h3>
+      <p>ACTH and β-endorphin are familiar enough to many clinicians as stress and opioid systems. α-MSH is less familiar, yet it is the crucial hinge of this model. It is involved in pigmentation, appetite suppression, energy balance, immune modulation, anti-inflammatory signaling, thermoregulation, CNS behavior, sexual desire, neuroprotection, cardiovascular protection, and skin repair.</p>
+      <h3>The model claim</h3>
+      <p>In the Metastrophe framework, α-MSH is the recalibrative fuel: the peptide economy that helps the organism update state, restore balance, modulate inflammation precisely, and reopen approach after chronic demand. It is not merely a libido signal or pigmentation hormone; it belongs to the broader melanocortin system of repair, appetite, inflammation, and behavioral approach.</p>
+      <div class="fn-highlight">For the full α-MSH map, use the expanded α-MSH page. This POMC parent page only establishes why α-MSH belongs in the same precursor grammar as ACTH and β-endorphin.</div>
+    </div>
+    <div class="fn-refs"><h4>References</h4><ol>
+      <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+      <li>Böhm M et al. α-MSH and related tripeptides: biochemistry, antiinflammatory and protective effects in vitro and in vivo. <em>Endocrine Reviews</em>. 2008;29(5):581–602. <a href="https://doi.org/10.1210/er.2007-0027" target="_blank">https://doi.org/10.1210/er.2007-0027</a></li>
+      <li>Herraiz C et al. The α-melanocyte-stimulating hormone/melanocortin-1 receptor interaction: A driver of pleiotropic effects beyond pigmentation. <em>Pigment Cell &amp; Melanoma Research</em>. 2021;34(3):479–496. <a href="https://doi.org/10.1111/pcmr.12980" target="_blank">https://doi.org/10.1111/pcmr.12980</a></li>
+    </ol></div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ENERGY -->
+  <div class="fn-section accent-pigment" id="sec-energy">
+    <div class="fn-header">
+      <div class="fn-icon">⚖️</div>
+      <div>
+        <div class="fn-title">POMC Neurons and Energy Balance</div>
+        <div class="fn-subtitle">Arcuate nucleus · leptin · AgRP opposition · MC4R satiety pathway</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>POMC as a central energy-balance system</h3>
+      <p>Hypothalamic POMC neurons, especially in the arcuate nucleus, are central to energy balance. They respond to signals such as leptin and insulin, release melanocortin peptides, and project to downstream sites where MC3R and MC4R signaling influences appetite, satiety, and energy expenditure.</p>
+      <h3>The AgRP opposition</h3>
+      <p>POMC neurons are opposed by AgRP / NPY neurons. AgRP acts as an endogenous antagonist or inverse agonist at melanocortin receptors, especially MC4R. This creates a regulatory opposition between satiety / expenditure signaling and hunger / energy acquisition signaling.</p>
+      <h3>Clinical relevance</h3>
+      <p>Human POMC or melanocortin-pathway defects can produce severe early-onset obesity, impaired satiety, adrenal insufficiency, and pigmentation changes, depending on where the pathway is disrupted. This makes the POMC system an unusually clear example of a molecular architecture linking metabolism, stress response, and behavior.</p>
+    </div>
+    <div class="fn-refs"><h4>References</h4><ol>
+      <li>Coll AP et al. The role of proopiomelanocortin (POMC) neurones in feeding behaviour. <em>Nutrition &amp; Metabolism</em>. 2007;4:18. <a href="https://doi.org/10.1186/1743-7075-4-18" target="_blank">https://doi.org/10.1186/1743-7075-4-18</a></li>
+      <li>Wardlaw SL. Hypothalamic proopiomelanocortin processing and the regulation of energy balance. <em>European Journal of Pharmacology</em>. 2011;660(1):213–219. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3095770/" target="_blank">PMC3095770</a></li>
+      <li>Krude H et al. Severe early-onset obesity, adrenal insufficiency and red hair pigmentation caused by POMC mutations in humans. <em>Nature Genetics</em>. 1998;19:155–157. <a href="https://doi.org/10.1038/509" target="_blank">https://doi.org/10.1038/509</a></li>
+      <li>Farooqi IS et al. Clinical spectrum of obesity and mutations in the melanocortin 4 receptor gene. <em>New England Journal of Medicine</em>. 2003;348(12):1085–1095.</li>
+    </ol></div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- EVOLUTION -->
+  <div class="fn-section accent-immune" id="sec-evolution">
+    <div class="fn-header">
+      <div class="fn-icon">🌀</div>
+      <div>
+        <div class="fn-title">Evolutionary Conservation and Vertebrate Coordination</div>
+        <div class="fn-subtitle">Why this precursor architecture matters for a molecules-to-mind model</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>Peptides are ancient; POMC coordinates them</h3>
+      <p>The important claim is not that POMC invented peptide signaling. Peptides are older than vertebrates. The stronger claim is that POMC consolidated multiple peptide outputs into a vertebrate precursor architecture that could coordinate stress, melanocortin, and opioid functions across a larger, more distributed body.</p>
+      <h3>Conservation with local variation</h3>
+      <p>POMC and POMC-derived systems are conserved across vertebrate evolution, though the exact peptides, processing patterns, and tissue distributions vary across lineages. That combination — conserved architecture with local variation — is precisely what makes POMC interesting as a regulatory grammar.</p>
+      <h3>The Metastrophe reading</h3>
+      <p>As bodies become more internally differentiated, regulation cannot remain purely local. POMC offers a way to coordinate mobilization, conservation, and recalibration from one precursor family while preserving distinct budgets for each demand. This is why the model treats POMC as the molecular foundation of the affective sphere.</p>
+      <div class="fn-highlight">POMC is not the whole organism, the whole brain, or the whole theory. It is the conserved molecular architecture that makes the three-fuel coordinate system biologically plausible.</div>
+    </div>
+    <div class="fn-refs"><h4>References</h4><ol>
+      <li>Dores RM, Baron AJ. Evolution of POMC: origin, phylogeny, posttranslational processing, and the melanocortins. <em>Annals of the New York Academy of Sciences</em>. 2011;1220:34–48.</li>
+      <li>Cawley NX et al. New roles of prohormone convertases and carboxypeptidase E in the processing of POMC-derived peptides. <em>Peptides</em>. 2016;82:1–12.</li>
+      <li>Millington GWM. POMC: The Physiological Power of Hormone Processing. <em>Physiological Reviews</em>. 2018;98(4):2381–2430. <a href="https://doi.org/10.1152/physrev.00024.2017" target="_blank">https://doi.org/10.1152/physrev.00024.2017</a></li>
+      <li>Takumi K et al. Molecular evolution of proopiomelanocortin in vertebrates. <em>General and Comparative Endocrinology</em>. 2019;287:113344. <a href="https://doi.org/10.1016/j.ygcen.2019.113344" target="_blank">https://doi.org/10.1016/j.ygcen.2019.113344</a></li>
+    </ol></div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+</div><!-- end page-body -->
+
+<footer>
+  Part of the Metastrophe interactive teaching system &nbsp;·&nbsp; <a href="sphere.html#map">Back to Sphere</a><br>
+  POMC Family resource hub &nbsp;·&nbsp; POMC &nbsp;·&nbsp; <a href="acth-resource.html">ACTH</a> &nbsp;·&nbsp; <a href="beta-endorphin-resource.html">β-Endorphin</a> &nbsp;·&nbsp; <a href="alpha-msh-resource.html">α-MSH</a><br>
+  Content based on peer-reviewed literature and the Metastrophe regulatory model. Selected references appear within each section.
+</footer>
+
+<script>
+  function jumpTo(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
+
+</body>
+</html>

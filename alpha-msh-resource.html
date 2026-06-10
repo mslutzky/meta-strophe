@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>α-MSH — Alpha-Melanocyte Stimulating Hormone</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-light: #EEEDFE;
+    --purple-mid:   #7F77DD;
+    --purple-dark:  #3C3489;
+    --purple-text:  #26215C;
+    --teal-light:   #E1F5EE;
+    --teal-mid:     #1D9E75;
+    --teal-dark:    #0F6E56;
+    --coral-light:  #FAECE7;
+    --coral-mid:    #D85A30;
+    --amber-light:  #FAEEDA;
+    --amber-mid:    #BA7517;
+    --gray-light:   #F1EFE8;
+    --gray-mid:     #888780;
+    --text-primary: #1a1917;
+    --text-secondary: #5a5854;
+    --bg: #fdfcfa;
+    --border: rgba(0,0,0,0.1);
+    --section-max: 820px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--purple-dark);
+    padding: 12px 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  nav a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  nav a:hover { color: #fff; }
+  nav .sep { opacity: 0.4; }
+  nav .current { color: #fff; font-weight: 600; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, #534AB7 100%);
+    color: #fff;
+    padding: 56px 32px 48px;
+    text-align: center;
+  }
+  .hero-label {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 15px; opacity: 0.75; margin-bottom: 28px; }
+  .hero-summary {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.85;
+    opacity: 0.92;
+    font-style: italic;
+    font-family: 'Merriweather', serif;
+    font-weight: 300;
+  }
+
+  /* PAGE WRAPPER */
+  .page-body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* DIAGRAM SECTION */
+  .diagram-section {
+    padding: 48px 0 32px;
+    text-align: center;
+  }
+  .diagram-section h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--purple-dark);
+  }
+  .diagram-section p { font-size: 14px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  .diagram-wrap {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: inline-block;
+    width: 100%;
+    max-width: 700px;
+  }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+
+  /* SVG node styles */
+  .d-node { cursor: pointer; transition: opacity 0.15s; }
+  .d-node:hover { opacity: 0.78; }
+  .d-center rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 1.5; }
+  .d-center text { fill: #26215C; }
+  .d-teal rect  { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 1.5; }
+  .d-teal text  { fill: #085041; }
+  .d-amber rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 1.5; }
+  .d-amber text { fill: #412402; }
+  .d-blue rect  { fill: #E6F1FB; stroke: #185FA5; stroke-width: 1.5; }
+  .d-blue text  { fill: #042C53; }
+  .d-coral rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 1.5; }
+  .d-coral text { fill: #4A1B0C; }
+
+  /* FUNCTION SECTIONS */
+  .functions-intro {
+    padding: 16px 0 40px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .fn-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    scroll-margin-top: 24px;
+  }
+  .fn-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fn-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .fn-title {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 18px; color: var(--text-primary);
+  }
+  .fn-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .fn-body { padding: 28px 28px 32px; }
+  .fn-body h3 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700; font-size: 15px;
+    color: var(--purple-dark);
+    margin: 24px 0 8px;
+  }
+  .fn-body h3:first-child { margin-top: 0; }
+  .fn-body p {
+    font-size: 15px; line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    max-width: var(--section-max);
+  }
+  .fn-body p:last-child { margin-bottom: 0; }
+
+  .fn-highlight {
+    background: var(--gray-light);
+    border-left: 3px solid var(--purple-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px; margin: 16px 0;
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: var(--section-max);
+  }
+
+  /* REFERENCES */
+  .fn-refs {
+    background: var(--gray-light);
+    border-top: 1px solid var(--border);
+    padding: 20px 28px;
+  }
+  .fn-refs h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .fn-refs ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+  .fn-refs li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .fn-refs li a {
+    color: var(--purple-mid);
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .fn-refs li a:hover { text-decoration: underline; }
+
+  /* Accent colors per section */
+  .accent-pigment  .fn-icon { background: var(--amber-light); }
+  .accent-appetite .fn-icon { background: var(--teal-light);  }
+  .accent-immune   .fn-icon { background: #E6F1FB; }
+  .accent-inflam   .fn-icon { background: var(--coral-light); }
+  .accent-thermo   .fn-icon { background: var(--coral-light); }
+  .accent-cns      .fn-icon { background: var(--purple-light); }
+  .accent-cardio   .fn-icon { background: var(--teal-light);  }
+  .accent-skin     .fn-icon { background: var(--amber-light); }
+
+  .accent-pigment  .fn-header { border-left: 4px solid var(--amber-mid);  }
+  .accent-appetite .fn-header { border-left: 4px solid var(--teal-mid);   }
+  .accent-immune   .fn-header { border-left: 4px solid #185FA5;           }
+  .accent-inflam   .fn-header { border-left: 4px solid var(--coral-mid);  }
+  .accent-thermo   .fn-header { border-left: 4px solid var(--coral-mid);  }
+  .accent-cns      .fn-header { border-left: 4px solid var(--purple-mid); }
+  .accent-cardio   .fn-header { border-left: 4px solid var(--teal-mid);   }
+  .accent-skin     .fn-header { border-left: 4px solid var(--amber-mid);  }
+
+  .back-top {
+    display: block; text-align: center;
+    padding: 10px 0 0;
+    font-size: 13px;
+    color: var(--purple-mid);
+    text-decoration: none; cursor: pointer;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .back-top:hover { color: var(--purple-dark); background: var(--gray-light); }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 13px;
+    color: var(--gray-mid);
+    border-top: 1px solid var(--border);
+  }
+
+  /* inline section diagrams */
+  .section-diagram{margin:24px 0;background:var(--gray-light);border-radius:10px;padding:16px;overflow-x:auto;}
+  .section-diagram svg{display:block;width:100%;max-width:680px;height:auto;margin:0 auto;}
+  .section-diagram .caption{font-size:12px;color:var(--gray-mid);text-align:center;margin-top:8px;font-style:italic;}
+
+
+  /* Compact above-the-fold resource layout */
+  html { scroll-behavior: smooth; }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 8px 24px;
+    min-height: 38px;
+  }
+  .site-strip { padding: 7px 24px; }
+  .site-strip-inner { max-width: 1080px; }
+  .site-note { font-size: 12px; line-height: 1.35; }
+  .sphere-link { padding: 5px 11px; font-size: 12px; }
+  .hero {
+    padding: 24px 28px 22px;
+  }
+  .hero-label { font-size: 10.5px; margin-bottom: 8px; letter-spacing: 0.18em; }
+  .hero h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 4px; }
+  .hero-sub { font-size: 12px; margin-bottom: 13px; }
+  .hero-summary {
+    max-width: 780px;
+    font-size: 13.5px;
+    line-height: 1.58;
+  }
+  .page-body { max-width: 1080px; padding: 0 24px 64px; }
+
+  .resource-dashboard {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 20px;
+  }
+  .resource-dashboard-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .resource-kicker {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .resource-dashboard h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+    color: var(--purple-dark);
+    text-align: center;
+  }
+  .resource-dashboard p.resource-intro {
+    margin: 0 auto 14px;
+    max-width: 780px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .resource-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .resource-card {
+    display: block;
+    min-height: 96px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--gray-light);
+    padding: 13px 14px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    border-color: rgba(60,52,137,0.25);
+  }
+  .resource-card strong {
+    display: block;
+    color: var(--purple-dark);
+    font-family: 'Merriweather', serif;
+    font-size: 15px;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+  .resource-card span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .resource-card em {
+    display: inline-block;
+    margin-top: 9px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--purple-mid);
+    font-size: 12px;
+  }
+
+  .diagram-collapser {
+    margin: 20px auto 24px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 860px;
+    overflow: hidden;
+  }
+  .diagram-collapser summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 18px;
+    font-weight: 600;
+    color: var(--purple-dark);
+    background: var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .diagram-collapser summary::-webkit-details-marker { display: none; }
+  .diagram-collapser summary:after { content: 'Show'; color: var(--gray-mid); font-size: 12px; }
+  .diagram-collapser[open] summary:after { content: 'Hide'; }
+  .diagram-collapser .diagram-section { padding: 20px 18px 22px; }
+  .diagram-section { padding: 22px 0 18px; }
+  .diagram-section h2 { font-size: 19px; margin-bottom: 4px; }
+  .diagram-section p { font-size: 12.5px; margin-bottom: 14px; }
+  .diagram-wrap { padding: 14px; max-width: 640px; }
+  .functions-intro {
+    padding: 0 0 18px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .fn-section { scroll-margin-top: 54px; margin-bottom: 24px; }
+  .fn-header { padding: 15px 22px; }
+  .fn-body { padding: 22px 24px 26px; }
+  .fn-refs { padding: 16px 24px; }
+  .back-top { padding: 8px 0 0; }
+
+  .hub-section { padding: 20px 0 12px; }
+  .hub-intro { margin-bottom: 14px; }
+  .hub-intro h2 { font-size: 21px; }
+  .hub-intro p { font-size: 13.5px; line-height: 1.45; }
+  .hub-card-row { gap: 12px; }
+  .hub-card { min-height: 132px; padding: 15px 16px 14px; }
+  .hub-card h3 { font-size: 18px; }
+  .hub-card p { font-size: 12.5px; line-height: 1.42; }
+
+  @media (max-width: 720px) {
+    nav { padding: 8px 14px; }
+    .site-strip { padding: 8px 14px; }
+    .hero { padding: 22px 18px 20px; }
+    .hero-summary { font-size: 13px; }
+    .resource-dashboard { padding: 16px 16px 18px; }
+    .resource-card-grid { grid-template-columns: 1fr; }
+    .page-body { padding-left: 16px; padding-right: 16px; }
+  }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="sphere.html#map">← Back to Sphere</a>
+  <span class="sep">›</span>
+  <a href="pomc-resource.html">POMC Family</a>
+  <span class="sep">·</span>
+  <a href="acth-resource.html">ACTH</a>
+  <span class="sep">·</span>
+  <a href="beta-endorphin-resource.html">β-Endorphin</a>
+  <span class="sep">·</span>
+  <span class="current">α-MSH</span>
+</nav>
+
+<div class="site-strip">
+  <div class="site-strip-inner">
+    <div class="site-note">Part of the Metastrophe interactive teaching system: the biological resource layer behind the affective sphere.</div>
+    <a class="sphere-link" href="sphere.html#map">Back to Sphere</a>
+  </div>
+</div>
+
+<div class="hero" id="top">
+  <div class="hero-label">Pro-opiomelanocortin (POMC) derived peptide</div>
+  <h1>α-Melanocyte Stimulating Hormone</h1>
+  <div class="hero-sub">13-amino acid neuropeptide · ACTH<sub>1–13</sub> · Acts via MC1R–MC5R</div>
+  <p class="hero-summary">
+    α-MSH is a remarkably versatile 13-amino acid neuropeptide cleaved from POMC. Far more than a pigmentation hormone,
+    it regulates skin color and UV defense, suppresses appetite and controls body weight, modulates both innate and adaptive immunity,
+    dampens inflammation across multiple organ systems, acts as the brain's own antipyretic to limit fever, drives
+    memory, sexual behavior, and neuroprotection in the CNS, protects the heart from hypertrophy and ischemic injury,
+    and maintains skin homeostasis across melanocytes, keratinocytes, fibroblasts, and endothelial cells.
+  </p>
+</div>
+
+<section class="resource-dashboard" aria-label="Clickable research options">
+  <div class="resource-dashboard-inner">
+    <div class="resource-kicker">Clickable research map</div>
+    <h2>α-MSH functions at a glance</h2>
+    <p class="resource-intro">Click a function below to jump directly to its explanation and references. The larger diagram is available below without taking over the first screen.</p>
+    <div class="resource-card-grid">
+      <a class="resource-card" href="#sec-pigment"><strong>Pigmentation &amp; Melanogenesis</strong><span>The canonical function — regulating skin and hair color via MC1R</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-appetite"><strong>Appetite Suppression &amp; Energy Homeostasis</strong><span>Central melanocortin system · POMC neurons · MC3R and MC4R</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-immune"><strong>Immune Modulation</strong><span>Innate and adaptive immunity · Tregs · macrophage polarization</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-inflam"><strong>Anti-inflammatory Effects</strong><span>NF-κB · p38 MAPK · cytokine suppression · descending neural pathways</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-thermo"><strong>Thermoregulation &amp; Fever Control</strong><span>Endogenous antipyretic · septal region · acts upstream of PGE2</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-cns"><strong>CNS &amp; Behavioral Roles</strong><span>Memory · sexual behavior · dopamine · neuroprotection · neuroinflammation</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-cardio"><strong>Cardiovascular Effects &amp; Cardioprotection</strong><span>MC5R · anti-hypertrophic · ischemia-reperfusion · HO-1 pathway</span><em>Open section ↓</em></a>
+      <a class="resource-card" href="#sec-skin"><strong>Skin Homeostasis</strong><span>UV defense · DNA repair · keratinocytes · fibroblasts · wound healing</span><em>Open section ↓</em></a>
+    </div>
+  </div>
+</section>
+
+<div class="page-body">
+
+  <details class="diagram-collapser">
+    <summary>Full regulatory diagram</summary>
+    <div class="diagram-section">
+    <h2>Regulatory roles at a glance</h2>
+    <p>Click any box to jump to the full explanation below.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 640 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- connector lines (drawn first, behind nodes) -->
+        <line x1="320" y1="92"  x2="320" y2="218" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="320" y1="276" x2="320" y2="438" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="168" x2="228" y2="244" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="322" x2="228" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="452" y1="168" x2="412" y2="244" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="452" y1="322" x2="412" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="188" y1="466" x2="228" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+        <line x1="452" y1="466" x2="412" y2="278" stroke="#bbb" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+        <!-- CENTER -->
+        <g class="d-node d-center" onclick="jumpTo('sec-summary')">
+          <rect x="230" y="220" width="180" height="56" rx="10"/>
+          <text font-family="'Merriweather',serif" font-weight="700" font-size="14" x="320" y="244" text-anchor="middle" dominant-baseline="central">α-MSH</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="263" text-anchor="middle" dominant-baseline="central">13-aa POMC peptide</text>
+        </g>
+
+        <!-- TOP: Pigmentation -->
+        <g class="d-node d-amber" onclick="jumpTo('sec-pigment')">
+          <rect x="230" y="40" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="58" text-anchor="middle" dominant-baseline="central">Pigmentation</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="76" text-anchor="middle" dominant-baseline="central">Melanin via MC1R → cAMP → MITF</text>
+        </g>
+
+        <!-- BOTTOM: Appetite -->
+        <g class="d-node d-teal" onclick="jumpTo('sec-appetite')">
+          <rect x="230" y="440" width="180" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="320" y="458" text-anchor="middle" dominant-baseline="central">Appetite &amp; Energy</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="320" y="476" text-anchor="middle" dominant-baseline="central">Suppresses hunger via MC3/4R</text>
+        </g>
+
+        <!-- LEFT TOP: Immune -->
+        <g class="d-node d-blue" onclick="jumpTo('sec-immune')">
+          <rect x="20" y="140" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="158" text-anchor="middle" dominant-baseline="central">Immune modulation</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="177" text-anchor="middle" dominant-baseline="central">↓ NF-κB · ↑ IL-10 · Tregs</text>
+        </g>
+
+        <!-- LEFT BOTTOM: Anti-inflam -->
+        <g class="d-node d-coral" onclick="jumpTo('sec-inflam')">
+          <rect x="20" y="296" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="314" text-anchor="middle" dominant-baseline="central">Anti-inflammatory</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="333" text-anchor="middle" dominant-baseline="central">Inhibits TNF-α · IL-1 · p38</text>
+        </g>
+
+        <!-- RIGHT TOP: Thermoregulation -->
+        <g class="d-node d-coral" onclick="jumpTo('sec-thermo')">
+          <rect x="452" y="140" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="158" text-anchor="middle" dominant-baseline="central">Thermoregulation</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="177" text-anchor="middle" dominant-baseline="central">Antipyretic · limits fever</text>
+        </g>
+
+        <!-- RIGHT BOTTOM: CNS -->
+        <g class="d-node d-center" onclick="jumpTo('sec-cns')">
+          <rect x="452" y="296" width="168" height="56" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="314" text-anchor="middle" dominant-baseline="central">CNS &amp; Behavior</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="333" text-anchor="middle" dominant-baseline="central">Memory · sexual · neuro</text>
+        </g>
+
+        <!-- BOTTOM LEFT: Cardio -->
+        <g class="d-node d-teal" onclick="jumpTo('sec-cardio')">
+          <rect x="20" y="440" width="168" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="104" y="458" text-anchor="middle" dominant-baseline="central">Cardioprotection</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="104" y="476" text-anchor="middle" dominant-baseline="central">Anti-hypertrophic · ischemia</text>
+        </g>
+
+        <!-- BOTTOM RIGHT: Skin -->
+        <g class="d-node d-amber" onclick="jumpTo('sec-skin')">
+          <rect x="452" y="440" width="168" height="52" rx="8"/>
+          <text font-family="'Source Sans 3',sans-serif" font-weight="600" font-size="13" x="536" y="458" text-anchor="middle" dominant-baseline="central">Skin homeostasis</text>
+          <text font-family="'Source Sans 3',sans-serif" font-size="11" x="536" y="476" text-anchor="middle" dominant-baseline="central">Keratinocytes · fibroblasts</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+    </div>
+  </details>
+
+  <p class="functions-intro">Each section below corresponds to a function in the diagram above. References are listed at the bottom of each section.</p>
+
+  <!-- ═══ SECTION 1: PIGMENTATION ═══ -->
+  <div class="fn-section accent-pigment" id="sec-pigment">
+    <div class="fn-header">
+      <div class="fn-icon">🎨</div>
+      <div>
+        <div class="fn-title">Pigmentation &amp; Melanogenesis</div>
+        <div class="fn-subtitle">The canonical function — regulating skin and hair color via MC1R</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 640" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="215" y="20" width="250" height="52" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#412402">UV radiation</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#633806">Keratinocytes release alpha-MSH</text>
+        <rect x="510" y="100" width="150" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="585" y="120" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">ASIP</text>
+        <text font-family="sans-serif" font-size="11" x="585" y="138" text-anchor="middle" dominant-baseline="central" fill="#712B13">Natural MC1R antagonist</text>
+        <line x1="340" y1="72" x2="340" y2="130" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <rect x="215" y="130" width="250" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="150" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH binds MC1R</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="168" text-anchor="middle" dominant-baseline="central" fill="#3C3489">G-protein coupled receptor on melanocyte</text>
+        <line x1="510" y1="126" x2="467" y2="152" stroke="#D85A30" stroke-width="1.2"/>
+        <line x1="467" y1="146" x2="467" y2="158" stroke="#D85A30" stroke-width="2"/>
+        <line x1="340" y1="182" x2="340" y2="240" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <rect x="215" y="240" width="250" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="260" text-anchor="middle" dominant-baseline="central" fill="#26215C">cAMP rise via PKA / CREB</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="278" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Adenylyl cyclase activation</text>
+        <line x1="340" y1="292" x2="340" y2="350" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <rect x="215" y="350" width="250" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="370" text-anchor="middle" dominant-baseline="central" fill="#26215C">MITF upregulation</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="388" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Master melanocyte transcription factor</text>
+        <line x1="340" y1="402" x2="340" y2="460" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <rect x="170" y="460" width="340" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="480" text-anchor="middle" dominant-baseline="central" fill="#085041">Tyrosinase / TRP1 / TRP2 enzymes</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="498" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Melanogenic enzyme upregulation</text>
+        <line x1="255" y1="512" x2="180" y2="560" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <line x1="425" y1="512" x2="500" y2="560" stroke="#D85A30" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ap)"/>
+        <rect x="60" y="560" width="220" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="170" y="580" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Eumelanin (brown/black)</text>
+        <text font-family="sans-serif" font-size="11" x="170" y="598" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">UV shield and ROS scavenger</text>
+        <rect x="400" y="560" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="510" y="580" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Pheomelanin (red/yellow)</text>
+        <text font-family="sans-serif" font-size="11" x="510" y="598" text-anchor="middle" dominant-baseline="central" fill="#712B13">When ASIP dominant</text>
+      </svg>
+      <p class="caption">Pigmentation signaling cascade: UV trigger to melanin production via cAMP / MITF / tyrosinase</p>
+    </div>
+
+    <h3>The trigger: UV radiation and keratinocyte signaling</h3>
+      <p>As an acute physiological response to UV radiation, keratinocytes produce and secrete α-MSH. The skin therefore does not wait passively for pituitary α-MSH — it generates its own local supply in response to damage, creating a paracrine loop that activates neighboring melanocytes immediately.</p>
+
+      <h3>MC1R binding and the cAMP cascade</h3>
+      <p>α-MSH binds the melanocortin-1 receptor (MC1R), a G protein-coupled receptor on melanocytes. After binding, the Gαs subunit dissociates from MC1R and stimulates adenylyl cyclase, generating cAMP. cAMP activates protein kinase A (PKA), which phosphorylates CREB (cAMP Response Element Binding Protein). CREB then binds CRE-containing gene promoters to drive transcription.</p>
+
+      <h3>MITF — the master transcription factor</h3>
+      <p>Phosphorylated CREB drives the transcription of MITF (microphthalmia-associated transcription factor), the master regulator of melanocyte identity. MITF upregulates the three key melanogenic enzymes — tyrosinase (TYR), TYRP1, and TYRP2/DCT — which catalyze the sequential conversion of tyrosine into melanin. MITF also controls melanosome distribution by regulating RAB27A, the GTPase that anchors melanosomes to myosin motors for dendritic transport toward keratinocytes.</p>
+
+      <h3>The eumelanin–pheomelanin switch</h3>
+      <p>α-MSH promotes a switch from red/yellow pheomelanin to brown/black eumelanin. Both types share the same pathway up to dopaquinone. In eumelanogenesis, TYR, TRP1, and TRP2 continue the reaction to form brown/black pigment. In pheomelanogenesis, dopaquinone reacts with sulfhydryl groups to form cysteinyl-DOPA and then benzothiazine polymers — the red/yellow pigment. The ratio depends on the balance between α-MSH (favors eumelanin) and agouti signaling protein ASIP (favors pheomelanin) competing at MC1R.</p>
+
+      <div class="fn-highlight">Eumelanin is an effective UV filter and free-radical scavenger, while pheomelanin can act as an endogenous photosensitizer — making the α-MSH-driven switch a genuine photoprotective mechanism, not merely a cosmetic one.</div>
+
+      <h3>ASIP — the natural antagonist</h3>
+      <p>Agouti signaling protein (ASIP) is the endogenous inverse agonist of MC1R. When ASIP occupies MC1R, cAMP does not rise, MITF is not upregulated, and the melanocyte defaults to pheomelanin. This molecular competition underlies coat color patterning in mammals and contributes to the red hair/fair skin phenotype in humans carrying loss-of-function MC1R variants.</p>
+
+      <h3>Melanosome transfer to keratinocytes</h3>
+      <p>Fully melanized melanosomes are transported along melanocyte dendrites and transferred to surrounding keratinocytes by cytocrine secretion. The symbiotic relationship between a melanocyte and its associated pool of keratinocytes is called the epidermal melanin unit (EMU). Melanin is then distributed within the epidermis, providing tanning and UV protection to a far larger cell population than the melanocytes alone.</p>
+
+      <h3>MC1R constitutive activity and ciliary signaling</h3>
+      <p>MC1R has measurable constitutive (ligand-independent) activity, enhanced by α-MSH binding. Recent work has shown that UV and α-MSH trigger cilium formation in melanocytes. MC1R enters the primary cilium upon stimulation, generating sustained cAMP signaling and activating Sox9 as a transcriptional cofactor for MITF — a newly discovered mechanism that may explain why some MC1R variants impair pigmentation even when they retain basic cAMP signaling capacity.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Herraiz C et al. (2021). The α-melanocyte-stimulating hormone/melanocortin-1 receptor interaction: A driver of pleiotropic effects beyond pigmentation. <em>Pigment Cell &amp; Melanoma Research</em>, 34(3), 479–496. <a href="https://doi.org/10.1111/pcmr.12980" target="_blank">https://doi.org/10.1111/pcmr.12980</a></li>
+        <li>Elassiuty YE et al. (2023). cAMP, CREB, SOX9, and MITF signaling pathway for melanogenesis. <em>Molecules</em>, 28, 4551. <a href="https://doi.org/10.3390/molecules28124551" target="_blank">https://doi.org/10.3390/molecules28124551</a></li>
+        <li>Nasti TH &amp; Timares L (2015). MC1R, eumelanin and pheomelanin: Their role in determining the susceptibility to skin cancer. <em>Photochemistry and Photobiology</em>, 91(1), 188–200. <a href="https://doi.org/10.1111/php.12335" target="_blank">https://doi.org/10.1111/php.12335</a></li>
+        <li>Lo JA &amp; Fisher DE (2014). The melanoma revolution: From UV carcinogenesis to a new era in therapeutics. <em>Science</em>, 346(6212), 945–949.</li>
+        <li>D'Orazio J et al. (2006). Topical drug rescue strategy and skin protection based on the role of Mc1r in UV-induced tanning. <em>Nature</em>, 443, 340–344.</li>
+        <li>Melanocortin 1 receptor mediates melanin production by interacting with the BBSome in primary cilia. <em>PNAS</em>, 2024. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11637432/" target="_blank">PMC11637432</a></li>
+        <li>Elassiuty YE et al. Elucidation of Melanogenesis Cascade for Identifying Pathophysiology and Therapeutic Approach of Pigmentary Disorders and Melanoma. <em>Int J Mol Sci</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7503925/" target="_blank">PMC7503925</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 2: APPETITE ═══ -->
+  <div class="fn-section accent-appetite" id="sec-appetite">
+    <div class="fn-header">
+      <div class="fn-icon">⚖️</div>
+      <div>
+        <div class="fn-title">Appetite Suppression &amp; Energy Homeostasis</div>
+        <div class="fn-subtitle">Central melanocortin system · POMC neurons · MC3R and MC4R</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 540" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="aa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="40" y="30" width="130" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="105" y="52" text-anchor="middle" dominant-baseline="central" fill="#085041">Leptin</text>
+        <rect x="195" y="30" width="130" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="260" y="52" text-anchor="middle" dominant-baseline="central" fill="#085041">Serotonin (5-HT)</text>
+        <rect x="510" y="30" width="130" height="44" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="575" y="52" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Ghrelin</text>
+        <rect x="30" y="120" width="620" height="190" rx="16" fill="none" stroke="#aaa" stroke-width="0.5" stroke-dasharray="6 4"/>
+        <text font-family="sans-serif" font-size="11" x="50" y="140" fill="#aaa" dominant-baseline="central">Arcuate nucleus (ARC)</text>
+        <rect x="80" y="155" width="220" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="190" y="175" text-anchor="middle" dominant-baseline="central" fill="#26215C">POMC neuron</text>
+        <text font-family="sans-serif" font-size="11" x="190" y="193" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Releases alpha-MSH</text>
+        <rect x="380" y="155" width="220" height="56" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="490" y="175" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">AgRP / NPY neuron</text>
+        <text font-family="sans-serif" font-size="11" x="490" y="193" text-anchor="middle" dominant-baseline="central" fill="#712B13">Promotes feeding</text>
+        <line x1="105" y1="74" x2="150" y2="153" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <line x1="260" y1="74" x2="190" y2="153" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <line x1="575" y1="74" x2="490" y2="153" stroke="#D85A30" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <line x1="380" y1="183" x2="302" y2="183" stroke="#D85A30" stroke-width="1.2"/>
+        <line x1="302" y1="177" x2="302" y2="189" stroke="#D85A30" stroke-width="2"/>
+        <text font-family="sans-serif" font-size="10" x="341" y="173" text-anchor="middle" fill="#993C1D">AgRP blocks</text>
+        <line x1="190" y1="211" x2="190" y2="350" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <text font-family="sans-serif" font-size="10" x="205" y="285" fill="#534AB7">alpha-MSH</text>
+        <line x1="490" y1="211" x2="490" y2="350" stroke="#D85A30" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <rect x="80" y="350" width="260" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="210" y="370" text-anchor="middle" dominant-baseline="central" fill="#26215C">MC4R (PVN)</text>
+        <text font-family="sans-serif" font-size="11" x="210" y="388" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Paraventricular nucleus</text>
+        <line x1="210" y1="406" x2="140" y2="455" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <line x1="210" y1="406" x2="360" y2="455" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aa)"/>
+        <rect x="40" y="455" width="195" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="137" y="475" text-anchor="middle" dominant-baseline="central" fill="#085041">Reduced food intake</text>
+        <text font-family="sans-serif" font-size="10" x="137" y="493" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Satiety signaling</text>
+        <rect x="250" y="455" width="195" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="347" y="475" text-anchor="middle" dominant-baseline="central" fill="#085041">Energy expenditure</text>
+        <text font-family="sans-serif" font-size="10" x="347" y="493" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Sympathetic activation / TRH</text>
+        <rect x="480" y="350" width="168" height="56" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="564" y="370" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">NTS (brainstem)</text>
+        <text font-family="sans-serif" font-size="10" x="564" y="388" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Meal size reduction</text>
+      </svg>
+      <p class="caption">Hypothalamic melanocortin appetite circuit: POMC vs AgRP/NPY competition at MC4R</p>
+    </div>
+
+    <h3>The hypothalamic melanocortin circuit</h3>
+      <p>The arcuate nucleus of the hypothalamus contains two opposing neuronal populations. POMC neurons release α-MSH and inhibit feeding; AgRP/NPY neurons promote feeding and are the natural antagonists. These two populations project to many of the same downstream targets — including the paraventricular nucleus (PVN) — where α-MSH and AgRP compete for MC4R binding to determine food intake and energy expenditure.</p>
+
+      <h3>What activates POMC neurons</h3>
+      <p>Leptin — released by adipose tissue in proportion to fat stores — binds receptors on POMC neurons in the arcuate nucleus, stimulating α-MSH release. Serotonin (5-HT) also activates POMC neurons. In contrast, ghrelin (the hunger hormone from the stomach) activates AgRP/NPY neurons, which suppress POMC neuron activity through NPY and GABA, thereby reducing α-MSH output and increasing hunger.</p>
+
+      <h3>MC4R and satiety signaling</h3>
+      <p>When α-MSH binds MC4R in the paraventricular nucleus, it triggers anorexigenic signals that create the perception of satiety. MC4R activation also increases energy expenditure by stimulating thyrotropin-releasing hormone (TRH) and activating the sympathetic nervous system. Loss-of-function MC4R mutations — the most common cause of monogenic obesity in humans — prevent children from experiencing satiety, causing severe hyperphagia and early-onset obesity.</p>
+
+      <h3>AgRP — α-MSH's direct opponent</h3>
+      <p>AgRP is an endogenous inverse agonist at MC3R and MC4R. It directly blocks α-MSH binding and is itself upregulated by fasting and ghrelin. The ratio of α-MSH to AgRP tone at hypothalamic MC4R neurons is essentially the molecular tug-of-war that determines whether an organism feels hungry or full at any given moment.</p>
+
+      <h3>A second site of action: the brainstem NTS</h3>
+      <p>The nucleus of the solitary tract (NTS) in the brainstem also expresses POMC neurons that can be activated by leptin, cholecystokinin (CCK), and other satiety signals arriving from the gut via the vagus nerve. α-MSH released in the NTS acutely reduces meal size and food intake. Overexpression of POMC in the NTS produces sustained anorexia — distinct from the transient effects seen with hypothalamic overexpression — because the NTS lacks compensatory AgRP expression.</p>
+
+      <h3>Reward and hedonic eating</h3>
+      <p>α-MSH also acts within the ventral tegmental area (VTA) via MC3R to modulate dopamine release in the nucleus accumbens, influencing the reward value and hedonic appeal of food. This connects α-MSH to non-homeostatic (pleasure-driven) eating, not just hunger-driven intake.</p>
+
+      <div class="fn-highlight">α-MSH levels are lower in some obese individuals. Setmelanotide (Imcivree), an MC4R agonist, has received FDA approval for treating obesity caused by POMC, PCSK1, or LEPR gene deficiencies.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Wu Q et al. (2023). Alpha-Melanocyte-Stimulating Hormone-Mediated Appetite Regulation in the Central Nervous System. <em>Neuroendocrinology</em>, 113(9), 885–904. <a href="https://doi.org/10.1159/000530804" target="_blank">https://doi.org/10.1159/000530804</a></li>
+        <li>Cone RD (2006). Studies on the physiological functions of the melanocortin system. <em>Endocrine Reviews</em>, 27(7), 736–749.</li>
+        <li>Farooqi IS et al. (2003). Clinical spectrum of obesity and mutations in the melanocortin 4 receptor gene. <em>NEJM</em>, 348(12), 1085–1095.</li>
+        <li>MC4R Variants Modulate α-MSH and Setmelanotide Induced Cellular Signaling. <em>J Clin Endocrinol Metab</em>, 2024, 109(10):2452. <a href="https://doi.org/10.1210/clinem/dgae210" target="_blank">https://doi.org/10.1210/clinem/dgae210</a></li>
+        <li>West EA et al. (2019). Alpha-MSH increases the activity of melanocortin-3 receptor-expressing neurons in the ventral tegmental area. <em>Journal of Physiology</em>, 597(13), 3315–3332. <a href="https://doi.org/10.1113/JP277193" target="_blank">https://doi.org/10.1113/JP277193</a></li>
+        <li>Guan HZ et al. (2017). α-MSH Influences the Excitability of Feeding-Related Neurons in the Hypothalamus and Dorsal Vagal Complex. <em>Neural Plasticity</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5727559/" target="_blank">PMC5727559</a></li>
+        <li>Aponte Y, Atasoy D, Sternson SM (2011). AGRP neurons are sufficient to orchestrate feeding behavior rapidly and without training. <em>Nature Neuroscience</em>, 14(3), 351–355.</li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 3: IMMUNE MODULATION ═══ -->
+  <div class="fn-section accent-immune" id="sec-immune">
+    <div class="fn-header">
+      <div class="fn-icon">🛡️</div>
+      <div>
+        <div class="fn-title">Immune Modulation</div>
+        <div class="fn-subtitle">Innate and adaptive immunity · Tregs · macrophage polarization</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="aim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="255" y="20" width="170" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Binds MC1R / MC3R</text>
+        <line x1="280" y1="72" x2="145" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="340" y1="72" x2="340" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="400" y1="72" x2="535" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <rect x="40" y="140" width="210" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="145" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Macrophages / DCs</text>
+        <text font-family="sans-serif" font-size="11" x="145" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">M1 to M2 polarization</text>
+        <rect x="255" y="140" width="170" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Effector T cells</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Converted to Tregs</text>
+        <rect x="430" y="140" width="210" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="535" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Neutrophils</text>
+        <text font-family="sans-serif" font-size="11" x="535" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Migration inhibited</text>
+        <line x1="145" y1="196" x2="145" y2="258" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="340" y1="196" x2="340" y2="258" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="535" y1="196" x2="535" y2="258" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <rect x="40" y="258" width="210" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="145" y="278" text-anchor="middle" dominant-baseline="central" fill="#085041">Down: TNF-a, IL-1, IL-6</text>
+        <text font-family="sans-serif" font-size="10" x="145" y="296" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Up: IL-10 / NF-kB blocked</text>
+        <rect x="255" y="258" width="170" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="278" text-anchor="middle" dominant-baseline="central" fill="#085041">Immune tolerance</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="296" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">CTLA4+ / IL-10 T cells</text>
+        <rect x="430" y="258" width="210" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="535" y="278" text-anchor="middle" dominant-baseline="central" fill="#085041">Down: chemotaxis</text>
+        <text font-family="sans-serif" font-size="10" x="535" y="296" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Reduced tissue infiltration</text>
+        <line x1="145" y1="310" x2="255" y2="360" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="340" y1="310" x2="340" y2="360" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <line x1="535" y1="310" x2="425" y2="360" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#aim)"/>
+        <rect x="170" y="360" width="340" height="32" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="376" text-anchor="middle" dominant-baseline="central" fill="#26215C">Immune homeostasis restored</text>
+      </svg>
+      <p class="caption">alpha-MSH acts simultaneously on macrophages, T cells, and neutrophils to suppress inflammation and promote tolerance</p>
+    </div>
+
+    <h3>Target cells</h3>
+      <p>The immunomodulating capacity of α-MSH is primarily driven by its effects on MC1R-expressing monocytes, macrophages, and dendritic cells (DCs). α-MSH down-regulates production of pro-inflammatory cytokines — including IL-1, IL-6, TNF-α, IL-2, IFN-γ, IL-4, and IL-13 — as well as costimulatory molecules (CD86, CD40, ICAM-1) on antigen-presenting DCs. Simultaneously, it upregulates IL-10, a key immunosuppressive cytokine.</p>
+
+      <h3>Macrophage polarization: M1 → M2</h3>
+      <p>α-MSH promotes the alternative (M2) activation of macrophages by inducing IL-10 and TGF-β production. M2 macrophages are anti-inflammatory and tissue-repairing, whereas M1 macrophages are pro-inflammatory. This polarization shift helps resolve rather than amplify immune responses.</p>
+
+      <h3>T cell regulation and immune tolerance</h3>
+      <p>α-MSH suppresses the activation of effector T cells and actively induces regulatory T cells (Tregs). This has been studied in detail in the ocular immune privilege system, where constitutively present α-MSH in the aqueous humor continuously suppresses T cell activation. The melanocortin pathway can convert a systemic effector T cell response into a regulatory one specific to local autoantigens — a process relevant to autoimmune disease management.</p>
+
+      <h3>A self-perpetuating immunosuppressive loop</h3>
+      <p>α-MSH induces MC1R expression and POMC transcription in monocytes, establishing an autocrine loop: α-MSH promotes more α-MSH production in immune cells, sustaining immunosuppression. Serum levels of α-MSH also increase during the acute phase of inflammation, suggesting it rises as a natural counter-regulatory signal.</p>
+
+      <h3>Tolerance induction</h3>
+      <p>In vivo, systemic and topical application of α-MSH (or its active C-terminal tripeptide KPV) inhibits both sensitization and elicitation phases of contact hypersensitivity reactions, and induces antigen-specific tolerance mediated by CTLA4+ and IL-10-producing T lymphocytes.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Taylor AW &amp; Lee DJ (2010). The Alpha-Melanocyte Stimulating Hormone Induces Conversion of Effector T Cells into Treg Cells. <em>J Neuroimmunol</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3175390/" target="_blank">PMC3175390</a></li>
+        <li>Luger TA et al. (2003). New insights into the functions of alpha-MSH and related peptides in the immune system. <em>Ann NY Acad Sci</em>, 994, 133–140. PMID: 12851308.</li>
+        <li>Taylor AW (2013). α-MSH Is a Post-Caspase Suppressor of Apoptosis in RAW 264.7 Macrophages. <em>PLoS One</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3757010/" target="_blank">PMC3757010</a></li>
+        <li>Bhardwaj RS et al. (2006). NDP-MSH Inhibits TLR2- and TLR4-Induced Microglial Activation. <em>PLoS One</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4928783/" target="_blank">PMC4928783</a></li>
+        <li>Grabbe S et al. (2001). Alpha-MSH related peptides: a new class of anti-inflammatory and immunomodulating drugs. <em>Exp Dermatol</em>, 10(2), 70–83.</li>
+        <li>Increased Expression of TLR4 and In Vitro Attenuation of Th2 Inflammatory Response by Alpha-MSH in Allergic Conjunctivitis. <em>Front Immunol</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7672642/" target="_blank">PMC7672642</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 4: ANTI-INFLAMMATORY ═══ -->
+  <div class="fn-section accent-inflam" id="sec-inflam">
+    <div class="fn-header">
+      <div class="fn-icon">🔥</div>
+      <div>
+        <div class="fn-title">Anti-inflammatory Effects</div>
+        <div class="fn-subtitle">NF-κB · p38 MAPK · cytokine suppression · descending neural pathways</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="255" y="20" width="170" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH binds MC1R/MC3R</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Macrophages, DCs, neutrophils</text>
+        <line x1="340" y1="72" x2="340" y2="130" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ai)"/>
+        <rect x="215" y="130" width="250" height="52" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="150" text-anchor="middle" dominant-baseline="central" fill="#085041">cAMP accumulation</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="168" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Via adenylyl cyclase / PKA / CREB</text>
+        <line x1="280" y1="182" x2="170" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ai)"/>
+        <line x1="400" y1="182" x2="510" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ai)"/>
+        <rect x="60" y="250" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="170" y="270" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">NF-kB inhibition</text>
+        <text font-family="sans-serif" font-size="11" x="170" y="288" text-anchor="middle" dominant-baseline="central" fill="#712B13">Blocks nuclear translocation</text>
+        <rect x="400" y="250" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="510" y="270" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">p38 MAPK suppression</text>
+        <text font-family="sans-serif" font-size="11" x="510" y="288" text-anchor="middle" dominant-baseline="central" fill="#712B13">Reduces stress kinase activity</text>
+        <line x1="170" y1="302" x2="170" y2="370" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ai)"/>
+        <rect x="40" y="370" width="260" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="170" y="390" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Down: TNF-a, IL-1, IL-6, NO</text>
+        <text font-family="sans-serif" font-size="10" x="170" y="408" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Pro-inflammatory mediators suppressed</text>
+        <line x1="510" y1="302" x2="510" y2="370" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ai)"/>
+        <rect x="390" y="370" width="250" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="515" y="390" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Down: adhesion molecules</text>
+        <text font-family="sans-serif" font-size="10" x="515" y="408" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">CD86, CD40, ICAM-1 reduced</text>
+        <line x1="340" y1="182" x2="340" y2="450" stroke="#888" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#ai)" opacity="0.5"/>
+        <rect x="215" y="450" width="250" height="52" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="470" text-anchor="middle" dominant-baseline="central" fill="#085041">Up: IL-10</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="488" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Anti-inflammatory cytokine upregulated</text>
+      </svg>
+      <p class="caption">alpha-MSH anti-inflammatory pathway: dual NF-kB/p38 blockade and simultaneous IL-10 upregulation</p>
+    </div>
+
+    <h3>Receptor binding and the cAMP mechanism</h3>
+      <p>α-MSH binds MC1R and MC3R on immune and stromal cells. This activates adenylyl cyclase via Gαs, raising intracellular cAMP, which activates PKA and phosphorylates CREB — upregulating anti-inflammatory gene expression. cAMP accumulation is central to most immunomodulatory effects of α-MSH.</p>
+
+      <h3>NF-κB suppression — the master switch</h3>
+      <p>The most important molecular mechanism is suppression of NF-κB activation. NF-κB is the master transcription factor for pro-inflammatory gene expression. α-MSH blocks nuclear translocation of NF-κB in macrophages, dendritic cells, neutrophils, keratinocytes, and fibroblasts — across different inflammatory triggers including LPS, IL-1β, and TNF-α.</p>
+
+      <h3>p38 MAPK suppression</h3>
+      <p>α-MSH also suppresses p38 MAPK phosphorylation, a key stress kinase involved in cytokine production, cell adhesion, and neutrophil survival. Together with NF-κB inhibition, this provides a two-pronged block on the intracellular signaling that drives acute inflammation.</p>
+
+      <h3>Cytokine and mediator suppression</h3>
+      <p>α-MSH suppresses production of TNF-α, IL-6, and IL-1, and inhibits chemokines that guide macrophage and neutrophil migration to inflammatory sites. It also inhibits nitric oxide (NO) synthesis by endotoxin-stimulated macrophages and neutrophils, and reduces prostaglandin E synthesis in fibroblasts. Meanwhile, IL-10 is upregulated — shifting the cytokine balance toward resolution.</p>
+
+      <h3>Neutrophil chemotaxis inhibition</h3>
+      <p>α-MSH directly inhibits neutrophil migration toward chemoattractants such as FMLP and IL-8. This inhibition is mediated through cAMP accumulation in neutrophils and represents a key mechanism by which α-MSH limits influx of damaging immune cells to inflamed tissues.</p>
+
+      <h3>Central neurogenic anti-inflammatory pathway</h3>
+      <p>α-MSH acting within the brain can inhibit peripheral inflammation through descending neurogenic pathways dependent on peripheral β2-adrenergic receptors. The brain can therefore modulate tissue inflammation systemically — not just through circulating hormones — making α-MSH mechanistically distinct from conventional anti-inflammatory drugs.</p>
+
+      <div class="fn-highlight">α-MSH has been shown to be anti-inflammatory in animal models of fever, contact dermatitis, cutaneous vasculitis, inflammatory bowel disease, ocular inflammation, brain inflammation, arthritis, and fibrosis.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Bohm M et al. (2008). α-MSH and Related Tripeptides: Biochemistry, Antiinflammatory and Protective Effects in Vitro and in Vivo. <em>Endocrine Reviews</em>, 29(5), 581–602. <a href="https://doi.org/10.1210/er.2007-0027" target="_blank">https://doi.org/10.1210/er.2007-0027</a></li>
+        <li>Luger TA et al. (2003). Terminal Signal: Anti-Inflammatory Effects of α-MSH Related Peptides Beyond the Pharmacophore. <em>Ann NY Acad Sci</em>.</li>
+        <li>Lipton JM &amp; Catania A (1997). Anti-inflammatory actions of the neuroimmunomodulator alpha-MSH. <em>Immunology Today</em>, 18(3), 140–145.</li>
+        <li>Central neurogenic anti-inflammatory action of alpha-MSH: modulation of peripheral inflammation induced by cytokines. <em>Neuroimmunomodulation</em>. PMID: 8127402.</li>
+        <li>Central administration of alpha-MSH inhibits inflammation in the skin. <em>Science</em>, 1991.</li>
+        <li>Kim SH et al. (2024). Interruption of p38MAPK-MSK1-CREB-MITF-M pathway to prevent hyperpigmentation. <em>Int J Biol Sci</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10929196/" target="_blank">PMC10929196</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 5: THERMOREGULATION ═══ -->
+  <div class="fn-section accent-thermo" id="sec-thermo">
+    <div class="fn-header">
+      <div class="fn-icon">🌡️</div>
+      <div>
+        <div class="fn-title">Thermoregulation &amp; Fever Control</div>
+        <div class="fn-subtitle">Endogenous antipyretic · septal region · acts upstream of PGE2</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 580" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="at" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <text font-family="sans-serif" font-size="12" x="150" y="14" text-anchor="middle" fill="#993C1D" font-weight="600">Fever cascade</text>
+        <text font-family="sans-serif" font-size="12" x="530" y="14" text-anchor="middle" fill="#0F6E56" font-weight="600">alpha-MSH brake</text>
+        <rect x="40" y="30" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="50" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Pathogen / LPS</text>
+        <text font-family="sans-serif" font-size="11" x="150" y="68" text-anchor="middle" dominant-baseline="central" fill="#712B13">Endotoxin triggers immune cells</text>
+        <line x1="150" y1="82" x2="150" y2="140" stroke="#D85A30" stroke-width="1" marker-end="url(#at)"/>
+        <rect x="40" y="140" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="160" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Pyrogenic cytokines</text>
+        <text font-family="sans-serif" font-size="11" x="150" y="178" text-anchor="middle" dominant-baseline="central" fill="#712B13">IL-1, TNF-alpha, IL-6</text>
+        <line x1="150" y1="192" x2="150" y2="250" stroke="#D85A30" stroke-width="1" marker-end="url(#at)"/>
+        <rect x="40" y="250" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="270" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">PGE2 synthesis</text>
+        <text font-family="sans-serif" font-size="11" x="150" y="288" text-anchor="middle" dominant-baseline="central" fill="#712B13">At OVLT / blood-brain border</text>
+        <line x1="150" y1="302" x2="150" y2="360" stroke="#D85A30" stroke-width="1" marker-end="url(#at)"/>
+        <rect x="40" y="360" width="220" height="52" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="380" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Preoptic area (POA)</text>
+        <text font-family="sans-serif" font-size="11" x="150" y="398" text-anchor="middle" dominant-baseline="central" fill="#712B13">Set-point raised - FEVER</text>
+        <line x1="150" y1="412" x2="150" y2="470" stroke="#D85A30" stroke-width="1" marker-end="url(#at)"/>
+        <rect x="40" y="470" width="220" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="150" y="490" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Fever response</text>
+        <text font-family="sans-serif" font-size="11" x="150" y="508" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Shivering, vasoconstriction, high T</text>
+        <rect x="420" y="30" width="220" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="50" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH (arcuate/septum)</text>
+        <text font-family="sans-serif" font-size="11" x="530" y="68" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Rises during fever as brake</text>
+        <line x1="530" y1="82" x2="530" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#at)"/>
+        <rect x="420" y="140" width="220" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="160" text-anchor="middle" dominant-baseline="central" fill="#085041">Cytokine suppression</text>
+        <text font-family="sans-serif" font-size="11" x="530" y="178" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Down: IL-1, TNF-alpha via NF-kB</text>
+        <line x1="530" y1="192" x2="530" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#at)"/>
+        <rect x="420" y="250" width="220" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="270" text-anchor="middle" dominant-baseline="central" fill="#085041">PGE2 suppression</text>
+        <text font-family="sans-serif" font-size="11" x="530" y="288" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Inhibits prostaglandin synthesis</text>
+        <line x1="530" y1="302" x2="530" y2="360" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#at)"/>
+        <rect x="420" y="360" width="220" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="380" text-anchor="middle" dominant-baseline="central" fill="#085041">Septal region action</text>
+        <text font-family="sans-serif" font-size="11" x="530" y="398" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Limits fever amplitude</text>
+        <line x1="530" y1="412" x2="530" y2="470" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#at)"/>
+        <rect x="420" y="470" width="220" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="530" y="490" text-anchor="middle" dominant-baseline="central" fill="#085041">Fever limitation</text>
+        <text font-family="sans-serif" font-size="11" x="530" y="508" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Prevents runaway hyperthermia</text>
+        <line x1="420" y1="165" x2="262" y2="165" stroke="#888" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#at)"/>
+        <line x1="262" y1="159" x2="262" y2="171" stroke="#888" stroke-width="2"/>
+        <line x1="420" y1="275" x2="262" y2="275" stroke="#888" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#at)"/>
+        <line x1="262" y1="269" x2="262" y2="281" stroke="#888" stroke-width="2"/>
+        <line x1="420" y1="385" x2="262" y2="385" stroke="#888" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#at)"/>
+        <line x1="262" y1="379" x2="262" y2="391" stroke="#888" stroke-width="2"/>
+      </svg>
+      <p class="caption">alpha-MSH acts upstream of PGE2 as an endogenous brake on the fever cascade</p>
+    </div>
+
+    <h3>The fever cascade α-MSH opposes</h3>
+      <p>Fever follows a well-defined cascade: invading pathogens release endotoxin → macrophages produce pyrogenic cytokines (IL-1β, TNF-α, IL-6) → these cytokines reach the brain's blood-brain border where they trigger prostaglandin E2 (PGE2) synthesis → PGE2 penetrates the blood-brain barrier and raises the preoptic area (POA) temperature set-point → the body shivers and vasoconstricts to reach that higher set-point.</p>
+
+      <h3>α-MSH rises during fever as a natural brake</h3>
+      <p>The concentration of α-MSH in the septal region of the brain increases during fever. This rise is a physiological response to the febrile stimulus — the brain deploying its own antipyretic in proportion to the inflammatory challenge. α-MSH is synthesized largely within arcuate nucleus neurons, with projections to the septum and limbic areas positioned to modulate the fever response.</p>
+
+      <h3>Immunoneutralization proof</h3>
+      <p>When antiserum against α-MSH was injected into the third cerebral ventricle of rabbits, fever induced by IL-1 was significantly prolonged and the temperature rise was greater. Neutralizing endogenous α-MSH made fever worse — direct evidence that α-MSH is a physiologically active antipyretic. Critically, the antiserum did not alter normal (afebrile) body temperature, confirming selectivity for the febrile state.</p>
+
+      <h3>Mechanism: acting upstream of PGE2</h3>
+      <p>α-MSH attenuates both the rise in body temperature and the rise in plasma PGE2 levels induced by LPS, endogenous pyrogen, TNF-α, and IL-1β. When PGE2 was injected directly into the brain ventricle — bypassing the cytokine cascade — α-MSH had no effect on the temperature rise. This proves α-MSH acts upstream of PGE2, suppressing cytokine-driven PGE2 synthesis rather than blocking PGE2's direct action on hypothalamic thermosensitive neurons.</p>
+
+      <h3>Selective antipyresis without disturbing normal temperature</h3>
+      <p>α-MSH reduces fever at doses that do not affect normal (afebrile) body temperature — distinguishing it from drugs that can cause hypothermia. It lowers the threshold for cold thermogenesis during fever, telling the body's thermostat to tolerate a lower temperature again, without pulling the set-point below baseline.</p>
+
+      <h3>Sleep and fever interaction</h3>
+      <p>α-MSH also attenuates IL-1-induced excess non-REM sleep that accompanies fever. The thermoregulatory and sleep-regulatory consequences of fever are co-regulated by the melanocortin system — α-MSH opposes both the temperature elevation and the behavioral changes of the sickness response simultaneously.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Shih ST et al. (1986). Central administration of alpha-MSH antiserum augments fever in the rabbit. <em>Am J Physiol</em>, 250(5), R803–R806. PMID: 3486600.</li>
+        <li>Deeter LB et al. (1989). Antipyretic doses of α-MSH do not alter afebrile body temperature in the cold. <em>Peptides</em>.</li>
+        <li>Brito HO et al. (1993). Alpha-melanocyte-stimulating hormone suppresses fever and increases in plasma levels of prostaglandin E2 in the rabbit. <em>J Physiol</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1176172/" target="_blank">PMC1176172</a></li>
+        <li>Deeter LB et al. (1990). Depletion of brain alpha-MSH alters prostaglandin and interleukin fever in rats. <em>Brain Res Bull</em>. PMID: 2175244.</li>
+        <li>Opp M et al. (1988). Effects of alpha-MSH on sleep, behavior, and brain temperature: interactions with IL 1. <em>Am J Physiol</em>, 255(6), R914–R923.</li>
+        <li>Murphy MT et al. (1983). Hypothermic and antipyretic effects of centrally administered ACTH and alpha-melanotropin. <em>Brain Res</em>. PMID: 6270634.</li>
+        <li>Brosda J et al. (2023). Microbial and Host Metabolites at the Backstage of Fever. <em>Int J Mol Sci</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10056708/" target="_blank">PMC10056708</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 6: CNS & BEHAVIOR ═══ -->
+  <div class="fn-section accent-cns" id="sec-cns">
+    <div class="fn-header">
+      <div class="fn-icon">🧠</div>
+      <div>
+        <div class="fn-title">CNS &amp; Behavioral Roles</div>
+        <div class="fn-subtitle">Memory · sexual behavior · dopamine · neuroprotection · neuroinflammation</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      <h3>Receptor distribution in the brain</h3>
+      <p>MC4R — the primary CNS melanocortin receptor — is expressed broadly across the cortex, thalamus, hypothalamus, amygdala, brainstem, and spinal cord. MC3R has more restricted expression in the hypothalamus, thalamus, VTA, raphe nucleus, and hippocampus.</p>
+
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 600" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="acns" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="220" y="20" width="240" height="54" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH in the CNS</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Via MC3R and MC4R</text>
+        <line x1="280" y1="74" x2="120" y2="148" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <line x1="340" y1="74" x2="340" y2="148" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <line x1="400" y1="74" x2="560" y2="148" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="30" y="148" width="180" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="120" y="168" text-anchor="middle" dominant-baseline="central" fill="#085041">Hypothalamus</text>
+        <text font-family="sans-serif" font-size="10" x="120" y="186" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">PVN / ARC / DMH</text>
+        <rect x="250" y="148" width="180" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="168" text-anchor="middle" dominant-baseline="central" fill="#085041">VTA / Nucleus accumbens</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="186" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Reward circuit</text>
+        <rect x="470" y="148" width="180" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="560" y="168" text-anchor="middle" dominant-baseline="central" fill="#085041">Hippocampus / cortex</text>
+        <text font-family="sans-serif" font-size="10" x="560" y="186" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Memory / cognition</text>
+        <line x1="120" y1="202" x2="120" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="30" y="268" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="120" y="288" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Sexual behavior</text>
+        <text font-family="sans-serif" font-size="10" x="120" y="306" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Erection / arousal via MC4R</text>
+        <line x1="120" y1="320" x2="120" y2="386" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="30" y="386" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="120" y="406" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Thermoregulation</text>
+        <text font-family="sans-serif" font-size="10" x="120" y="424" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Antipyretic / fever control</text>
+        <line x1="120" y1="438" x2="120" y2="504" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="30" y="504" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="120" y="524" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Grooming / motivation</text>
+        <text font-family="sans-serif" font-size="10" x="120" y="542" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Stretching / yawning</text>
+        <line x1="340" y1="202" x2="340" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="250" y="268" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="288" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Dopamine modulation</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="306" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">DA release in NAc via MC3R</text>
+        <line x1="340" y1="320" x2="340" y2="386" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="250" y="386" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="406" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Stress and anxiety</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="424" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">HPA axis / social behavior</text>
+        <line x1="340" y1="438" x2="340" y2="504" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="250" y="504" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="524" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Pain perception</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="542" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Analgesic / nociception</text>
+        <line x1="560" y1="202" x2="560" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="470" y="268" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="560" y="288" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Memory and learning</text>
+        <text font-family="sans-serif" font-size="10" x="560" y="306" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">BDNF / neurite outgrowth</text>
+        <line x1="560" y1="320" x2="560" y2="386" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="470" y="386" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="560" y="406" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Neuroprotection</text>
+        <text font-family="sans-serif" font-size="10" x="560" y="424" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">TBI / ischemia / AD</text>
+        <line x1="560" y1="438" x2="560" y2="504" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#acns)"/>
+        <rect x="470" y="504" width="180" height="52" rx="8" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="560" y="524" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Neuroinflammation</text>
+        <text font-family="sans-serif" font-size="10" x="560" y="542" text-anchor="middle" dominant-baseline="central" fill="#5F5E5A">Microglia / astrocyte control</text>
+      </svg>
+      <p class="caption">alpha-MSH CNS roles organized by brain region and behavioral output</p>
+    </div>
+
+    <h3>Memory and learning</h3>
+      <p>α-MSH enhances memory and learning through multiple mechanisms: upregulation of CREB phosphorylation, induction of brain-derived neurotrophic factor (BDNF), promotion of neurogenesis, increased viability of hippocampal pyramidal cells, and stimulation of neurite outgrowth. In Alzheimer's disease mouse models, synthetic α-MSH analogs improved spatial memory and rescued GABAergic interneuron loss in the hippocampus. α-MSH levels are reduced in the brain and CSF of Alzheimer's patients, and α-MSH autoantibody levels correlate with cognitive dysfunction.</p>
+
+      <h3>Sexual behavior and erectile function</h3>
+      <p>Microinjections of α-MSH into the paraventricular nucleus of the hypothalamus induce penile erection, stretching, and yawning — collectively called the melanocortin erectile response. MC4R in the hypothalamus and spinal cord mediates these effects. Synthetic α-MSH analogs (including Melanotan II and bremelanotide/PT-141) have been investigated and developed for psychogenic erectile dysfunction and hypoactive sexual desire disorder (bremelanotide was FDA-approved in 2019 for HSDD).</p>
+
+      <h3>Dopamine and the reward circuit</h3>
+      <p>Intra-VTA injection of α-MSH increases dopamine and DOPAC levels in the nucleus accumbens via MC3R activation. α-MSH also increases the firing rate of MC3R-expressing VTA neurons, linking the melanocortin system to the mesolimbic reward circuit and influencing hedonic feeding, motivation, and reward-driven behavior beyond simple homeostatic hunger.</p>
+
+      <h3>Grooming, locomotion, and motivation</h3>
+      <p>Both intraventricular and VTA microinjections of α-MSH produce excessive grooming and significantly increased locomotor activity. These stereotyped behaviors are among the most reliably observed behavioral signatures of central melanocortin activation.</p>
+
+      <h3>Neuroprotection — TBI, stroke, and neurodegeneration</h3>
+      <p>In models of cerebral ischemia, traumatic brain injury (TBI), and neurodegenerative disease, α-MSH and its analogs reduce neuronal loss, inhibit apoptotic cascades, and improve functional recovery. After TBI, MC1R levels in the brain increase three-fold within 12 hours. A single dose of the α-MSH fragment α-MSH(11–13) significantly reduced lesion volume, inflammatory markers (TNF-α, IL-1β), and microglial activation. In stroke models, α-MSH abolished intracerebral TNF-α and IL-1β gene expression after arterial occlusion and reperfusion.</p>
+
+      <h3>Neuroinflammation: microglia and astrocytes</h3>
+      <p>Within the CNS, α-MSH modulates microglial activation and acts as an autocrine anti-inflammatory factor in microglia. MC4R activation in astrocytes reduces the inflammatory response and prevents apoptosis induced by LPS and IFN-γ — positioning α-MSH as a potential therapeutic target in neuroinflammatory and neurodegenerative disorders.</p>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Bhatt DL et al. (2014). α-Melanocyte Stimulating Hormone Prevents GABAergic Neuronal Loss and Improves Cognitive Function in Alzheimer's Disease. <em>J Neuroscience</em>, 34(20), 6736–6745. <a href="https://doi.org/10.1523/JNEUROSCI.0848-14.2014" target="_blank">https://doi.org/10.1523/JNEUROSCI.0848-14.2014</a></li>
+        <li>Schaible EV et al. (2013). Single Administration of Tripeptide α-MSH(11–13) Attenuates Brain Damage after TBI. <em>PLoS One</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3733710/" target="_blank">PMC3733710</a></li>
+        <li>Wessells H et al. (2000). A role for the melanocortin 4 receptor in sexual function. <em>PNAS</em>, 97(21), 11444–11449. <a href="https://doi.org/10.1073/pnas.172378699" target="_blank">https://doi.org/10.1073/pnas.172378699</a></li>
+        <li>West EA et al. (2019). Alpha-MSH increases the activity of MC3R-expressing neurons in the VTA. <em>J Physiol</em>. <a href="https://doi.org/10.1113/JP277193" target="_blank">https://doi.org/10.1113/JP277193</a></li>
+        <li>Alpha-MSH injected into the substantia nigra alters behavior and striatal dopaminergic activity. <em>Pharmacol Biochem Behav</em>, 1986. <a href="https://doi.org/10.1016/0006-2952(86)90355-5" target="_blank">ScienceDirect</a></li>
+        <li>Drug Discovery News (2026). A new approach could radically change erectile dysfunction treatment. <a href="https://www.drugdiscoverynews.com/a-new-approach-could-radically-change-erectile-dysfunction-treatment-16910" target="_blank">drugdiscoverynews.com</a></li>
+        <li>Tanabe K et al. (2007). Melanocortin receptor 4 is induced in nerve-injured motor and sensory neurons of mouse. <em>J Neurochem</em>, 101(4), 1145–1152.</li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 7: CARDIOPROTECTION ═══ -->
+  <div class="fn-section accent-cardio" id="sec-cardio">
+    <div class="fn-header">
+      <div class="fn-icon">❤️</div>
+      <div>
+        <div class="fn-title">Cardiovascular Effects &amp; Cardioprotection</div>
+        <div class="fn-subtitle">MC5R · anti-hypertrophic · ischemia-reperfusion · HO-1 pathway</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 480" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="170" y="20" width="340" height="52" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#26215C">alpha-MSH (local cardiac + pituitary)</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Reduced in failing heart / rises in cardiomyopathy</text>
+        <line x1="340" y1="72" x2="340" y2="130" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <rect x="220" y="130" width="240" height="52" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="150" text-anchor="middle" dominant-baseline="central" fill="#085041">Binds MC5R on cardiomyocytes</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="168" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Primary cardiac receptor</text>
+        <line x1="280" y1="182" x2="120" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <line x1="340" y1="182" x2="340" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <line x1="400" y1="182" x2="560" y2="250" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <rect x="30" y="250" width="178" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="119" y="270" text-anchor="middle" dominant-baseline="central" fill="#085041">Anti-hypertrophic</text>
+        <text font-family="sans-serif" font-size="10" x="119" y="288" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Down: fibrosis / Up: systolic fn</text>
+        <rect x="251" y="250" width="178" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="340" y="270" text-anchor="middle" dominant-baseline="central" fill="#085041">I/R injury protection</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="288" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Down: infarct size / arrhythmias</text>
+        <rect x="472" y="250" width="178" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="12" x="561" y="270" text-anchor="middle" dominant-baseline="central" fill="#085041">HO-1 vasodilation</text>
+        <text font-family="sans-serif" font-size="10" x="561" y="288" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">CO + biliverdin / antioxidant</text>
+        <line x1="119" y1="306" x2="220" y2="380" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <line x1="340" y1="306" x2="340" y2="380" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <line x1="561" y1="306" x2="460" y2="380" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ac)"/>
+        <rect x="110" y="380" width="460" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="400" text-anchor="middle" dominant-baseline="central" fill="#26215C">Cardiac protection and functional recovery</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="418" text-anchor="middle" dominant-baseline="central" fill="#3C3489">pJAK2 / pERK1/2 / STAT3 / Bcl-XL / HO-1 upregulated</text>
+      </svg>
+      <p class="caption">alpha-MSH cardiac effects via MC5R: anti-hypertrophic, ischemia protection, and HO-1-mediated vasodilation</p>
+    </div>
+
+    <h3>Cardiac expression and local production</h3>
+      <p>α-MSH is expressed in the heart — particularly in the ventricles — where it acts locally via MC5R on cardiomyocytes. Plasma α-MSH levels are elevated in patients with hypertrophic or dilated cardiomyopathy, suggesting it rises as a compensatory response to cardiac stress. Conversely, α-MSH production is significantly reduced in the failing heart.</p>
+
+      <h3>Anti-hypertrophic and anti-fibrotic protection</h3>
+      <p>Pharmacological activation of MC5R improved systolic function and reduced cardiac fibrosis in pressure-overloaded mice. Silencing MC5R in cardiomyocytes induced hypertrophy and fibrosis markers in vitro and aggravated cardiac hypertrophy in vivo. α-MSH acts as a brake on the maladaptive remodeling — pathological cell growth and scarring — that leads progressively to heart failure.</p>
+
+      <h3>Ischemia-reperfusion injury protection</h3>
+      <p>Treatment with melanocortin analogs during coronary artery occlusion upregulated cardioprotective transcription factors (pJAK2, pERK1/2, pTyr-STAT3), reduced inflammatory mediators (TNF-α, pJNK), increased pro-survival proteins (HO-1, Bcl-XL), and decreased both ventricular arrhythmias and infarct size. The reduction in reperfusion-induced ventricular fibrillation corresponded to reduced apoptotic cell death.</p>
+
+      <h3>Vasodilation via heme oxygenase-1 (HO-1)</h3>
+      <p>α-MSH induces vasodilation through activation of HO-1, a heat shock protein and major antioxidant defense molecule. HO-1 produces carbon monoxide and biliverdin — both of which have vasodilatory and cytoprotective properties. Blocking HO-1 abolishes the cardioprotective effects of α-MSH, confirming this pathway is essential to its mechanism.</p>
+
+      <h3>Heart rate and autonomic regulation</h3>
+      <p>α-MSH influences sympathetic activation in the cardiovascular system, affecting systolic activity, heart rate, blood pressure, and coronary vascular responses. α-MSH levels during exercise recovery hold predictive value for heart rate recovery, suggesting a contributing role in cardiopulmonary performance and potential prognostic value in coronary artery disease.</p>
+
+      <div class="fn-highlight">Analogs of naturally occurring α-MSH with agonistic activity at MC5R have been recently approved for clinical use in other indications and may have therapeutic potential for heart failure based on the same receptor mechanism.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Suominen A et al. (2024). α-Melanocyte-Stimulating Hormone Alleviates Pathological Cardiac Remodeling via Melanocortin 5 Receptor. <em>EMBO Mol Med</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11014855/" target="_blank">PMC11014855</a></li>
+        <li>Vecsernyes M et al. (2017). Alpha-MSH Induces Vasodilation and Exerts Cardioprotection Through the Heme-Oxygenase Pathway in Rat Hearts. <em>J Cardiovasc Pharmacol</em>, 69(5), 286–297. <a href="https://doi.org/10.1097/FJC.0000000000000472" target="_blank">https://doi.org/10.1097/FJC.0000000000000472</a></li>
+        <li>Popovic D et al. (2021). Alpha-MSH during exercise recovery has prognostic value for coronary artery disease. <em>Hormones</em>. <a href="https://doi.org/10.1007/s42000-020-00270-2" target="_blank">https://doi.org/10.1007/s42000-020-00270-2</a></li>
+        <li>Popovic D et al. (2020). Alpha-MSH is related to heart rate during exercise recovery. <em>Heliyon</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7658700/" target="_blank">PMC7658700</a></li>
+        <li>Long Term Osmotic Mini Pump Treatment with Alpha-MSH Improves Myocardial Function in Zucker Diabetic Fatty Rats. <em>Molecules</em>, 2018. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6151765/" target="_blank">PMC6151765</a></li>
+        <li>Effects of α-MSH on ischemia/reperfusion injury in the rat sciatic nerve. <em>Neural Regen Res</em>. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3424683/" target="_blank">PMC3424683</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+  <!-- ═══ SECTION 8: SKIN HOMEOSTASIS ═══ -->
+  <div class="fn-section accent-skin" id="sec-skin">
+    <div class="fn-header">
+      <div class="fn-icon">🧴</div>
+      <div>
+        <div class="fn-title">Skin Homeostasis</div>
+        <div class="fn-subtitle">UV defense · DNA repair · keratinocytes · fibroblasts · wound healing</div>
+      </div>
+    </div>
+    <div class="fn-body">
+      
+    <div class="section-diagram">
+      <svg viewBox="0 0 680 460" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ask" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <!-- UV source -->
+        <rect x="190" y="20" width="300" height="52" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="42" text-anchor="middle" dominant-baseline="central" fill="#412402">UV radiation / inflammation</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="60" text-anchor="middle" dominant-baseline="central" fill="#633806">Keratinocytes and melanocytes produce local alpha-MSH</text>
+        <!-- fan lines to 5 cell types -->
+        <line x1="260" y1="72" x2="80"  y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="300" y1="72" x2="207" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="340" y1="72" x2="340" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="380" y1="72" x2="473" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="420" y1="72" x2="600" y2="140" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <!-- 5 cell type boxes -->
+        <rect x="20"  y="140" width="120" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="11" x="80"  y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Melanocytes</text>
+        <text font-family="sans-serif" font-size="10" x="80"  y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">UV defense</text>
+        <rect x="148" y="140" width="120" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="11" x="208" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Keratinocytes</text>
+        <text font-family="sans-serif" font-size="10" x="208" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">DNA repair</text>
+        <rect x="280" y="140" width="120" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="11" x="340" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Fibroblasts</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">ECM regulation</text>
+        <rect x="413" y="140" width="120" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="11" x="473" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Endothelial</text>
+        <text font-family="sans-serif" font-size="10" x="473" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Cytokine control</text>
+        <rect x="541" y="140" width="120" height="52" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="11" x="601" y="160" text-anchor="middle" dominant-baseline="central" fill="#042C53">Immune cells</text>
+        <text font-family="sans-serif" font-size="10" x="601" y="178" text-anchor="middle" dominant-baseline="central" fill="#185FA5">Tolerance</text>
+        <!-- down to outcome boxes -->
+        <line x1="80"  y1="192" x2="80"  y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="208" y1="192" x2="208" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="340" y1="192" x2="340" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="473" y1="192" x2="473" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="601" y1="192" x2="601" y2="268" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <!-- outcome boxes -->
+        <rect x="20"  y="268" width="120" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-size="10" x="80"  y="288" text-anchor="middle" dominant-baseline="central" fill="#085041">Down: 8-oxodG</text>
+        <text font-family="sans-serif" font-size="10" x="80"  y="306" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Up: catalase</text>
+        <rect x="148" y="268" width="120" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-size="10" x="208" y="288" text-anchor="middle" dominant-baseline="central" fill="#085041">XPA/NER repair</text>
+        <text font-family="sans-serif" font-size="10" x="208" y="306" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Up: Nrf2</text>
+        <rect x="280" y="268" width="120" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-size="10" x="340" y="288" text-anchor="middle" dominant-baseline="central" fill="#085041">Down: collagenase</text>
+        <text font-family="sans-serif" font-size="10" x="340" y="306" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Antifibrotic</text>
+        <rect x="413" y="268" width="120" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-size="10" x="473" y="288" text-anchor="middle" dominant-baseline="central" fill="#085041">Down: IL-8, TNF-a</text>
+        <text font-family="sans-serif" font-size="10" x="473" y="306" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Up: IL-10</text>
+        <rect x="541" y="268" width="120" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-size="10" x="601" y="288" text-anchor="middle" dominant-baseline="central" fill="#085041">CTLA4+ Tregs</text>
+        <text font-family="sans-serif" font-size="10" x="601" y="306" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Hapten tolerance</text>
+        <!-- converge to final outcome -->
+        <line x1="80"  y1="324" x2="200" y2="392" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="208" y1="324" x2="268" y2="392" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="340" y1="324" x2="340" y2="392" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="473" y1="324" x2="413" y2="392" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <line x1="601" y1="324" x2="481" y2="392" stroke="#888" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ask)"/>
+        <rect x="110" y="392" width="460" height="52" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+        <text font-family="sans-serif" font-weight="600" font-size="13" x="340" y="412" text-anchor="middle" dominant-baseline="central" fill="#26215C">Skin homeostasis and wound healing</text>
+        <text font-family="sans-serif" font-size="11" x="340" y="430" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Coordinated across the epidermal melanin unit</text>
+      </svg>
+      <p class="caption">alpha-MSH acts across all major skin cell types to coordinate UV defense, inflammation control, and tissue repair</p>
+    </div>
+
+    <h3>Beyond pigmentation: UV defense and oxidative stress</h3>
+      <p>In addition to driving melanin synthesis, α-MSH protects melanocytes from UV-induced oxidative stress independent of melanin production. Pre-treatment with α-MSH reduces UV-induced generation of 8-oxodG (a major form of oxidative DNA damage), increases protein levels of catalase and ferritin (antioxidant enzymes), and enhances overall DNA repair capacity — maintaining genomic stability in melanocytes over decades of UV exposure.</p>
+
+      <h3>DNA repair in keratinocytes — pigmentation independent</h3>
+      <p>α-MSH enhances DNA repair in keratinocytes by a separate mechanism from melanin production. After binding MC1R on keratinocytes, it activates adenylyl cyclase → XAB1 → nuclear translocation of XPA, a critical factor in nucleotide excision repair (NER). Intracutaneous injection of MSH prevented UV-induced DNA damage in human and mouse skin independent of melanogenesis. α-MSH also prevents UVB-induced suppression of Nrf2, a key antioxidant transcription factor, in both keratinocytes and melanocytes.</p>
+
+      <h3>Keratinocyte immune modulation</h3>
+      <p>α-MSH suppresses keratinocyte TLR2-mediated inflammatory responses induced by bacterial stimuli. It down-regulates TLR2 and IL-8 expression and blocks NF-κB nuclear translocation via an IRAK-M-dependent mechanism — regulating how keratinocytes respond to the skin microbiome and bacterial pathogens.</p>
+
+      <h3>Fibroblast regulation</h3>
+      <p>MC1R expressed by dermal fibroblasts mediates antifibrogenic effects of α-MSH. It regulates fibroblast cytokine production and collagenase production, preventing both excessive degradation and excessive scarring of the dermal extracellular matrix — helping maintain the structural integrity of the dermis.</p>
+
+      <h3>Wound healing</h3>
+      <p>α-MSH is involved in normal skin wound healing. Its anti-inflammatory properties have been demonstrated in cutaneous wound healing in vivo and in fibroblast models in vitro. Local α-MSH produced by keratinocytes and melanocytes in response to inflammatory stimuli likely contributes to resolving the inflammatory phase and promoting repair.</p>
+
+      <h3>Local production — skin as both source and target</h3>
+      <p>Pro-inflammatory cytokines and UV radiation induce epidermal cells — keratinocytes and melanocytes — to synthesize and release α-MSH themselves. The skin is therefore an active producer, creating a local paracrine loop that fine-tunes inflammation and repair in real time at the site of damage.</p>
+
+      <h3>Contact hypersensitivity and tolerance</h3>
+      <p>Systemic application of α-MSH inhibits both induction and elicitation of contact hypersensitivity reactions and induces hapten-specific tolerance — mediated by the generation of CTLA4+ and IL-10-producing T lymphocytes. Relevant to allergic contact dermatitis and related skin immune disorders.</p>
+
+      <div class="fn-highlight">Important caveat: in human mast cells, α-MSH appears to be pro-inflammatory due to histamine release. Its effects in skin are not uniformly anti-inflammatory — the net outcome depends on cell type and context.</div>
+    </div>
+    <div class="fn-refs">
+      <h4>References</h4>
+      <ol>
+        <li>Kadekaro AL et al. (2009). alpha-MSH activates immediate defense responses to UV-induced oxidative stress in human melanocytes. <em>Pigment Cell Melanoma Res</em>. PMID: 19659742.</li>
+        <li>Swope VB &amp; Abdel-Malek ZA (2016). Alpha-MSH suppresses oxidative stress through a p53-mediated signaling pathway in human melanocytes. <em>Mol Cancer Res</em>, 10(6), 778–786. <a href="https://doi.org/10.1158/1541-7786.MCR-11-0587" target="_blank">https://doi.org/10.1158/1541-7786.MCR-11-0587</a></li>
+        <li>Kadekaro AL et al. (2010). MSH Directly Enhances UV-Induced DNA Repair in Keratinocytes by an XPA-Dependent Mechanism. <em>Cancer Res</em>, 70(9), 3547–3554. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2862104/" target="_blank">PMC2862104</a></li>
+        <li>Park HY et al. (2015). The Alpha-MSH Suppresses TLR2-Mediated Functional Responses through IRAK-M in Normal Human Keratinocytes. <em>PLoS One</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4550463/" target="_blank">PMC4550463</a></li>
+        <li>Luger TA et al. (1997). α-MSH may act not only on MC-receptors located to melanocytes but also on immunocompetent and inflammatory cells, keratinocytes, fibroblasts and endothelial cells. <em>Melanocortin 1 Receptor Selective Compounds</em>. US Patent 7008925.</li>
+        <li>Dall'Olmo L et al. (2023). Alpha-melanocyte stimulating hormone (α-MSH): biology, clinical relevance and implication in melanoma. <em>J Transl Med</em>, 21, 562. <a href="https://doi.org/10.1186/s12967-023-04405-y" target="_blank">https://doi.org/10.1186/s12967-023-04405-y</a></li>
+        <li>Guo MS et al. (2025). Regulation of Melanogenesis in Skin Epidermal Keratinocytes via α7 Nicotinic Acetylcholine Receptor. <em>FASEB J</em>. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12849533/" target="_blank">PMC12849533</a></li>
+      </ol>
+    </div>
+    <a class="back-top" onclick="jumpTo('top')">↑ Back to top</a>
+  </div>
+
+</div><!-- end page-body -->
+
+<footer>
+  Part of the POMC Family series &nbsp;·&nbsp; α-MSH &nbsp;·&nbsp; ACTH &nbsp;·&nbsp; β-Endorphin<br>
+  Content based on peer-reviewed literature through 2024–2025
+</footer>
+
+<script>
+  function jumpTo(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
+
+</body>
+</html>

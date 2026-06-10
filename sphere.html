@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Meta-strophe Sphere — Merged Prototype</title>
+<style>
+:root{
+  --bg:#07101d; --panel:#07101d; --ink:#eef6ff; --muted:#9fb0c6; --line:rgba(255,255,255,.78);
+  --green:#46d65c; --red:#ff1818; --blue:#075dd8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  height:100vh;overflow:hidden;background:radial-gradient(circle at 50% 22%,#13233b 0%,#07101d 55%,#03060b 100%);
+  font-family:Arial,Helvetica,sans-serif;color:var(--ink)
+}
+header{position:absolute;top:0;left:0;right:0;z-index:30;text-align:center;padding:12px 18px 22px;background:linear-gradient(180deg,rgba(3,8,16,.92),rgba(3,8,16,0));pointer-events:none}
+header h1{font-size:24px;letter-spacing:.6px}
+header .sub{font-size:13px;color:#cfe0f6;margin-top:4px}
+#stage{position:absolute;inset:72px 0 105px 0;display:flex;align-items:center;justify-content:center}
+#mapWrap{position:relative;width:min(84vh,860px);height:min(84vh,860px)}
+canvas{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 18px 38px rgba(0,0,0,.48))}
+#overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.grid{stroke:rgba(255,255,255,.82);stroke-width:2.5;fill:none;vector-effect:non-scaling-stroke}
+.gridSoft{stroke:rgba(255,255,255,.36);stroke-width:1.3;fill:none;vector-effect:non-scaling-stroke}
+.axisText{font-size:19px;font-weight:900;fill:white;paint-order:stroke;stroke:#02050a;stroke-width:4px;stroke-linejoin:round;letter-spacing:.2px}
+.axisSmall{font-size:15px;font-weight:800;fill:#eaf4ff;paint-order:stroke;stroke:#02050a;stroke-width:3px;stroke-linejoin:round}
+.stateText{font-size:17px;font-weight:900;fill:white;text-anchor:middle;dominant-baseline:middle;pointer-events:none;letter-spacing:.1px}
+.labelBtn{cursor:pointer}
+.labelBtn rect{fill:rgba(2,5,10,.62);stroke:rgba(255,255,255,.86);stroke-width:1.6;rx:9;ry:9;filter:drop-shadow(0 2px 5px rgba(0,0,0,.62))}
+.labelBtn:hover rect{fill:rgba(255,255,255,.18);stroke:white}
+.labelBtn:hover text{fill:#fff7a6}
+.selectedOutline{fill:rgba(255,255,255,.09);stroke:white;stroke-width:4;filter:drop-shadow(0 0 13px rgba(255,255,255,.60))}
+#modeCaption{position:absolute;left:28px;top:88px;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.16);padding:10px 13px;border-radius:12px;color:#e8f6ff;font-weight:900;letter-spacing:.3px;z-index:15}
+/* Pop-out tooltip */
+#popout{
+  position:absolute;z-index:100;pointer-events:none;
+  width:340px;
+  max-width:min(340px, calc(100% - 24px));
+  max-height:calc(100% - 24px);
+  overflow:auto;
+  background:
+    linear-gradient(180deg,rgba(8,16,30,.985),rgba(5,10,22,.98));
+  border:1px solid rgba(220,235,255,.24);
+  border-top:2px solid var(--stateAccent, rgba(255,215,50,.70));
+  border-radius:14px;
+  padding:14px 15px 11px;
+  box-shadow:
+    0 14px 42px rgba(0,0,0,.72),
+    0 0 0 1px rgba(255,255,255,.028),
+    0 0 14px color-mix(in srgb, var(--stateAccent, #ffe87a) 12%, transparent);
+  backdrop-filter:blur(12px);
+  opacity:0;
+  transition:opacity .18s ease;
+  display:none;
+}
+#popout.visible{opacity:1;display:block;}
+#popout h2{
+  font-size:22px;font-weight:900;color:#fff;
+  margin:0 0 9px;line-height:1.08;letter-spacing:.10px;
+}
+#popout .po-interpretive{
+  margin:0 0 10px;
+  padding:0;
+}
+#popout .po-meta{
+  display:grid;
+  grid-template-columns:0.82fr 1.18fr;
+  gap:9px;
+  margin:0 0 8px;
+  padding:0 0 8px;
+  border-bottom:1px solid rgba(255,255,255,.075);
+}
+#popout .po-field{
+  min-width:0;
+  padding:0 0 0 7px;
+  border-left:2px solid rgba(255,255,255,.09);
+}
+#popout .po-field:first-child{
+  border-left-color:color-mix(in srgb, var(--stateAccent, #ffe87a) 50%, rgba(255,255,255,.10));
+}
+#popout .po-kicker{
+  display:block;font-size:7.8px;font-weight:900;
+  letter-spacing:1.15px;text-transform:uppercase;
+  color:#6f8eac;margin:0 0 2px;
+}
+#popout .po-value{
+  display:block;font-size:12.4px;font-weight:800;
+  color:#f4f8ff;line-height:1.22;
+}
+#popout .po-address{
+  margin:0;
+  padding:7px 9px 7px;
+  background:rgba(255,255,255,.04);
+  border-left:3px solid var(--stateAccent, rgba(255,215,50,.72));
+  border-radius:0 7px 7px 0;
+}
+#popout .po-formula{
+  display:block;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:14.8px;font-weight:900;
+  color:#fff2a6;letter-spacing:.15px;line-height:1.20;
+  margin-top:2px;
+}
+#popout .po-section{margin:0 0 8px}
+#popout .po-section:last-of-type{margin-bottom:0}
+#popout .po-label{
+  display:block;font-size:8px;font-weight:900;
+  letter-spacing:1.25px;text-transform:uppercase;
+  color:#6e8dad;margin:0 0 3px;
+}
+#popout .po-body{
+  font-size:12.2px;line-height:1.48;
+  color:#d9e8f8;margin:0;
+}
+#popout .po-divider{
+  border:none;border-top:1px solid rgba(255,255,255,.075);
+  margin:8px 0 9px;
+}
+#popout .po-hint{
+  font-size:9px;color:rgba(115,143,175,.50);
+  margin-top:8px;text-align:right;letter-spacing:.15px;
+}
+@media(max-width:950px){
+  #popout{
+    width:320px;
+    max-width:min(320px, calc(100% - 20px));
+    padding:12px 13px 10px;
+  }
+  #popout h2{font-size:20px;margin-bottom:8px}
+  #popout .po-body{font-size:11.8px;line-height:1.43}
+  #popout .po-formula{font-size:14px}
+  #popout .po-value{font-size:12px}
+}
+
+@media (max-height: 820px) {
+  #popout {
+    width:300px;
+    max-width:min(300px, calc(100% - 16px));
+    max-height:min(68vh, calc(100% - 16px));
+    padding:10px 11px 8px;
+    border-radius:11px;
+  }
+  #popout h2 { font-size:17px; margin-bottom:6px; }
+  #popout .po-interpretive{ margin-bottom:7px; }
+  #popout .po-meta { gap:6px; margin-bottom:6px; padding-bottom:6px; }
+  #popout .po-field{ padding-left:5px; }
+  #popout .po-address{ padding:5px 7px 5px; }
+  #popout .po-value { font-size:10.8px; line-height:1.18; }
+  #popout .po-formula { font-size:12.8px; line-height:1.16; }
+  #popout .po-body { font-size:10.6px; line-height:1.28; }
+  #popout .po-section { margin-bottom:5px; }
+  #popout .po-divider { margin:5px 0 6px; }
+  #popout .po-hint{ font-size:8px; margin-top:5px; }
+}
+
+@media (max-height: 700px) {
+  #popout {
+    width:280px;
+    max-width:min(280px, calc(100% - 16px));
+    max-height:64vh;
+    padding:9px 10px 7px;
+  }
+  #popout h2 { font-size:16px; margin-bottom:5px; }
+  #popout .po-meta{ gap:5px; margin-bottom:5px; padding-bottom:5px; }
+  #popout .po-address{ padding:5px 6px; }
+  #popout .po-body,
+  #popout .po-value { font-size:10px; line-height:1.24; }
+  #popout .po-kicker,
+  #popout .po-label { font-size:6.8px; letter-spacing:1px; }
+  #popout .po-formula { font-size:12px; }
+}
+
+#controls{
+  position:absolute;bottom:0;left:0;right:0;min-height:96px;background:linear-gradient(0deg,rgba(2,4,9,.96),rgba(2,4,9,.72),rgba(2,4,9,0));
+  display:flex;gap:8px;align-items:center;justify-content:center;padding:8px 12px;z-index:35;flex-wrap:wrap
+}
+.group{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:7px 9px;flex-wrap:wrap}
+
+.user-controls{
+  background:rgba(255,255,255,.075);
+  border-color:rgba(255,255,255,.20);
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.user-controls button{min-width:84px}
+.advancedControls{
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  flex-basis:100%;
+  max-width:1160px;
+  margin:0 auto;
+}
+.advancedControls.show{display:flex}
+.advanced-subgroup{
+  background:rgba(255,255,255,.040);
+  border-color:rgba(255,255,255,.11);
+  align-items:center;
+  justify-content:center;
+  min-width:min-content;
+}
+.views-controls{max-width:560px}
+.display-controls{max-width:640px}
+.clinical-controls{
+  background:rgba(70,214,92,.055);
+  border-color:rgba(70,214,92,.18);
+  max-width:440px;
+}
+.clinicalBtn{border-color:rgba(70,214,92,.34);background:#102219}
+.clinicalBtn:hover{background:#173323}
+.comfortLabel{font-size:11px;color:#cbd9e8;font-weight:800;margin-left:4px}
+#labelsToggleBtn.active,
+#supplyBoundaryBtn.active,
+#fixedViewBtn.active,
+#freeRotateBtn.active{background:#eaf5ff;color:#07101d;border-color:white}
+#advancedBtn[aria-expanded="true"]{background:#eaf5ff;color:#07101d;border-color:white}
+.glabel{font-size:10.5px;color:#90a3b8;text-transform:uppercase;letter-spacing:1px;margin-right:3px;font-weight:900}
+button{border:1px solid rgba(255,255,255,.30);background:#121d2d;color:#eaf5ff;border-radius:9px;padding:8px 10px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:.2px;white-space:nowrap}
+button:hover{background:#1b2b43;filter:brightness(1.1)}
+button.active{background:#eaf5ff;color:#07101d;border-color:white}
+button:disabled{opacity:.35;cursor:not-allowed}
+.sbtn{font-size:11px;padding:7px 8px;border-width:1.4px}
+#comfort{width:150px;accent-color:#7cff9c}
+#comfortVal{font-size:12px;color:#cbd9e8;width:36px;font-weight:900}
+#progress{position:absolute;left:0;bottom:0;height:3px;background:linear-gradient(90deg,#ff1818,#46d65c,#075dd8);width:0%;opacity:0;z-index:50}
+#fixedPanel{
+  position:fixed;inset:0;background:rgba(248,250,252,.995);color:#081734;
+  z-index:1000;display:none;overflow:hidden;padding:10px
+}
+#fixedPanel.show{display:flex;flex-direction:column}
+#fixedPanel .bar{flex:0 0 auto;margin:-10px -10px 10px;padding:12px 14px;background:rgba(248,250,252,.995);border-bottom:1px solid rgba(15,23,42,.14);display:flex;justify-content:space-between;align-items:center}
+#fixedPanel h3{font-size:18px;color:#081734}
+#fixedPanel button{background:#101c2e;color:white;border:0;padding:9px 14px;font-size:14px}
+#fixedSvg{width:100%;height:100%;flex:1 1 auto;min-height:0;display:block;background:white;border-radius:10px}
+body.fixed-open > header,
+body.fixed-open > #modeCaption,
+body.fixed-open > #stage,
+body.fixed-open > #infoPanel,
+body.fixed-open > #controls{visibility:hidden}
+body.fixed-open > #fixedPanel{visibility:visible}
+@media(max-width:950px){
+  #stage{right:0;bottom:300px}
+  #modeCaption{display:none}
+  #controls{justify-content:center;overflow-x:auto;flex-wrap:wrap;padding-left:8px;padding-right:8px}
+  .user-controls{width:auto;max-width:100%;flex-wrap:wrap}
+  .user-controls button{min-width:78px}
+  .advancedControls{justify-content:center;flex-wrap:wrap;align-items:flex-start;width:100%}
+  .advanced-subgroup{flex:1 1 260px;justify-content:flex-start}
+  .clinical-controls{flex:1 1 260px}
+  #comfort{width:120px}
+  #fixedPanel{padding:8px}
+  #fixedPanel .bar{margin:-8px -8px 8px;padding:10px 10px}
+}
+
+
+/* Resource dropdown: separate from sphere controls so it does not clutter the model */
+#resourceNav{
+  position:absolute;
+  top:14px;
+  right:18px;
+  z-index:80;
+  font-family:Arial,Helvetica,sans-serif;
+}
+.resource-toggle{
+  min-width:0;
+  background:rgba(234,245,255,.12);
+  border:1px solid rgba(234,245,255,.42);
+  color:#eaf5ff;
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.resource-toggle:hover,
+.resource-toggle.active{
+  background:#eaf5ff;
+  color:#07101d;
+  border-color:#fff;
+}
+.resource-menu{
+  display:none;
+  position:absolute;
+  right:0;
+  top:calc(100% + 8px);
+  min-width:255px;
+  background:rgba(6,14,28,.98);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:8px;
+  box-shadow:0 18px 42px rgba(0,0,0,.62);
+  backdrop-filter:blur(12px);
+}
+.resource-menu.show{display:block}
+.resource-menu .resource-section-label{
+  display:block;
+  padding:8px 10px 5px;
+  font-size:10px;
+  line-height:1;
+  letter-spacing:1.35px;
+  text-transform:uppercase;
+  color:#7593b4;
+  font-weight:900;
+}
+.resource-menu a,
+.resource-menu .resource-disabled{
+  display:block;
+  padding:8px 10px;
+  border-radius:9px;
+  color:#eaf5ff;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:800;
+  line-height:1.25;
+}
+.resource-menu a span,
+.resource-menu .resource-disabled span{
+  display:block;
+  margin-top:2px;
+  font-size:11px;
+  font-weight:600;
+  color:#9fb0c6;
+}
+.resource-menu a:hover{
+  background:rgba(255,255,255,.11);
+}
+.resource-menu .resource-disabled{
+  opacity:.55;
+  cursor:default;
+}
+.resource-divider{
+  height:1px;
+  background:rgba(255,255,255,.10);
+  margin:7px 4px;
+}
+@media(max-width:950px){
+  #resourceNav{top:56px;right:10px}
+  .resource-menu{min-width:235px}
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Meta-strophe Theory — Regulatory Map</h1>
+  <div class="sub">Rotatable sphere · valence mode | demand–supply relation · click affect labels</div>
+</header>
+
+<div id="resourceNav" aria-label="Resource navigation">
+  <button id="resourceToggle" class="resource-toggle" aria-expanded="false" aria-controls="resourceMenu">Resources ▾</button>
+  <div id="resourceMenu" class="resource-menu" aria-hidden="true">
+    <span class="resource-section-label">Overview</span>
+    <a href="index.html">Home / Introduction<span>Return to the splash page</span></a>
+    <div class="resource-divider"></div>
+    <span class="resource-section-label">Biological architecture</span>
+    <a href="pomc-resource.html">POMC Architecture<span>One precursor · three regulatory economies</span></a>
+    <a href="acth-resource.html">ACTH — Mobilization<span>Stress economy, action readiness, HPA axis</span></a>
+    <a href="beta-endorphin-resource.html">β-Endorphin — Conservation<span>Analgesia, endurance, protective withdrawal</span></a>
+    <a href="alpha-msh-resource.html">α-MSH — Recalibration<span>Immune tuning, repair, safe strategy update</span></a>
+    <div class="resource-divider"></div>
+    <span class="resource-section-label">Presentation materials</span>
+    <a href="presentation.pdf">Barcelona Slides PDF<span>Static backup for the live presentation</span></a>
+    <a href="presentation.pptx">Barcelona PowerPoint<span>Editable slide deck</span></a>
+    <a href="working-paper.html">Working Paper<span>Provisional draft hub and future references</span></a>
+    <a href="future-developments.html">Future Developments<span>Extensions, clinical trajectories, formalization</span></a>
+  </div>
+</div>
+
+
+<div id="modeCaption">Sphere · Field only</div>
+<main id="stage">
+  <div id="mapWrap">
+    <canvas id="field" width="900" height="900"></canvas>
+    <svg id="overlay" viewBox="0 0 900 900" aria-label="interactive regulatory map"></svg>
+    <div id="popout"></div>
+  </div>
+</main>
+
+<section id="fixedPanel">
+  <div class="bar"><h3>2D Fixed Hemisphere Maps</h3><button id="closeFixed">Close</button></div>
+  <svg id="fixedSvg" viewBox="0 0 1600 1000"></svg>
+</section>
+
+<div id="controls">
+  <div class="group user-controls"><span class="glabel">Main</span>
+    <button data-view="threat" class="active">Threat</button>
+    <button data-view="opportunity">Opportunity</button>
+    <button id="fixedViewBtn" class="active" aria-pressed="true">Fixed View</button>
+    <button id="freeRotateBtn" aria-pressed="false">Free Rotate</button>
+    <button id="resetBtn">Reset</button>
+    <button id="fixedBtn">2D Maps</button>
+    <button id="walkthroughBtn">Guide</button>
+    <button id="advancedBtn" aria-expanded="false">Advanced</button>
+  </div>
+
+  <div id="advancedControls" class="advancedControls" aria-hidden="true">
+    <div class="group advanced-subgroup display-controls"><span class="glabel">Display</span>
+      <button id="labelsToggleBtn" class="active" aria-pressed="true">Labels On</button>
+      <button id="supplyBoundaryBtn" class="active" aria-pressed="true">Boundary On</button>
+      <span class="comfortLabel">Comfort</span>
+      <input id="comfort" type="range" min="18" max="72" value="44"/>
+      <span id="comfortVal">44%</span>
+    </div>
+
+    <div class="group advanced-subgroup views-controls"><span class="glabel">Seams</span>
+      <button data-view="mobilize">Mobilization</button>
+      <button data-view="conserve">Conservation</button>
+      <button data-view="under">Under-supplied</button>
+      <button data-view="over">Over-supplied</button>
+    </div>
+
+    <div class="group advanced-subgroup clinical-controls"><span class="glabel">Clinical Examples</span>
+      <button id="bipolarBtn" class="clinicalBtn">Bipolar</button>
+      <button id="ptsdBtn" class="clinicalBtn">PTSD</button>
+      <button id="bpdBtn" class="clinicalBtn">Borderline</button>
+    </div>
+  </div>
+
+  <div style="flex-basis:100%;text-align:center;font-size:12px;font-weight:700;color:rgba(255,255,255,.80);padding:3px 0 1px;letter-spacing:.15px">
+    Metastrophe Sphere © 2026 Mitchell Slutzky — original work, all rights reserved. May not be reproduced or adapted without permission.
+  </div>
+</div>
+<div id="progress"></div>
+
+<!-- Walkthrough overlay -->
+<div id="walkthrough" style="display:none;position:fixed;inset:0;background:rgba(3,6,14,.88);z-index:200;display:none;align-items:center;justify-content:center">
+  <div style="max-width:520px;background:rgba(6,14,28,.97);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:36px 40px;color:#eef6ff;font-family:Arial,Helvetica,sans-serif">
+    <div id="wtStep" style="font-size:11px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;color:#6e92b8;margin-bottom:10px">Step 1 of 3</div>
+    <h2 id="wtTitle" style="font-size:24px;font-weight:900;margin:0 0 14px;line-height:1.2"></h2>
+    <p id="wtBody" style="font-size:15px;line-height:1.65;color:#cfe0f4;margin:0 0 28px"></p>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <button id="wtPrev" style="background:#1a2a40;border:1px solid rgba(255,255,255,.2);color:#eef6ff;border-radius:9px;padding:9px 18px;font-weight:900;font-size:13px;cursor:pointer">← Back</button>
+      <button id="wtNext" style="background:#eaf5ff;border:none;color:#07101d;border-radius:9px;padding:9px 22px;font-weight:900;font-size:13px;cursor:pointer">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas=document.getElementById('field'), ctx=canvas.getContext('2d'), svg=document.getElementById('overlay');
+const caption=document.getElementById('modeCaption'), progress=document.getElementById('progress');
+const popout=document.getElementById('popout');
+const cx=450, cy=450, r=330;
+
+let view='threat', layer='labels', selected=null, comfort=.44, presenterMode=false, advancedOpen=false, rotationLocked=true, supplyBoundary=true;
+let rotX=0, rotY=Math.PI/2, dragging=false, lastX=0,lastY=0, inertiaX=0, inertiaY=0;
+let anim=null, xray=0, flatten=0, demo=null, popoutOpen=false;
+
+
+const STATES=[
+  {
+    id:'anxiety', name:'Anxiety', abbr:'Anx.', V:'V−', row:'M', col:'under', hemi:-1,
+    valenceMode:'Threat mode', demandState:'Mobilization under-supplied',
+    formula:'V− | D<sub>M</sub> &gt; S<sub>ACTH</sub>',
+    derivation:'Threat mode: mobilization demand exceeds ACTH supply.',
+    functionText:'The system must mobilize, but available mobilizing supply is insufficient to meet the demand. The felt result is urgent, activated, and under-resourced: the organism prepares to act while registering that action may not be enough.',
+    clinicalNote:'Clinically, this is the anxious edge of threat: response is required, but confidence in available capacity is low. Treatment first supports containment, pacing, and restoration of usable mobilizing supply before asking for complex recalibration.',
+    desc:'Threat; mobilization demand exceeds ACTH supply. The system must mobilize without enough mobilizing supply.'
+  },
+  {
+    id:'anger', name:'Anger', abbr:'Anger', V:'V−', row:'M', col:'over', hemi:-1,
+    valenceMode:'Threat mode', demandState:'Mobilization over-supplied',
+    formula:'V− | D<sub>M</sub> &lt; S<sub>ACTH</sub>',
+    derivation:'Threat mode: ACTH supply exceeds mobilization demand.',
+    functionText:'Mobilizing supply exceeds the immediate demand. The system therefore has surplus force available for boundary defense, attack, protest, or overcoming obstruction, and speed tends to dominate accuracy.',
+    clinicalNote:'Clinically, anger can be protective and organizing, but when mobilization is over-supplied it can become coercive, impulsive, or rupture-prone. The task is not simple suppression but better matching of mobilization to actual demand.',
+    desc:'Threat; ACTH supply exceeds mobilization demand. Mobilization becomes forceful, overdriven, and attack-ready.'
+  },
+  {
+    id:'depression', name:'Depression', abbr:'Depr.', V:'V−', row:'C', col:'under', hemi:-1,
+    valenceMode:'Threat mode', demandState:'Conservation under-supplied',
+    formula:'V− | D<sub>C</sub> &gt; S<sub>β-endorphin</sub>',
+    derivation:'Threat mode: conservation demand exceeds β-endorphin supply.',
+    functionText:'The system needs conservation, withdrawal, and restoration, but conservation supply is insufficient. Rest is required, yet it does not register as rewarding or completing.',
+    clinicalNote:'This is a core failure condition for anhedonia and burnout: the system requires recovery but cannot feel recovered by resting. Treatment often must restore the capacity for satisfaction before insight can consolidate.',
+    desc:'Threat; conservation demand exceeds β-endorphin supply. The system needs conservation, but conservation does not feel restorative.'
+  },
+  {
+    id:'dissociation', name:'Dissociation', abbr:'Dissoc.', V:'V−', row:'C', col:'over', hemi:-1,
+    valenceMode:'Threat mode', demandState:'Conservation over-supplied',
+    formula:'V− | D<sub>C</sub> &lt; S<sub>β-endorphin</sub>',
+    derivation:'Threat mode: β-endorphin supply exceeds conservation demand.',
+    functionText:'Conservation and analgesic shielding exceed the immediate demand. The system reduces exposure, dampens pain, narrows awareness, and protects continuity by lowering contact with overwhelming input.',
+    clinicalNote:'Clinically, dissociation is not an absence of function but an active conservation strategy. The risk is that shielding outlasts the threat and blocks updating, mourning, or relational repair.',
+    desc:'Threat; β-endorphin supply exceeds conservation demand. Dampening, analgesia, shielding, or shutdown comes to dominate.'
+  },
+  {
+    id:'anticipation', name:'Anticipation', abbr:'Antic.', V:'V+', row:'M', col:'under', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Mobilization under-supplied',
+    formula:'V+ | D<sub>M</sub> &gt; S<sub>ACTH</sub>',
+    derivation:'Opportunity mode: mobilization demand exceeds ACTH supply.',
+    functionText:'The system detects an opening and begins to approach, but mobilizing supply has not yet fully met the demand. The result is forward-leaning readiness, expectation, and energized reaching.',
+    clinicalNote:'This is opportunity-based activation with some residual risk intolerance. It can support curiosity and preparation, but it may tip into anxiety if the system loses confidence that the opening is viable.',
+    desc:'Opportunity; mobilization demand exceeds ACTH supply. Approach is active, but still under-supplied.'
+  },
+  {
+    id:'engagement', name:'Engagement', abbr:'Engage', V:'V+', row:'M', col:'match', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Mobilization supply balanced',
+    formula:'V+ | D<sub>M</sub> ≈ S<sub>ACTH</sub>',
+    derivation:'Opportunity mode: ACTH supply is functionally balanced with mobilization demand.',
+    functionText:'Mobilizing supply is proportionate to the opportunity. The system can act, explore, speak, move, and pursue without becoming either underpowered or overdriven.',
+    clinicalNote:'This is the clean action state in opportunity: there is enough activation for agency and enough matching for accuracy. It is a useful therapeutic target when patients need to move without flipping into threat.',
+    desc:'Opportunity; ACTH supply matches mobilization demand. The system can act with sufficient energy and control.'
+  },
+  {
+    id:'exhilaration', name:'Exhilaration', abbr:'Exhil.', V:'V+', row:'M', col:'over', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Mobilization over-supplied',
+    formula:'V+ | D<sub>M</sub> &lt; S<sub>ACTH</sub>',
+    derivation:'Opportunity mode: ACTH supply exceeds mobilization demand.',
+    functionText:'Mobilizing supply exceeds the immediate demand within an opportunity frame. The system feels expansive, fast, capable, and risk-tolerant, and action becomes self-amplifying.',
+    clinicalNote:'This can be creative and enlivening, but it is also the state most likely to overshoot into hypomanic acceleration if recalibration and conservation do not keep pace.',
+    desc:'Opportunity; ACTH supply exceeds mobilization demand. Mobilization becomes expansive, over-supplied, and intensely energized.'
+  },
+  {
+    id:'tooCautious', name:'Overcautious', abbr:'Caut.', V:'V+', row:'R', col:'under', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Recalibration under-supplied',
+    formula:'V+ | D<sub>R</sub> &gt; S<sub>α-MSH</sub>',
+    derivation:'Opportunity mode: recalibration demand exceeds α-MSH supply.',
+    functionText:'The system needs corrective updating, immune-metabolic retuning, and more accurate risk assessment, but recalibrative supply is insufficient. The opening is recognized, yet prior threat expectations cannot be fully revised.',
+    clinicalNote:'Patients in this state may understand that something is safer or more possible, yet still be unable to embody that update. α-MSH is doing more than signaling "safety"; it supports recalibrative accuracy, including targeted immune modulation and repair.',
+    desc:'Opportunity; recalibration demand exceeds α-MSH supply. The system needs to update, but lacks sufficient recalibrative supply.'
+  },
+  {
+    id:'comfortZone', name:'Comfort Zone', displayName:'Comfort Zone', abbr:'Comfort', V:'V+', row:'R', col:'match', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Recalibration supply balanced',
+    formula:'V+ | D<sub>R</sub> ≈ S<sub>α-MSH</sub>',
+    derivation:'Opportunity mode: α-MSH supply is functionally balanced with recalibration demand.',
+    functionText:'Recalibrative supply matches the need for updating. The system can tune risk, immune response, metabolic allocation, and repair while preserving enough stability to learn from the opportunity.',
+    clinicalNote:'This is the regulated middle in which accuracy can exceed speed. Clinically, it is the zone where symbolic work, reappraisal, immune calming, and relational repair become possible without collapse back into threat.',
+    desc:'Opportunity; α-MSH supply matches recalibration demand. This is the regulated middle in which accuracy can exceed speed.'
+  },
+  {
+    id:'overconfident', name:'Overconfident', abbr:'Overconf.', V:'V+', row:'R', col:'over', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Recalibration over-supplied',
+    formula:'V+ | D<sub>R</sub> &lt; S<sub>α-MSH</sub>',
+    derivation:'Opportunity mode: α-MSH supply exceeds recalibration demand.',
+    functionText:'Recalibrative permissiveness exceeds the actual need for correction. The system may read the field as safer, more repairable, or more flexible than it actually is.',
+    clinicalNote:'This is not simply confidence. It may represent excessive risk tolerance or insufficient boundary detection, and treatment may need to restore discriminative accuracy without forcing the patient back into threat.',
+    desc:'Opportunity; α-MSH supply exceeds recalibration demand. The system becomes too permissive or insufficiently bounded.'
+  },
+  {
+    id:'complacency', name:'Complacency', abbr:'Complac.', V:'V+', row:'C', col:'under', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Conservation under-supplied',
+    formula:'V+ | D<sub>C</sub> &gt; S<sub>β-endorphin</sub>',
+    derivation:'Opportunity mode: conservation demand exceeds β-endorphin supply.',
+    functionText:'The system needs rest, completion, and conservation within opportunity, but conservation supply does not fully meet that demand. The organism slows down without feeling genuinely restored.',
+    clinicalNote:'This can look like low initiative under apparently safe conditions. The core issue is not laziness but under-rewarded conservation.',
+    desc:'Opportunity; conservation demand exceeds β-endorphin supply. Rest is needed, but it does not yet feel fully rewarding or complete.'
+  },
+  {
+    id:'contentment', name:'Contentment', abbr:'Content.', V:'V+', row:'C', col:'match', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Conservation supply balanced',
+    formula:'V+ | D<sub>C</sub> ≈ S<sub>β-endorphin</sub>',
+    derivation:'Opportunity mode: β-endorphin supply is functionally balanced with conservation demand.',
+    functionText:'Conservation supply matches the need for rest and completion. The system can bank resources, feel satisfaction, and allow recovery to register as rewarding.',
+    clinicalNote:'This is the ordinary positive conservation state: not collapse and not dissociation, but restorative sufficiency. It matters clinically because patients often need to learn that rest can be felt as completion.',
+    desc:'Opportunity; β-endorphin supply matches conservation demand. The system can rest, recover, and feel satisfaction.'
+  },
+  {
+    id:'bliss', name:'Bliss', abbr:'Bliss', V:'V+', row:'C', col:'over', hemi:1,
+    valenceMode:'Opportunity mode', demandState:'Conservation over-supplied',
+    formula:'V+ | D<sub>C</sub> &lt; S<sub>β-endorphin</sub>',
+    derivation:'Opportunity mode: β-endorphin supply exceeds conservation demand.',
+    functionText:'Conservation supply exceeds the immediate need within an opportunity frame. The system feels deeply rewarded, buffered, and complete, and the sense of sufficiency can become immersive.',
+    clinicalNote:'Clinically, this can represent profound pleasure or completion, but if it is over-supplied it may reduce initiative, slow updating, or encourage prolonged withdrawal into reward.',
+    desc:'Opportunity; β-endorphin supply exceeds conservation demand. Rewarded conservation becomes immersive and abundant.'
+  }
+];
+
+const byId=Object.fromEntries(STATES.map(s=>[s.id,s]));
+const threatStates=STATES.filter(s=>s.hemi<0), oppStates=STATES.filter(s=>s.hemi>0);
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function mix(a,b,t){return a+(b-a)*t}
+function smooth(t){t=clamp(t,0,1);return t*t*(3-2*t)}
+function hslToRgb(h,s,l){
+  h=((h%360)+360)%360; s=clamp(s,0,1); l=clamp(l,0,1);
+  const c=(1-Math.abs(2*l-1))*s, x=c*(1-Math.abs((h/60)%2-1)), m=l-c/2;
+  let r1=0,g1=0,b1=0;
+  if(h<60){r1=c;g1=x}else if(h<120){r1=x;g1=c}else if(h<180){g1=c;b1=x}else if(h<240){g1=x;b1=c}else if(h<300){r1=x;b1=c}else{r1=c;b1=x}
+  return [Math.round((r1+m)*255),Math.round((g1+m)*255),Math.round((b1+m)*255)]
+}
+function blend(a,b,t){return [mix(a[0],b[0],t),mix(a[1],b[1],t),mix(a[2],b[2],t)]}
+function fieldColor(mode,nx,ny){
+  // nx, ny: -1..1, ny negative = top (screen/model y). nx = supply axis (left=D>S, right=D<S).
+  if(mode==='threat'){
+    const top=ny<0;
+    const t=clamp((nx+1)/2,0,1);
+    const hue=top ? mix(58,0,smooth(Math.pow(t,.86))) : mix(190,232,smooth(Math.pow(t,.86)));
+    const sat=mix(.30,1.0,smooth(t));
+    const light=t<.5 ? mix(.86,.52,smooth(t/.5)) : mix(.52,.29,smooth((t-.5)/.5));
+    return hslToRgb(hue,sat,light);
+  }
+  if(mode==='opportunity'){
+    const hw=comfort/2;
+    const t=clamp((nx+1)/2,0,1);
+    let hue;
+    if(ny < -hw){
+      const p=smooth(clamp((-hw-ny)/(1-hw),0,1));
+      hue=mix(58,0,Math.pow(p,.86));
+    } else if(ny > hw){
+      const p=smooth(clamp((ny-hw)/(1-hw),0,1));
+      hue=mix(190,232,Math.pow(p,.86));
+    } else {
+      hue=124; // green D_R band
+    }
+    const sat=mix(.30,1.0,smooth(t));
+    const light=t<.5 ? mix(.86,.52,smooth(t/.5)) : mix(.52,.29,smooth((t-.5)/.5));
+    return hslToRgb(hue,sat,light);
+  }
+  return [128,128,128];
+}
+// fieldColorSphere: uses true model coordinates so colors track rotation correctly.
+// mx=valence(x<0=threat,x≥0=opp), my=demand(y<0=top=mobilize,y>0=bottom=conserve),
+// mz=supply(z<0=D>S/left, z>0=D<S/right). This aligns with projected grid lines.
+function fieldColorSphere(mx,my,mz){
+  const hw=comfort/2;
+  const t=clamp((mz+1)/2,0,1); // supply gradient from model z
+  let hue;
+  if(mx>=0){ // opportunity hemisphere → 3-row (M/R/C)
+    if(my < -hw)       hue=mix(58,0,smooth(Math.pow(t,.86)));
+    else if(my > hw)   hue=mix(190,232,smooth(Math.pow(t,.86)));
+    else               hue=124; // green D_R band when |my|≤hw
+  } else { // threat hemisphere → 2-row (M/C)
+    if(my < 0)         hue=mix(58,0,smooth(Math.pow(t,.86)));
+    else               hue=mix(190,232,smooth(Math.pow(t,.86)));
+  }
+  const sat=mix(.30,1.0,smooth(t));
+  const light=t<.5 ? mix(.86,.52,smooth(t/.5)) : mix(.52,.29,smooth((t-.5)/.5));
+  return hslToRgb(hue,sat,light);
+}
+function rotateModelToView(x,y,z){
+  const cyy=Math.cos(rotY), syy=Math.sin(rotY), cxx=Math.cos(rotX), sxx=Math.sin(rotX);
+  let x1=x*cyy+z*syy, z1=-x*syy+z*cyy, y1=y;
+  let y2=y1*cxx-z1*sxx, z2=y1*sxx+z1*cxx;
+  return [x1,y2,z2]
+}
+function rotateViewToModel(x,y,z){
+  const cyy=Math.cos(-rotY), syy=Math.sin(-rotY), cxx=Math.cos(-rotX), sxx=Math.sin(-rotX);
+  let y1=y*cxx-z*sxx, z1=y*sxx+z*cxx, x1=x;
+  let x2=x1*cyy+z1*syy, z2=-x1*syy+z1*cyy;
+  return [x2,y1,z2]
+}
+
+function drawCanvas(){
+  const img=ctx.createImageData(canvas.width,canvas.height);
+  for(let py=0;py<900;py++){
+    for(let px=0;px<900;px++){
+      const dx=(px-cx)/r, dy=(py-cy)/r, dist=Math.hypot(dx,dy);
+      const idx=(py*900+px)*4;
+      if(dist>1){img.data[idx+3]=0;continue}
+      const vz=Math.sqrt(Math.max(0,1-dist*dist));
+      const m=rotateViewToModel(dx,dy,vz);
+      // m[0]=valence(x), m[1]=demand(neg=top=mobilize), m[2]=supply(neg=D>S left)
+      // fieldColorSphere uses model-z for supply so colors track rotation & align with grids
+      let col=fieldColorSphere(m[0],m[1],m[2]);
+      let shade=.72+.28*vz;
+      const edge=1-clamp((dist-.86)/.14,0,1)*.35;
+      let rr=col[0]*shade*edge, gg=col[1]*shade*edge, bb=col[2]*shade*edge;
+      const glare=Math.max(0,1-Math.hypot(dx+.36,dy+.44)/.70)*30;
+      rr+=glare;gg+=glare;bb+=glare;
+      img.data[idx]=clamp(rr,0,255);img.data[idx+1]=clamp(gg,0,255);img.data[idx+2]=clamp(bb,0,255);img.data[idx+3]=255;
+    }
+  }
+  ctx.clearRect(0,0,900,900);ctx.putImageData(img,0,0);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.92)';ctx.lineWidth=4;ctx.stroke();
+}
+function el(name,attrs={},text=''){
+  const e=document.createElementNS('http://www.w3.org/2000/svg',name);
+  for(const k in attrs)e.setAttribute(k,attrs[k]);
+  if(text)e.innerHTML=text;
+  svg.appendChild(e);return e;
+}
+function activeView(){return view}
+
+function statesForCurrentView(){
+  const av=activeView();
+  if(av==='threat') return threatStates;
+  if(av==='opportunity') return oppStates;
+  if(av==='mobilize') return STATES.filter(s=>s.row==='M');
+  if(av==='conserve') return STATES.filter(s=>s.row==='C');
+  if(av==='under') return STATES.filter(s=>s.col==='under');
+  if(av==='over') return STATES.filter(s=>s.col==='over');
+  return STATES;
+}
+function seamTitle(){
+  const av=activeView();
+  if(av==='mobilize') return 'D\u2098 Mobilize seam';
+  if(av==='conserve') return 'D\u1d9c Conserve seam';
+  if(av==='under') return 'D > S seam';
+  if(av==='over') return 'D < S seam';
+  return null;
+}
+function isSeamView(){
+  const av=activeView();
+  return av==='mobilize' || av==='conserve' || av==='under' || av==='over';
+}
+
+function drawActiveViewTitle(){
+  const av=activeView();
+  let title='';
+  if(av==='threat') title='Threat (speed > accuracy)';
+  else if(av==='opportunity') title='Opportunity (accuracy > speed)';
+  else if(av==='mobilize') title='Dₘ Mobilize seam';
+  else if(av==='conserve') title='Dᶜ Conserve seam';
+  else if(av==='under') title='D > S seam';
+  else if(av==='over') title='D < S seam';
+  if(title) el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},title);
+}
+
+function drawOverlay(){
+  svg.innerHTML='';
+  el('circle',{cx,cy,r,fill:'none',stroke:'rgba(255,255,255,.92)','stroke-width':4});
+  const av=activeView();
+
+  if(av==='sphere'){
+    drawSphereAxes();
+    drawProjectedThreatGrid();
+    drawProjectedOpportunityGrid();
+    if(layer==='labels') drawSphereLabels();
+    if(selected) highlightSphereSelected();
+    return;
+  }
+
+  drawSphereAxes();
+
+  // Keep both hemisphere coordinate grids visible continuously.
+  // Threat or Opportunity now acts as the snapped starting orientation,
+  // not as a filter that removes the other hemisphere's white guide lines.
+  drawProjectedThreatGrid();
+  drawProjectedOpportunityGrid();
+  drawActiveViewTitle();
+
+  if(isSeamView()){
+    if(layer==='labels') drawStateLabels(statesForCurrentView());
+    if(selected) highlightSphereSelected();
+    return;
+  }
+
+  // Labels now also serves as the click-detail layer.
+  // In hemisphere views, all visible affect labels remain available as the user rotates.
+  if(layer==='labels') drawStateLabels(STATES);
+  if(selected) highlightSphereSelected();
+}
+function drawSphereAxes(){
+  // Only draw the valence seam great circle on sphere/seam views — it reads as a
+  // spurious dividing line on the flat snapped hemisphere views.
+  const av=activeView();
+  if(av==='threat'||av==='opportunity'){
+    // skip the great circle, just draw the bottom label
+    el('text',{x:cx,y:cy+r+42,class:'axisSmall','text-anchor':'middle'},'Fixed View locks the sphere · Free Rotate unlocks drag');
+    return;
+  }
+  let pts=[];
+  for(let i=0;i<=240;i++){
+    const a=i/240*Math.PI*2, p=rotateModelToView(0,Math.cos(a),Math.sin(a));
+    if(p[2]>-.06) pts.push([cx+p[0]*r,cy+p[1]*r]);
+  }
+  if(pts.length>2){
+    let d=`M ${pts[0][0]} ${pts[0][1]}`; for(let i=1;i<pts.length;i++) d+=` L ${pts[i][0]} ${pts[i][1]}`;
+    el('path',{d,fill:'none',stroke:'rgba(255,255,255,.55)','stroke-width':2.0});
+  }
+  el('text',{x:cx,y:cy+r+42,class:'axisSmall','text-anchor':'middle'},'Fixed View locks the sphere · Free Rotate unlocks drag');
+}
+function projPoint(x,y,z,scale=1.0){
+  const p=rotateModelToView(x,y,z);
+  if(p[2]<-.15) return null;
+  return [cx+p[0]*r*scale, cy+p[1]*r*scale, p[2]];
+}
+function projectedPath(points, cls='grid'){
+  let seg=[], paths=[];
+  points.forEach(pt=>{
+    const p=projPoint(pt[0],pt[1],pt[2]);
+    if(p) seg.push(p); else if(seg.length>1){paths.push(seg);seg=[];}
+  });
+  if(seg.length>1)paths.push(seg);
+  paths.forEach(s=>{
+    let d=`M ${s[0][0]} ${s[0][1]}`;
+    for(let i=1;i<s.length;i++)d+=` L ${s[i][0]} ${s[i][1]}`;
+    el('path',{d,fill:'none',class:cls});
+  });
+}
+function drawProjectedThreatGrid(){
+  // Threat hemisphere x<0: project the 2x2 divisions y=0 and z=0, clipped to x<0.
+  const ptsY=[], ptsZ=[];
+  for(let i=0;i<=240;i++){
+    const a=i/240*Math.PI*2;
+    ptsY.push([-Math.abs(Math.cos(a)),0,Math.sin(a)]); // mobilize/conserve divider
+    ptsZ.push([-Math.abs(Math.cos(a)),Math.sin(a),0]); // supply divider
+  }
+  projectedPath(ptsY,'grid');
+  if(supplyBoundary) projectedPath(ptsZ,'grid');
+}
+function drawProjectedOpportunityGrid(){
+  // Opportunity hemisphere x>0: project 3x3 section boundaries y=±optimal-zone/2 and z=±optimal-zone/2.
+  const hw=comfort/2;
+  [-hw,hw].forEach(yv=>{
+    const pts=[];
+    const rad=Math.sqrt(Math.max(0,1-yv*yv));
+    for(let i=0;i<=240;i++){
+      const a=-Math.PI/2 + i/240*Math.PI; // visible half of circle in x>0
+      pts.push([Math.abs(Math.cos(a))*rad,yv,Math.sin(a)*rad]);
+    }
+    projectedPath(pts,'grid');
+  });
+  if(supplyBoundary){
+    [-hw,hw].forEach(zv=>{
+      const pts=[];
+      const rad=Math.sqrt(Math.max(0,1-zv*zv));
+      for(let i=0;i<=240;i++){
+        const a=-Math.PI/2 + i/240*Math.PI;
+        pts.push([Math.abs(Math.cos(a))*rad,Math.sin(a)*rad,zv]);
+      }
+      projectedPath(pts,'grid');
+    });
+  }
+}
+function drawStateLabels(states){
+  states.forEach(st=>{
+    const p=spherePos(st);
+    if(p.z<-0.18) return;
+    addSmallTag(p.x,p.y,st.displayName || st.name,()=>selectState(st));
+  });
+}
+function drawHemisphereLabels(av){
+  drawStateLabels(av==='threat'?threatStates:oppStates);
+}
+
+function project(mx,my,mz){
+  const p=rotateModelToView(mx,my,mz); return {x:cx+p[0]*r*.76,y:cy+p[1]*r*.76,z:p[2]};
+}
+function spherePos(st){
+  const x=st.hemi*.72;
+  // model y: negative = top = mobilize, positive = bottom = conserve
+  let y=st.row==='M'?-.62:st.row==='R'?0:.62;
+  // model z: negative = D>S (left when facing threat), positive = D<S (right)
+  let z=st.col==='under'?-.62:st.col==='match'?0:.62;
+  return project(x,y,z);
+}
+function drawSphereLabels(){
+  STATES.forEach(st=>{
+    const p=spherePos(st);
+    if(p.z<-0.14) return;
+    addSmallTag(p.x,p.y,st.abbr,()=>selectState(st));
+  });
+}
+function highlightSphereSelected(){
+  const st=selected, p=spherePos(st);
+  if(p.z<-0.25)return;
+  const accent=stateAccent(st);
+  el('circle',{cx:p.x,cy:p.y,r:34,fill:'rgba(255,255,255,.08)',stroke:accent,'stroke-width':5,style:`filter:drop-shadow(0 0 12px ${accent});`});
+  el('circle',{cx:p.x,cy:p.y,r:24,fill:'rgba(255,255,255,.12)',stroke:'rgba(255,255,255,.90)','stroke-width':2});
+}
+function drawThreatGrid(){
+  el('line',{x1:cx-r,y1:cy,x2:cx+r,y2:cy,class:'grid'});
+  el('line',{x1:cx,y1:cy-r,x2:cx,y2:cy+r,class:'grid'});
+  el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},'Threat (speed > accuracy)');
+  el('text',{x:cx-r-76,y:cy-r*.5,class:'axisText','text-anchor':'middle'},'D<tspan baseline-shift="sub" font-size="12">M</tspan>');
+  el('text',{x:cx-r-76,y:cy-r*.5+24,class:'axisSmall','text-anchor':'middle'},'Mobilize');
+  el('text',{x:cx-r-76,y:cy+r*.5,class:'axisText','text-anchor':'middle'},'D<tspan baseline-shift="sub" font-size="12">C</tspan>');
+  el('text',{x:cx-r-76,y:cy+r*.5+24,class:'axisSmall','text-anchor':'middle'},'Conserve');
+  axisBottom([{x:cx-r*.5,a:'D > S',b:'Too little supply'},{x:cx+r*.5,a:'D < S',b:'Too much supply'}]);
+}
+function drawOpportunityGrid(){
+  const off=comfort*r/2;
+  el('line',{x1:cx-r,y1:cy-off,x2:cx+r,y2:cy-off,class:'grid'});
+  el('line',{x1:cx-r,y1:cy+off,x2:cx+r,y2:cy+off,class:'grid'});
+  el('line',{x1:cx-off,y1:cy-r,x2:cx-off,y2:cy+r,class:'grid'});
+  el('line',{x1:cx+off,y1:cy-r,x2:cx+off,y2:cy+r,class:'grid'});
+  el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},'Opportunity (accuracy > speed)');
+  const yM=cy-(off+r)/2,yR=cy,yC=cy+(off+r)/2;
+  [['M','Mobilize',yM],['R','Recalibrate',yR],['C','Conserve',yC]].forEach(([d,label,y])=>{
+    el('text',{x:cx-r-76,y,class:'axisText','text-anchor':'middle'},`D<tspan baseline-shift="sub" font-size="12">${d}</tspan>`);
+    el('text',{x:cx-r-76,y:y+24,class:'axisSmall','text-anchor':'middle'},label);
+  });
+  axisBottom([{x:cx-(off+r)/2,a:'D > S',b:'Too little'},{x:cx,a:'D ≈ S',b:'Supply balanced'},{x:cx+(off+r)/2,a:'D < S',b:'Too much'}]);
+}
+function axisBottom(items){
+  items.forEach(it=>{
+    el('text',{x:it.x,y:cy+r+38,class:'axisText','text-anchor':'middle'},it.a);
+    el('text',{x:it.x,y:cy+r+60,class:'axisSmall','text-anchor':'middle'},it.b);
+  });
+}
+function regionCenter(st){
+  const av=activeView();
+  if(av==='threat'){
+    return {x:st.col==='under'?cx-r*.5:cx+r*.5,y:st.row==='M'?cy-r*.5:cy+r*.5};
+  }
+  const off=comfort/2;
+  const xs={under:-(1+off)/2,match:0,over:(1+off)/2};
+  const ys={M:-(1+off)/2,R:0,C:(1+off)/2};
+  return {x:cx+xs[st.col]*r,y:cy+ys[st.row]*r};
+}
+function regionBounds(st){
+  const av=activeView();
+  if(av==='threat'){
+    return {x1:st.col==='under'?cx-r:cx,x2:st.col==='under'?cx:cx+r,y1:st.row==='M'?cy-r:cy,y2:st.row==='M'?cy:cy+r};
+  }
+  const hw=comfort/2;
+  const xs={under:[-1,-hw],match:[-hw,hw],over:[hw,1]}[st.col];
+  const ys={M:[-1,-hw],R:[-hw,hw],C:[hw,1]}[st.row];
+  return {x1:cx+xs[0]*r,x2:cx+xs[1]*r,y1:cy+ys[0]*r,y2:cy+ys[1]*r};
+}
+function addSmallTag(x,y,label,click){
+  const w=Math.max(90,label.length*9.8+22),h=34;
+  const g=el('g',{class:'labelBtn'});
+  const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('x',x-w/2);rect.setAttribute('y',y-h/2);rect.setAttribute('width',w);rect.setAttribute('height',h);rect.setAttribute('rx',10);rect.setAttribute('ry',10);
+  const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+  text.setAttribute('x',x);text.setAttribute('y',y+1);text.setAttribute('class','stateText');text.textContent=label;
+  g.appendChild(rect);g.appendChild(text);
+  // No click handler here — all clicks handled by svg listener for consistent state
+}
+function addLabelButton(st){
+  const p=regionCenter(st), label=st.displayName || st.name, w=Math.max(100,label.length*9.8+22), h=34;
+  const g=el('g',{class:'labelBtn'});
+  const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('x',p.x-w/2);rect.setAttribute('y',p.y-h/2);rect.setAttribute('width',w);rect.setAttribute('height',h);rect.setAttribute('rx',10);rect.setAttribute('ry',10);
+  const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+  text.setAttribute('x',p.x);text.setAttribute('y',p.y+1.2);text.setAttribute('class','stateText');text.textContent=label;
+  g.appendChild(rect);g.appendChild(text);
+  // No click handler here — all clicks handled by svg listener
+}
+function highlightSelectedFlat(st){
+  const b=regionBounds(st);
+  el('rect',{x:b.x1,y:b.y1,width:b.x2-b.x1,height:b.y2-b.y1,class:'selectedOutline',rx:18,ry:18});
+}
+
+function addCellCoordinateHints(){
+  const av=activeView();
+  const show = true; // coordinate structure is part of the map, not a label layer
+  if(!show || av==='sphere') return;
+  const states = av==='threat'?threatStates:oppStates;
+  states.forEach(st=>{
+    const p=regionCenter(st);
+    const y=p.y + (layer==='labels' ? 34 : 0);
+    const formula = st.formula
+      .replace(/<sub>/g,'<tspan baseline-shift="sub" font-size="10">')
+      .replace(/<\/sub>/g,'</tspan>');
+    el('text',{x:p.x,y:y,class:'axisSmall','text-anchor':'middle',style:'font-size:12px;opacity:.92'},formula);
+  });
+}
+
+function stateInCurrentView(st){const av=activeView();return (av==='threat'&&st.hemi<0)||(av==='opportunity'&&st.hemi>0)||(av==='mobilize'&&st.row==='M')||(av==='conserve'&&st.row==='C')||(av==='under'&&st.col==='under')||(av==='over'&&st.col==='over')||av==='sphere'}
+function stateAtPoint(mx,my){
+  const dx=(mx-cx)/r,dy=(my-cy)/r;if(dx*dx+dy*dy>1)return null;
+  const av=activeView();
+  if(av==='threat'){
+    const row=dy<0?'M':'C',col=dx<0?'under':'over';
+    return threatStates.find(s=>s.row===row&&s.col===col);
+  }
+  if(av==='opportunity'){
+    const hw=comfort/2,row=dy<-hw?'M':dy>hw?'C':'R',col=dx<-hw?'under':dx>hw?'over':'match';
+    return oppStates.find(s=>s.row===row&&s.col===col);
+  }
+  return null;
+}
+function stateAtSpherePoint(mx,my){
+  const dx=(mx-cx)/r, dy=(my-cy)/r;
+  if(dx*dx+dy*dy>1) return null;
+  const dz=Math.sqrt(Math.max(0,1-dx*dx-dy*dy));
+  const m=rotateViewToModel(dx,dy,dz);
+  const av=activeView();
+  if(av==='threat' && m[0] < .10){
+    const row=m[1]<0?'M':'C', col=m[2]<0?'under':'over';
+    return threatStates.find(s=>s.row===row&&s.col===col);
+  }
+  if(av==='opportunity' && (m[0] > -.10 || view==='opportunity')){
+    const hw=comfort/2;
+    const row=m[1]<-hw?'M':m[1]>hw?'C':'R';
+    const col=m[2]<-hw?'under':m[2]>hw?'over':'match';
+    return oppStates.find(s=>s.row===row&&s.col===col);
+  }
+  return null;
+}
+// Compute the screen-space anchor for a state's sector — the midpoint of its
+// region edge that points most toward the outside of the sphere — so the popout
+// opens away from the sector rather than on top of it.
+function sectorAnchor(st){
+  const wrap=document.getElementById('mapWrap');
+  const ww=wrap.offsetWidth, wh=wrap.offsetHeight;
+  const scale=ww/900; // SVG→pixel
+  const av=activeView();
+
+  // For sphere/seam views fall back to spherePos
+  if(av==='sphere'||av==='mobilize'||av==='conserve'||av==='under'||av==='over'){
+    const sp=spherePos(st);
+    return {x:sp.x*scale, y:sp.y*scale, edgeX:sp.x*scale, edgeY:sp.y*scale};
+  }
+
+  // Flat hemisphere: get the bounding box of this state's sector in SVG space
+  const b=regionBounds(st);
+  const midX=(b.x1+b.x2)/2*scale, midY=(b.y1+b.y2)/2*scale;
+  const ctrX=cx*scale, ctrY=cy*scale;
+
+  // Compute which edge of the sector is furthest from centre (the "outer" edge)
+  // and use that edge midpoint as the anchor, so the popout opens outward.
+  const edgeL=b.x1*scale, edgeR=b.x2*scale, edgeT=b.y1*scale, edgeB=b.y2*scale;
+  const dL=ctrX-edgeL, dR=edgeR-ctrX, dT=ctrY-edgeT, dB=edgeB-ctrY;
+  const maxD=Math.max(dL,dR,dT,dB);
+
+  let anchorX=midX, anchorY=midY;
+  if(maxD===dL) anchorX=edgeL;
+  else if(maxD===dR) anchorX=edgeR;
+  else if(maxD===dT) anchorY=edgeT;
+  else anchorY=edgeB;
+
+  return {x:midX, y:midY, edgeX:anchorX, edgeY:anchorY};
+}
+
+function stateAccent(st){
+  if(st.row==='M') return '#ff4b4b';       // ACTH / mobilization
+  if(st.row==='R') return '#46d65c';       // α-MSH / recalibration
+  if(st.row==='C') return '#4f8df7';       // β-endorphin / conservation
+  return '#ffe87a';
+}
+
+function showPopout(st){
+  const wrap=document.getElementById('mapWrap');
+  const ww=wrap.offsetWidth, wh=wrap.offsetHeight;
+  const compactW = wh < 700 ? 280 : (wh < 820 ? 300 : 340);
+  const compactH = wh < 700 ? Math.min(wh * .64, wh - 16) : (wh < 820 ? Math.min(wh * .68, wh - 16) : wh - 24);
+  const pw=Math.min(compactW, ww-16), ph=Math.min(compactH, wh-16);
+  const margin=8;
+
+  const {edgeX, edgeY, x:midX, y:midY}=sectorAnchor(st);
+
+  // Direction: push the popout away from the sphere centre
+  const ctrX=ww/2, ctrY=wh/2;
+  const dx=edgeX-ctrX, dy=edgeY-ctrY;
+  const gap=12;
+
+  let left, top;
+  if(Math.abs(dx)>=Math.abs(dy)){
+    // Primarily left or right sector
+    if(dx>=0){ left=edgeX+gap; } else { left=edgeX-pw-gap; }
+    top=midY-ph/2;
+  } else {
+    // Primarily top or bottom sector
+    left=midX-pw/2;
+    if(dy>=0){ top=edgeY+gap; } else { top=edgeY-ph-gap; }
+  }
+
+  // Clamp inside mapWrap
+  left=Math.max(margin, Math.min(left, ww-pw-margin));
+  top=Math.max(margin, Math.min(top, wh-ph-margin));
+
+  const clinicalHtml = st.clinicalNote
+    ? `<hr class="po-divider"><div class="po-section"><span class="po-label">Clinical / Talk Note</span><p class="po-body">${st.clinicalNote}</p></div>`
+    : '';
+
+  const accent = stateAccent(st);
+  popout.style.setProperty('--stateAccent', accent);
+
+  popout.innerHTML=`
+    <h2>${st.name}</h2>
+    <div class="po-interpretive">
+      <div class="po-meta">
+        <div class="po-field"><span class="po-kicker">Valence</span><span class="po-value">${st.valenceMode||st.V}</span></div>
+        <div class="po-field"><span class="po-kicker">State</span><span class="po-value">${st.demandState||''}</span></div>
+      </div>
+      <div class="po-address">
+        <span class="po-kicker">Address</span>
+        <span class="po-formula">${st.formula}</span>
+      </div>
+    </div>
+    <div class="po-section"><span class="po-label">Derivation</span><p class="po-body">${st.derivation||st.desc}</p></div>
+    <hr class="po-divider">
+    <div class="po-section"><span class="po-label">Function</span><p class="po-body">${st.functionText||st.desc}</p></div>
+    ${clinicalHtml}
+    <div class="po-hint">click elsewhere to dismiss</div>`;
+
+  popout.style.display='block';
+
+  // Re-clamp using the actual rendered size so compact panels stay fully visible,
+  // especially in smaller browser windows.
+  const actualW=popout.offsetWidth || pw;
+  const actualH=popout.offsetHeight || ph;
+  left=Math.max(margin, Math.min(left, ww-actualW-margin));
+  top=Math.max(margin, Math.min(top, wh-actualH-margin));
+
+  popout.style.left=left+'px';
+  popout.style.top=top+'px';
+  popoutOpen=true;
+  popout.classList.add('visible');
+}
+
+function hidePopout(){
+  popoutOpen=false;
+  popout.classList.remove('visible');
+  setTimeout(()=>{ popout.style.display='none'; }, 220);
+}
+function selectState(st){
+  selected=st; layer='labels';
+  document.querySelectorAll('[data-layer]').forEach(b=>b.classList.toggle('active',b.dataset.layer==='labels'));
+  showPopout(st);
+  render();
+}
+function render(){
+  drawCanvas();drawOverlay();
+  const av=activeView();
+  const viewLabel={
+    threat:'V− Threat (speed > accuracy)',
+    opportunity:'V+ Opportunity (accuracy > speed)',
+    mobilize:'D_M Mobilize seam',
+    conserve:'D_C Conserve seam',
+    under:'D > S — under-supplied seam',
+    over:'D < S — over-supplied seam',
+    sphere:'Full sphere'
+  }[av]||av;
+  const layerLabel=layer==='field'?'field only':'labels + click to explore';
+  const modeLabel=presenterMode?'· Presenter':'';
+  caption.textContent=`${viewLabel} · ${layerLabel}${modeLabel}`;
+}
+function setView(v,fromState=false){
+  selected=fromState?selected:null;
+  hidePopout();
+  inertiaX=0; inertiaY=0;
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  view=v;
+  if(v==='mobilize'||v==='conserve'||v==='under'||v==='over'){
+    layer='labels';
+    document.querySelectorAll('[data-layer]').forEach(b=>b.classList.toggle('active',b.dataset.layer==='labels'));
+  }
+  if(v==='sphere'){startAnim('sphere')}
+  else if(v==='threat'){startAnim('threat')}
+  else if(v==='opportunity'){startAnim('opportunity')}
+  else if(v==='mobilize'){startAnim('axisM')}
+  else if(v==='conserve'){startAnim('axisC')}
+  else if(v==='under'){startAnim('axisUnder')}
+  else if(v==='over'){startAnim('axisOver')}
+}
+function startAnim(kind){
+  const target={
+    sphere:{x:-.16,y:0.62},
+    threat:{x:0,y:Math.PI/2},
+    opportunity:{x:0,y:-Math.PI/2},
+    axisM:{x:-Math.PI/2,y:Math.PI/2},
+    axisC:{x:Math.PI/2,y:Math.PI/2},
+    axisUnder:{x:0,y:Math.PI},
+    axisOver:{x:0,y:0}
+  }[kind];
+  anim={kind,label:'Rotating',start:performance.now(),dur:760,fromX:rotX,fromY:rotY,toX:target.x,toY:target.y};
+  progress.style.opacity=1; requestAnimationFrame(tickAnim);
+}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function tickAnim(ts){
+  if(!anim)return;
+  const p=clamp((ts-anim.start)/anim.dur,0,1),e=ease(Math.min(1,p/.45));
+  rotX=mix(anim.fromX,anim.toX,e);rotY=mix(anim.fromY,anim.toY,e);
+  progress.style.width=(p*100)+'%';
+  render();
+  if(p<1)requestAnimationFrame(tickAnim);else{const k=anim.kind;anim=null;progress.style.opacity=0;progress.style.width='0%';if(k==='threat')view='threat';if(k==='opportunity')view='opportunity';if(k==='sphere')view='sphere';render();}
+}
+function pointerPos(e){const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY}}
+function startDrag(e){if(anim||presenterMode||rotationLocked)return;dragging=true;const p=pointerPos(e);lastX=p.x;lastY=p.y;e.preventDefault()}
+function moveDrag(e){if(!dragging||anim)return;const p=pointerPos(e),dx=p.x-lastX,dy=p.y-lastY;lastX=p.x;lastY=p.y;inertiaY=dx*.008;inertiaX=dy*.008;rotY+=inertiaY;rotX=clamp(rotX+inertiaX,-1.25,1.25);hidePopout();render();e.preventDefault()}
+function endDrag(){dragging=false}
+canvas.addEventListener('mousedown',startDrag);svg.addEventListener('mousedown',startDrag);
+window.addEventListener('mousemove',moveDrag);window.addEventListener('mouseup',endDrag);
+canvas.addEventListener('touchstart',startDrag,{passive:false});svg.addEventListener('touchstart',startDrag,{passive:false});
+window.addEventListener('touchmove',moveDrag,{passive:false});window.addEventListener('touchend',endDrag);
+function handleMapClick(e, element){
+  if(layer!=='labels') return;
+  const rect=element.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width*900;
+  const my=(e.clientY-rect.top)/rect.height*900;
+  if(popoutOpen){
+    // Any click while open → close, done.
+    selected=null; hidePopout(); render();
+    return;
+  }
+  // Nothing open → find state and open
+  const st=stateAtSpherePoint(mx,my)||stateAtPoint(mx,my);
+  if(st) selectState(st);
+}
+canvas.addEventListener('click',e=>handleMapClick(e,canvas));
+svg.addEventListener('click',e=>handleMapClick(e,svg));
+
+// View buttons
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+
+// Layer buttons — keep all label controls in sync
+function setLayer(l){
+  layer=l; selected=null; hidePopout();
+  document.querySelectorAll('[data-layer]').forEach(x=>x.classList.toggle('active',x.dataset.layer===l));
+  const labelBtn=document.getElementById('labelsToggleBtn');
+  if(labelBtn){
+    const on=l==='labels';
+    labelBtn.classList.toggle('active',on);
+    labelBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    labelBtn.textContent = on ? 'Labels On' : 'Labels Off';
+  }
+  render();
+}
+document.querySelectorAll('[data-layer]').forEach(b=>b.addEventListener('click',()=>setLayer(b.dataset.layer)));
+document.getElementById('labelsToggleBtn').addEventListener('click',()=>setLayer(layer==='labels'?'field':'labels'));
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  comfort=0.44;
+  document.getElementById('comfort').value=44;
+  document.getElementById('comfortVal').textContent='44%';
+  selected=null; hidePopout();
+  supplyBoundary=true;
+  updateSupplyBoundaryButton();
+  rotationLocked=true;
+  updateRotationButtons();
+  presenterMode=false;
+  advancedOpen=false;
+  const advanced=document.getElementById('advancedControls');
+  advanced.classList.remove('show');
+  advanced.setAttribute('aria-hidden','true');
+  document.getElementById('advancedBtn').classList.remove('active');
+  document.getElementById('advancedBtn').setAttribute('aria-expanded','false');
+  document.getElementById('fixedPanel').classList.remove('show');
+  document.body.classList.remove('fixed-open');
+  document.getElementById('fixedBtn').classList.remove('active');
+  closeWalkthrough();
+  setLayer('labels');
+  setView('threat');
+});
+
+// Advanced panel
+const advancedBtn=document.getElementById('advancedBtn');
+advancedBtn.addEventListener('click',()=>{
+  advancedOpen=!advancedOpen;
+  const advanced=document.getElementById('advancedControls');
+  advanced.classList.toggle('show', advancedOpen);
+  advanced.setAttribute('aria-hidden', advancedOpen ? 'false' : 'true');
+  advancedBtn.classList.toggle('active', advancedOpen);
+  advancedBtn.setAttribute('aria-expanded', advancedOpen ? 'true' : 'false');
+});
+
+function updateRotationButtons(){
+  const fixed=document.getElementById('fixedViewBtn');
+  const free=document.getElementById('freeRotateBtn');
+  if(fixed){
+    fixed.classList.toggle('active', rotationLocked);
+    fixed.setAttribute('aria-pressed', rotationLocked ? 'true' : 'false');
+  }
+  if(free){
+    free.classList.toggle('active', !rotationLocked);
+    free.setAttribute('aria-pressed', !rotationLocked ? 'true' : 'false');
+  }
+  if(rotationLocked){ inertiaX=0; inertiaY=0; }
+}
+document.getElementById('fixedViewBtn').addEventListener('click',()=>{
+  rotationLocked=true;
+  updateRotationButtons();
+  // Lock back to the selected face when possible; seam views keep their current view but stop dragging.
+  if(view==='threat' || view==='opportunity') setView(view);
+  else render();
+});
+document.getElementById('freeRotateBtn').addEventListener('click',()=>{
+  rotationLocked=false;
+  updateRotationButtons();
+  render();
+});
+
+function updateSupplyBoundaryButton(){
+  const b=document.getElementById('supplyBoundaryBtn');
+  if(!b) return;
+  b.classList.toggle('active', supplyBoundary);
+  b.setAttribute('aria-pressed', supplyBoundary ? 'true' : 'false');
+  b.textContent = supplyBoundary ? 'Boundary On' : 'Boundary Off';
+}
+document.getElementById('supplyBoundaryBtn').addEventListener('click',()=>{
+  supplyBoundary=!supplyBoundary;
+  updateSupplyBoundaryButton();
+  render();
+});
+
+// Comfort Zone width
+document.getElementById('comfort').addEventListener('input',e=>{
+  comfort=Number(e.target.value)/100;
+  document.getElementById('comfortVal').textContent=e.target.value+'%';
+  render();
+});
+
+// Fixed maps
+document.getElementById('fixedBtn').addEventListener('click',()=>{
+  const p=document.getElementById('fixedPanel');
+  if(p.classList.contains('show')){p.classList.remove('show');document.body.classList.remove('fixed-open');document.getElementById('fixedBtn').classList.remove('active')}
+  else{drawFixed();p.classList.add('show');document.body.classList.add('fixed-open');document.getElementById('fixedBtn').classList.add('active')}
+});
+document.getElementById('closeFixed').addEventListener('click',()=>{
+  document.getElementById('fixedPanel').classList.remove('show');
+  document.body.classList.remove('fixed-open');
+  document.getElementById('fixedBtn').classList.remove('active');
+});
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.getElementById('fixedPanel').classList.remove('show');
+    document.body.classList.remove('fixed-open');
+    document.getElementById('fixedBtn').classList.remove('active');
+    closeWalkthrough();
+  }
+});
+
+// Overlays
+function runDemo(ids){
+  hidePopout(); selected=null;
+  let i=0; selectState(byId[ids[0]]); progress.style.opacity=1;
+  const int=setInterval(()=>{
+    i++; progress.style.width=(i/ids.length*100)+'%';
+    if(i>=ids.length){clearInterval(int);progress.style.opacity=0;progress.style.width='0%';return}
+    selectState(byId[ids[i]]);
+  },900);
+}
+document.getElementById('bipolarBtn').addEventListener('click',()=>runDemo(['exhilaration','anger','depression','contentment']));
+document.getElementById('ptsdBtn').addEventListener('click',()=>runDemo(['anxiety','anger','dissociation','depression']));
+document.getElementById('bpdBtn').addEventListener('click',()=>runDemo(['comfortZone','anger','anxiety','overconfident','dissociation']));
+
+// Walkthrough
+const WT_STEPS=[
+  {
+    title:'The Regulatory Map',
+    body:'This sphere maps affect as a regulatory readout — not as emotion labels, but as positions in a coordinate system. The left hemisphere (V−) is threat: speed dominates accuracy. The right hemisphere (V+) is opportunity: accuracy can exceed speed. Every affective state is a location, not a category.'
+  },
+  {
+    title:'Three Peptides, Three Axes',
+    body:'Three POMC-derived peptides implement the space. ACTH governs mobilization (D_M): how much force the system deploys. α-MSH governs recalibration (D_R): how accurately the system updates its model of the world. β-Endorphin governs conservation (D_C): how completely the system can rest and restore. Each axis runs from demand exceeding supply (D > S) through supply balanced (D ≈ S) to supply exceeding demand (D < S).'
+  },
+  {
+    title:'Click to Explore',
+    body:'Switch to Labels mode and click any affect state to see its valence mode, demand–supply state, formal address, functional description, and clinical note. Drag to rotate the sphere and view the same structure from any angle. The seam views let you compare states across valence — for example, all mobilization states, or all under-supplied states, together.'
+  }
+];
+let wtCurrent=0;
+function openWalkthrough(){
+  wtCurrent=0; showWtStep();
+  document.getElementById('walkthrough').style.display='flex';
+}
+function closeWalkthrough(){
+  document.getElementById('walkthrough').style.display='none';
+}
+function showWtStep(){
+  const s=WT_STEPS[wtCurrent];
+  document.getElementById('wtStep').textContent=`Step ${wtCurrent+1} of ${WT_STEPS.length}`;
+  document.getElementById('wtTitle').textContent=s.title;
+  document.getElementById('wtBody').textContent=s.body;
+  document.getElementById('wtPrev').style.opacity=wtCurrent===0?'0.3':'1';
+  document.getElementById('wtPrev').disabled=wtCurrent===0;
+  document.getElementById('wtNext').textContent=wtCurrent===WT_STEPS.length-1?'Done':'Next →';
+}
+document.getElementById('walkthroughBtn').addEventListener('click',openWalkthrough);
+document.getElementById('wtPrev').addEventListener('click',()=>{if(wtCurrent>0){wtCurrent--;showWtStep();}});
+document.getElementById('wtNext').addEventListener('click',()=>{
+  if(wtCurrent<WT_STEPS.length-1){wtCurrent++;showWtStep();}
+  else closeWalkthrough();
+});
+document.getElementById('walkthrough').addEventListener('click',e=>{if(e.target===document.getElementById('walkthrough'))closeWalkthrough();});
+function drawFixed(){
+  const S=document.getElementById('fixedSvg');
+  S.innerHTML=`<defs><style>.t{font:850 43px Arial;fill:#081734}.subt{font:italic 31px Arial;fill:#111827}.axT{font:850 32px Arial;fill:#081734}.ax{font:850 28px Arial;fill:#081734}.axm{font:650 20px Arial;fill:#111827}.name{font:850 26px Arial;fill:#060b16}.nameW{font:850 26px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:3px}.form{font:650 21px Arial;fill:#0b1220}.formW{font:700 21px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:2px}.grid{stroke:#111827;stroke-width:2.4;fill:none}.inner{stroke:#111827;stroke-width:1.8}</style></defs>
+<rect width="1600" height="1000" fill="#fff"/>
+<text x="380" y="72" text-anchor="middle" class="t">V− Threat Mode</text><text x="380" y="114" text-anchor="middle" class="subt">4 regions · speed &gt; accuracy</text>
+<text x="1210" y="72" text-anchor="middle" class="t">V+ Opportunity Mode</text><text x="1210" y="114" text-anchor="middle" class="subt">9 regions · accuracy &gt; speed</text>
+${flatLeft()}${flatRight()}
+<text x="800" y="970" text-anchor="middle" style="font:650 25px Arial;fill:#111827">Rule: valence mode frames the demand–supply relation; each cell names the derived affect</text>`;
+}
+function flatCell(x,y,name,form,white=false,nfs=26,ffs=21){return `<text x="${x}" y="${y-28}" text-anchor="middle" class="${white?'nameW':'name'}" style="font-size:${nfs}px">${name}</text><text x="${x}" y="${y+28}" text-anchor="middle" class="${white?'formW':'form'}" style="font-size:${ffs}px">${form}</text>`}
+function rgbHex(arr){return '#'+arr.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('')}
+function fixedCellColor(mx,my,mz){ return rgbHex(fieldColorSphere(mx,my,mz)); }
+function flatLeft(){
+  const cTL=fixedCellColor(-0.5,-0.5,-0.5), cTR=fixedCellColor(-0.5,-0.5,0.5), cBL=fixedCellColor(-0.5,0.5,-0.5), cBR=fixedCellColor(-0.5,0.5,0.5);
+  return `<text x="38" y="488" class="axT" transform="rotate(-90 38 488)" text-anchor="middle">Demand (D)</text><text x="78" y="292" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="78" y="327" class="axm" text-anchor="middle">Mobilize</text><text x="78" y="606" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="78" y="641" class="axm" text-anchor="middle">Conserve</text><g transform="translate(130,160)"><rect width="560" height="600" class="grid"/><rect width="280" height="300" fill="${cTL}" class="inner"/><rect x="280" width="280" height="300" fill="${cTR}" class="inner"/><rect y="300" width="280" height="300" fill="${cBL}" class="inner"/><rect x="280" y="300" width="280" height="300" fill="${cBR}" class="inner"/>${flatCell(140,148,'Anxiety','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>')}${flatCell(420,148,'Anger','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>',true)}${flatCell(140,448,'Depression','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>')}${flatCell(420,448,'Dissociation','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>',true)}</g><text x="270" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="270" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="550" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="550" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="410" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
+function flatRight(){
+  const hw=comfort/2;
+  const rowY=[-(1+hw)/2,0,(1+hw)/2];
+  const colZ=[-(1+hw)/2,0,(1+hw)/2];
+  const mx=0.5;
+  let rects='';
+  for(let row=0;row<3;row++){
+    for(let col=0;col<3;col++){
+      const fill=fixedCellColor(mx,rowY[row],colZ[col]);
+      rects += `<rect x="${col*186.666}" y="${row*200}" width="186.667" height="200" fill="${fill}" class="inner"/>`;
+    }
+  }
+  return `<text x="770" y="488" class="axT" transform="rotate(-90 770 488)" text-anchor="middle">Demand (D)</text><text x="808" y="246" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="808" y="281" class="axm" text-anchor="middle">Mobilize</text><text x="808" y="446" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">R</tspan></text><text x="808" y="486" class="axm" text-anchor="middle">Recalibrate</text><text x="808" y="646" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="808" y="681" class="axm" text-anchor="middle">Conserve</text><g transform="translate(860,160)"><rect width="560" height="600" class="grid"/>${rects}${flatCell(93.333,96,'Anticipation','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(280,96,'Engagement','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(466.666,96,'Exhilaration','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',true,24,19)}${flatCell(93.333,296,'Overcautious','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(280,296,'Comfort Zone','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(466.666,296,'Overconfident','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',true,21,18)}${flatCell(93.333,496,'Complacency','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',false,22,18)}${flatCell(280,496,'Contentment','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> ≈ S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,22,18)}${flatCell(466.666,496,'Bliss','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,24,19)}</g><text x="953.333" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="953.333" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="1140" y="828" text-anchor="middle" class="ax">D ≈ S</text><text x="1140" y="858" text-anchor="middle" class="axm">Supply balanced</text><text x="1326.666" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="1326.666" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="1140" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
+
+
+
+// Resource dropdown
+const resourceToggle = document.getElementById('resourceToggle');
+const resourceMenu = document.getElementById('resourceMenu');
+function closeResourceMenu(){
+  if(!resourceToggle || !resourceMenu) return;
+  resourceMenu.classList.remove('show');
+  resourceMenu.setAttribute('aria-hidden','true');
+  resourceToggle.setAttribute('aria-expanded','false');
+  resourceToggle.classList.remove('active');
+}
+function toggleResourceMenu(e){
+  if(e) e.stopPropagation();
+  const open = resourceMenu.classList.toggle('show');
+  resourceMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+  resourceToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  resourceToggle.classList.toggle('active', open);
+}
+if(resourceToggle && resourceMenu){
+  resourceToggle.addEventListener('click', toggleResourceMenu);
+  resourceMenu.addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', closeResourceMenu);
+  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeResourceMenu(); });
+}
+
+function loop(){
+  if(!dragging&&!anim&&!rotationLocked){rotX=clamp(rotX+inertiaX,-1.25,1.25);rotY+=inertiaY;inertiaX*=.94;inertiaY*=.94;if(Math.abs(inertiaX)+Math.abs(inertiaY)>0.0004)render();}
+  requestAnimationFrame(loop);
+}
+updateRotationButtons();
+updateSupplyBoundaryButton();
+setLayer('labels');
+render();loop();
+</script>
+</body>
+</html>
