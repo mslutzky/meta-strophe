@@ -1,102 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Metastrophe — The Theory of Nested Triplets</title>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Meta-strophe Theory — Affect, Regulation, and Repair</title>
 <style>
-:root{
-  --bg:#07101d;
-  --ink:#eef6ff;
-  --muted:#b8d0ec;
-  --soft:#9ab4ce;
-  --button:#eaf5ff;
-  --button-ink:#07101d;
-}
+:root{--bg:#07101d;--ink:#eef6ff;--muted:#9ab8d4;--soft:#6a8faa;--line:rgba(255,255,255,.10);--gold:#d4a840;--button:#eaf5ff;--button-ink:#07101d}
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 12%,#172946 0%,#07101d 54%,#03060b 100%);
-  color:var(--ink);
-  font-family:Arial,Helvetica,sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-}
-main{
-  max-width:660px;
-  width:100%;
-  text-align:center;
-}
-.rule{height:1px;background:rgba(255,255,255,.18);margin:0 0 40px}
-h1{
-  font-size:clamp(22px,4vw,34px);
-  font-weight:900;
-  line-height:1.2;
-  letter-spacing:.3px;
-  color:#fff;
-  margin:0 0 18px;
-}
-.subtitle{
-  font-size:clamp(14px,2vw,17px);
-  line-height:1.65;
-  color:var(--muted);
-  margin:0 0 32px;
-  font-style:italic;
-}
-.divider{height:1px;background:rgba(255,255,255,.12);margin:0 0 32px}
-p{font-size:14px;line-height:1.65;color:#cfe0f4;margin:0 0 24px}
-.small{font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:16px}
-.small.last{margin-bottom:28px}
-.cta{
-  display:inline-block;
-  background:var(--button);
-  color:var(--button-ink);
-  border:none;
-  border-radius:10px;
-  padding:14px 38px;
-  font-size:16px;
-  font-weight:900;
-  cursor:pointer;
-  letter-spacing:.3px;
-  margin-bottom:28px;
-  text-decoration:none;
-  transition:filter .15s, transform .15s;
-}
-.cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.footer-rule{height:1px;background:rgba(255,255,255,.12);margin:0 0 20px}
-.disclaimer{font-size:11px;line-height:1.5;color:rgba(255,255,255,.38);margin:0}
-@media(max-height:680px){
-  body{align-items:flex-start;overflow-y:auto}
-  .rule{margin-bottom:28px}
-  .subtitle{margin-bottom:24px}
-  .divider{margin-bottom:24px}
-}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(circle at 50% 0%,#132840 0%,#07101d 50%,#03060b 100%);color:var(--ink);font-family:'Inter',Arial,Helvetica,sans-serif;min-height:100vh;line-height:1.6}
+.hero{text-align:center;padding:14px 24px 6px;max-width:860px;margin:0 auto}
+.kicker{font-family:'Inter',Arial,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);font-weight:600;margin-bottom:12px}.hero-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(26px,4vw,44px);font-weight:600;color:#fff;letter-spacing:.02em;line-height:1.05;margin-bottom:8px;font-style:italic}
+.hero .dash{font-family:'Inter',Arial,sans-serif;font-size:clamp(14px,1.8vw,16px);color:var(--muted);max-width:680px;margin:0 auto;line-height:1.65}
+.rule{width:60px;height:1px;background:var(--gold);margin:6px auto}
+.sphere-section{max-width:1280px;margin:0 auto;padding:0 32px 8px}
+.sphere-main{display:grid;grid-template-columns:minmax(180px,1fr) minmax(520px,52%) minmax(180px,1fr);gap:28px;align-items:center}
+.sphere-center{}
+.sphere-graphic{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:20px;padding:8px 6px 4px;margin-bottom:8px;max-width:92%;margin-left:auto;margin-right:auto}
+.cta-wrap{text-align:center}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--button);color:var(--button-ink);text-decoration:none;font-family:'Inter',Arial,sans-serif;font-size:15px;font-weight:900;letter-spacing:.3px;padding:11px 28px;border-radius:999px;transition:transform .15s,filter .15s;box-shadow:0 12px 32px rgba(0,0,0,.32)}
+.cta:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.cta-note{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:var(--soft);margin-top:7px}
+.sphere-col{display:flex;align-items:center;justify-content:center;height:100%}
+.body-sections{border-top:1px solid var(--line);max-width:1280px;margin:0 auto;padding:8px 32px 16px}
+.col-block h2{font-family:'Inter',Arial,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.col-block p{font-size:15px;color:var(--muted);line-height:1.72;font-family:'Inter',Arial,sans-serif}
+.col-block p strong{color:#fff}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding-top:8px}
+.three-block{padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.028)}
+.three-block .label{font-family:'Inter',Arial,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);margin-bottom:6px;display:block}
+.three-block p{font-size:15px;color:var(--muted);line-height:1.68;font-family:'Inter',Arial,sans-serif}
+.three-block p strong{color:#fff}
+footer{border-top:1px solid rgba(255,255,255,.2);text-align:center;padding:14px 24px;font-family:'Inter',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,.70);letter-spacing:.04em}
+
+.resource-strip{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.026)}
+.resource-strip .label{font-family:'Inter',Arial,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.resource-grid a{display:block;text-decoration:none;color:var(--ink);border:1px solid rgba(255,255,255,.10);border-radius:11px;padding:11px 12px;background:rgba(255,255,255,.035);min-height:76px;transition:transform .15s,background .15s,border-color .15s}
+.resource-grid a:hover{transform:translateY(-1px);background:rgba(255,255,255,.065);border-color:rgba(212,168,64,.45)}
+.resource-grid strong{display:block;font-size:12px;line-height:1.25;color:#fff;margin-bottom:5px}
+.resource-grid em{display:block;font-style:normal;font-size:11px;line-height:1.35;color:var(--muted)}
+@media(max-width:980px){.resource-grid{grid-template-columns:1fr 1fr}.resource-grid a{min-height:0}}
+@media(max-width:680px){.resource-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.sphere-main{grid-template-columns:1fr}.sphere-col{height:auto}.three-col{grid-template-columns:1fr;gap:10px}.hero{padding:28px 20px 16px}}
 </style>
 </head>
 <body>
-<main>
-  <div class="rule"></div>
-
-  <h1>Metastrophe: The Theory of Nested Triplets<br>in Self-Organizing Systems</h1>
-
-  <p class="subtitle">A living theoretical framework exploring affect as the functional architecture linking bodily regulation, conscious experience, and self-organizing systems.</p>
-
-  <div class="divider"></div>
-
-  <p>Begin here. This site introduces the core architecture first and then opens the interactive sphere model. Use Fixed View for the aligned presentation view, Free Rotate for exploration, and Advanced for labels, boundaries, seams, and selected clinical trajectories.</p>
-
-  <p class="small">Mitchell Slutzky is a clinical psychologist and theoretical researcher whose work integrates clinical observation, affect regulation, neurobiology, and psychoanalytic thought.</p>
-
-  <p class="small last">Metastrophe was first publicly presented by Mitchell Slutzky at the 2026 Congress in Barcelona.</p>
-
-  <a class="cta" href="sphere.html">Enter the Sphere</a>
-
-  <div class="footer-rule"></div>
-
-  <p class="disclaimer">This is a living framework: references, empirical anchors, and extensions are in progress.<br>© 2026 Mitchell Slutzky. All rights reserved.</p>
-</main>
+<section class="hero">
+  <div class="kicker">meta-strophe.com</div>
+  <h1 class="hero-title">Meta-strophe Theory</h1>
+  <p class="dash">A developing framework, proposed by clinical psychologist Mitchell Slutzky, PhD, for how living systems regulate themselves, adapt to changed conditions, and recover after catastrophic failure.</p>
+</section>
+<div class="rule"></div>
+<section class="sphere-section">
+  <div class="sphere-main">
+    <div class="sphere-col">
+      <div class="col-block">
+        <h2>Affect</h2>
+        <p><strong>It is the felt face of regulation itself.</strong> Every organism continuously registers what state it is in, what response that state can support, and whether supply can meet demand. But affect does more than register the present state. It also compares that state with a more optimal one and helps generate the instructions by which strategy can be updated, using the same peptides that produced the readout in the first place.</p>
+      </div>
+    </div>
+    <div class="sphere-center">
+      <div class="sphere-graphic">
+<svg width="100%" viewBox="0 0 680 460" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>The Structure of Affect</title>
+<defs>
+<clipPath id="cl"><circle cx="166" cy="272" r="152"/></clipPath>
+<clipPath id="cr"><circle cx="514" cy="272" r="152"/></clipPath>
+<radialGradient id="t-anx" cx="75%" cy="75%" r="90%"><stop offset="0%" stop-color="#e8d5a8"/><stop offset="45%" stop-color="#c8a860"/><stop offset="100%" stop-color="#8a6020"/></radialGradient>
+<radialGradient id="t-ang" cx="25%" cy="75%" r="90%"><stop offset="0%" stop-color="#f07040"/><stop offset="45%" stop-color="#e03010"/><stop offset="100%" stop-color="#880000"/></radialGradient>
+<radialGradient id="t-dep" cx="75%" cy="25%" r="90%"><stop offset="0%" stop-color="#c8d8e8"/><stop offset="45%" stop-color="#88a8c8"/><stop offset="100%" stop-color="#385878"/></radialGradient>
+<radialGradient id="t-dis" cx="25%" cy="25%" r="90%"><stop offset="0%" stop-color="#4878d0"/><stop offset="45%" stop-color="#1848a8"/><stop offset="100%" stop-color="#040e50"/></radialGradient>
+<radialGradient id="o-ant" cx="75%" cy="75%" r="90%"><stop offset="0%" stop-color="#e0c898"/><stop offset="50%" stop-color="#b89060"/><stop offset="100%" stop-color="#785028"/></radialGradient>
+<radialGradient id="o-eng" cx="50%" cy="75%" r="90%"><stop offset="0%" stop-color="#faa080"/><stop offset="50%" stop-color="#e86848"/><stop offset="100%" stop-color="#b03820"/></radialGradient>
+<radialGradient id="o-exh" cx="25%" cy="75%" r="90%"><stop offset="0%" stop-color="#f03820"/><stop offset="45%" stop-color="#c81000"/><stop offset="100%" stop-color="#780000"/></radialGradient>
+<radialGradient id="o-ovc" cx="75%" cy="50%" r="90%"><stop offset="0%" stop-color="#b8f0c0"/><stop offset="50%" stop-color="#68d878"/><stop offset="100%" stop-color="#289040"/></radialGradient>
+<radialGradient id="o-cfz" cx="50%" cy="50%" r="90%"><stop offset="0%" stop-color="#80e898"/><stop offset="50%" stop-color="#40c058"/><stop offset="100%" stop-color="#108030"/></radialGradient>
+<radialGradient id="o-occ" cx="25%" cy="50%" r="90%"><stop offset="0%" stop-color="#20b840"/><stop offset="45%" stop-color="#088028"/><stop offset="100%" stop-color="#024010"/></radialGradient>
+<radialGradient id="o-cmp" cx="75%" cy="25%" r="90%"><stop offset="0%" stop-color="#c0d8f0"/><stop offset="50%" stop-color="#7098c0"/><stop offset="100%" stop-color="#285888"/></radialGradient>
+<radialGradient id="o-cnt" cx="50%" cy="25%" r="90%"><stop offset="0%" stop-color="#80b0e8"/><stop offset="50%" stop-color="#3878d0"/><stop offset="100%" stop-color="#0848a0"/></radialGradient>
+<radialGradient id="o-bls" cx="25%" cy="25%" r="90%"><stop offset="0%" stop-color="#1048d0"/><stop offset="45%" stop-color="#0828a0"/><stop offset="100%" stop-color="#020840"/></radialGradient>
+</defs>
+<text x="340" y="54" text-anchor="middle" font-size="22" font-weight="900" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" letter-spacing="1">THE STRUCTURE OF AFFECT</text>
+<text x="166" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#eef6ff" font-family="Arial,Helvetica,sans-serif">Threat</text>
+<text x="166" y="90" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.58)" font-family="Arial,Helvetica,sans-serif">(speed &gt; accuracy)</text>
+<text x="514" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#eef6ff" font-family="Arial,Helvetica,sans-serif">Opportunity</text>
+<text x="514" y="90" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.58)" font-family="Arial,Helvetica,sans-serif">(accuracy &gt; speed)</text>
+<g clip-path="url(#cl)"><rect x="14" y="120" width="152" height="152" fill="url(#t-anx)"/><rect x="166" y="120" width="152" height="152" fill="url(#t-ang)"/><rect x="14" y="272" width="152" height="152" fill="url(#t-dep)"/><rect x="166" y="272" width="152" height="152" fill="url(#t-dis)"/></g>
+<line x1="166" y1="120" x2="166" y2="424" stroke="rgba(255,255,255,0.72)" stroke-width="1.5" clip-path="url(#cl)"/>
+<line x1="14" y1="272" x2="318" y2="272" stroke="rgba(255,255,255,0.72)" stroke-width="1.5" clip-path="url(#cl)"/>
+<circle cx="166" cy="272" r="152" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2.5"/>
+<rect x="54" y="185" width="74" height="24" rx="5" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.65)" stroke-width="1"/><text x="91" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Anxiety</text>
+<rect x="210" y="185" width="64" height="24" rx="5" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.65)" stroke-width="1"/><text x="242" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Anger</text>
+<rect x="40" y="337" width="100" height="24" rx="5" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.65)" stroke-width="1"/><text x="90" y="353" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Depression</text>
+<rect x="188" y="337" width="106" height="24" rx="5" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.65)" stroke-width="1"/><text x="241" y="353" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Dissociation</text>
+<g clip-path="url(#cr)"><rect x="362" y="120" width="102" height="102" fill="url(#o-ant)"/><rect x="464" y="120" width="100" height="102" fill="url(#o-eng)"/><rect x="564" y="120" width="102" height="102" fill="url(#o-exh)"/><rect x="362" y="222" width="102" height="100" fill="url(#o-ovc)"/><rect x="464" y="222" width="100" height="100" fill="url(#o-cfz)"/><rect x="564" y="222" width="102" height="100" fill="url(#o-occ)"/><rect x="362" y="322" width="102" height="102" fill="url(#o-cmp)"/><rect x="464" y="322" width="100" height="102" fill="url(#o-cnt)"/><rect x="564" y="322" width="102" height="102" fill="url(#o-bls)"/></g>
+<line x1="464" y1="120" x2="464" y2="424" stroke="rgba(255,255,255,0.50)" stroke-width="1" clip-path="url(#cr)"/>
+<line x1="564" y1="120" x2="564" y2="424" stroke="rgba(255,255,255,0.50)" stroke-width="1" clip-path="url(#cr)"/>
+<line x1="362" y1="222" x2="666" y2="222" stroke="rgba(255,255,255,0.50)" stroke-width="1" clip-path="url(#cr)"/>
+<line x1="362" y1="322" x2="666" y2="322" stroke="rgba(255,255,255,0.50)" stroke-width="1" clip-path="url(#cr)"/>
+<circle cx="514" cy="272" r="152" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2.5"/>
+<rect x="367" y="161" width="92" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="413" y="176" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Anticipation</text>
+<rect x="472" y="161" width="84" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="514" y="176" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Engagement</text>
+<rect x="572" y="161" width="84" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="614" y="176" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Exhilaration</text>
+<rect x="367" y="262" width="92" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="413" y="277" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Overcautious</text>
+<rect x="462" y="262" width="104" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.75)" stroke-width="1.5"/><text x="514" y="277" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Comfort Zone</text>
+<rect x="568" y="262" width="94" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="615" y="277" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Overconfident</text>
+<rect x="367" y="363" width="92" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="413" y="378" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Complacency</text>
+<rect x="472" y="363" width="84" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="514" y="378" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Contentment</text>
+<rect x="582" y="363" width="52" height="22" rx="4" fill="rgba(0,0,0,0.75)" stroke="rgba(255,255,255,0.55)" stroke-width="1"/><text x="608" y="378" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Arial,Helvetica,sans-serif">Bliss</text>
+</svg>
+      </div>
+      <div class="cta-wrap">
+        <a class="cta" href="sphere.html">Enter the Sphere &#8594;</a>
+        <p class="cta-note">Rotatable map &middot; clickable regions &middot; paths of regulation and repair</p>
+      </div>
+    </div>
+    <div class="sphere-col">
+      <div class="col-block">
+        <h2>Threat and opportunity</h2>
+        <p>Threat favors speed: fast, automatic alternation between mobilization and conservation in order to meet immediate demand.</p>
+        <p style="margin-top:14px;">Opportunity allows accuracy: a slower, more metabolically costly process in which the system can <strong>revise its own settings</strong> and restore flexibility. At its center is <strong>Comfort Zone</strong>, the optimal regulatory state in which the other affective possibilities are held in workable balance and felt as well-being.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="body-sections">
+  <div class="three-col">
+    <div class="three-block">
+      <span class="label">The map</span>
+      <p>The interactive sphere maps this regulatory grammar. Three axes. Two hemispheres. <strong>Thirteen named affect states</strong> — each a structured address in the space, not a label but a location.</p>
+      <a href="sphere.html" style="display:inline-block;margin-top:10px;font-size:12px;color:var(--gold);text-decoration:none;font-family:Inter,sans-serif;letter-spacing:.06em;">Enter the sphere &rarr;</a>
+    </div>
+    <div class="three-block">
+      <span class="label">Clinical trajectories</span>
+      <p>Diagnosis is not a symptom cluster. It is a <strong>trajectory through the sphere</strong>, driven by repeated mismatches between regulatory demand and available peptide supply.</p>
+      <a href="sphere.html" style="display:inline-block;margin-top:10px;font-size:12px;color:var(--gold);text-decoration:none;font-family:Inter,sans-serif;letter-spacing:.06em;">See trajectories &rarr;</a>
+    </div>
+    <div class="three-block">
+      <span class="label">A developing theory</span>
+      <p>This site presents the current state of the work — evidence, clinical implications, and open questions. Extensions, empirical anchors, and formal developments are <strong>added as the theory advances.</strong></p>
+      <a href="working-paper.html" style="display:inline-block;margin-top:10px;font-size:12px;color:var(--gold);text-decoration:none;font-family:Inter,sans-serif;letter-spacing:.06em;">Read the preliminary working paper &rarr;</a>
+    </div>
+  </div>
+    <div class="resource-strip" aria-label="Resources">
+      <span class="label">Resources</span>
+      <div class="resource-grid">
+        <a href="about-dr-slutzky.html"><strong>About Dr. Slutzky</strong><em>Clinical background and theoretical provenance</em></a>
+        <a href="pomc-resource.html"><strong>POMC Architecture</strong><em>Gateway to ACTH, β-endorphin, and α-MSH</em></a>
+        <a href="working-paper.html"><strong>Working Paper</strong><em>Preliminary draft and developing references</em></a>
+        <a href="presentation.pdf" target="_blank" rel="noopener"><strong>NPSA Barcelona Presentation PDF</strong><em>Static slide deck; opens in a new tab</em></a>
+        <a href="npsa-barcelona-narrative.html"><strong>NPSA Barcelona Narrative</strong><em>Talk narrative and explanatory text</em></a>
+        <a href="future-developments.html"><strong>Future Developments</strong><em>Extensions, clinical trajectories, formalization</em></a>
+      </div>
+    </div>
+</section>
+<footer>&#169; 2026 Mitchell Slutzky, PhD &nbsp;&middot;&nbsp; Meta-strophe Theory is a developing theoretical framework &nbsp;&middot;&nbsp; meta-strophe.com</footer>
 </body>
 </html>

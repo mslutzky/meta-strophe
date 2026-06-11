@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Meta-strophe Sphere — Merged Prototype</title>
+<title>The Structure of Affect — A Map of the Regulatory Sphere</title>
 <style>
 :root{
   --bg:#07101d; --panel:#07101d; --ink:#eef6ff; --muted:#9fb0c6; --line:rgba(255,255,255,.78);
@@ -20,18 +20,20 @@ header .sub{font-size:13px;color:#cfe0f6;margin-top:4px}
 #stage{position:absolute;inset:72px 0 105px 0;display:flex;align-items:center;justify-content:center}
 #mapWrap{position:relative;width:min(84vh,860px);height:min(84vh,860px)}
 canvas{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 18px 38px rgba(0,0,0,.48))}
-#overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#overlay{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5}
 .grid{stroke:rgba(255,255,255,.82);stroke-width:2.5;fill:none;vector-effect:non-scaling-stroke}
 .gridSoft{stroke:rgba(255,255,255,.36);stroke-width:1.3;fill:none;vector-effect:non-scaling-stroke}
-.axisText{font-size:19px;font-weight:900;fill:white;paint-order:stroke;stroke:#02050a;stroke-width:4px;stroke-linejoin:round;letter-spacing:.2px}
+.axisTitle{font-size:36px;font-weight:900;fill:white;paint-order:stroke;stroke:#02050a;stroke-width:6px;stroke-linejoin:round;letter-spacing:.3px}
+.axisSub{font-size:22px;font-weight:700;fill:rgba(255,255,255,.85);paint-order:stroke;stroke:#02050a;stroke-width:4px;stroke-linejoin:round;letter-spacing:.15px}
+.axisText{font-size:18px;font-weight:700;fill:rgba(255,255,255,.82);paint-order:stroke;stroke:#02050a;stroke-width:3px;stroke-linejoin:round;letter-spacing:.1px}
 .axisSmall{font-size:15px;font-weight:800;fill:#eaf4ff;paint-order:stroke;stroke:#02050a;stroke-width:3px;stroke-linejoin:round}
-.stateText{font-size:17px;font-weight:900;fill:white;text-anchor:middle;dominant-baseline:middle;pointer-events:none;letter-spacing:.1px}
+.stateText{font-size:22px;font-weight:900;fill:white;text-anchor:middle;dominant-baseline:middle;pointer-events:none;letter-spacing:.05px}
 .labelBtn{cursor:pointer}
 .labelBtn rect{fill:rgba(2,5,10,.62);stroke:rgba(255,255,255,.86);stroke-width:1.6;rx:9;ry:9;filter:drop-shadow(0 2px 5px rgba(0,0,0,.62))}
 .labelBtn:hover rect{fill:rgba(255,255,255,.18);stroke:white}
 .labelBtn:hover text{fill:#fff7a6}
 .selectedOutline{fill:rgba(255,255,255,.09);stroke:white;stroke-width:4;filter:drop-shadow(0 0 13px rgba(255,255,255,.60))}
-#modeCaption{position:absolute;left:28px;top:88px;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.16);padding:10px 13px;border-radius:12px;color:#e8f6ff;font-weight:900;letter-spacing:.3px;z-index:15}
+#modeCaption{display:none!important}
 /* Pop-out tooltip */
 #popout{
   position:absolute;z-index:100;pointer-events:none;
@@ -209,9 +211,28 @@ canvas{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 18p
   border-color:rgba(70,214,92,.18);
   max-width:440px;
 }
+.comfort-controls{
+  background:rgba(70,214,92,.045);
+  border-color:rgba(70,214,92,.18);
+  flex:0 0 auto;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+}
+.stage-controls{
+  background:rgba(255,242,166,.045);
+  border-color:rgba(255,242,166,.20);
+  flex:0 0 auto;
+}
+.comfort-inline{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+}
 .clinicalBtn{border-color:rgba(70,214,92,.34);background:#102219}
 .clinicalBtn:hover{background:#173323}
-.comfortLabel{font-size:11px;color:#cbd9e8;font-weight:800;margin-left:4px}
+.comfortLabel{font-size:11px;color:#cbd9e8;font-weight:800;margin-left:4px;white-space:nowrap}
 #labelsToggleBtn.active,
 #supplyBoundaryBtn.active,
 #fixedViewBtn.active,
@@ -249,6 +270,7 @@ body.fixed-open > #fixedPanel{visibility:visible}
   .user-controls button{min-width:78px}
   .advancedControls{justify-content:center;flex-wrap:wrap;align-items:flex-start;width:100%}
   .advanced-subgroup{flex:1 1 260px;justify-content:flex-start}
+  .comfort-controls{flex:0 1 300px;justify-content:flex-start}
   .clinical-controls{flex:1 1 260px}
   #comfort{width:120px}
   #fixedPanel{padding:8px}
@@ -257,13 +279,7 @@ body.fixed-open > #fixedPanel{visibility:visible}
 
 
 /* Resource dropdown: separate from sphere controls so it does not clutter the model */
-#resourceNav{
-  position:absolute;
-  top:14px;
-  right:18px;
-  z-index:80;
-  font-family:Arial,Helvetica,sans-serif;
-}
+/* #resourceNav position handled by #rightNav grid */
 .resource-toggle{
   min-width:0;
   background:rgba(234,245,255,.12);
@@ -341,47 +357,414 @@ body.fixed-open > #fixedPanel{visibility:visible}
   .resource-menu{min-width:235px}
 }
 
+
+/* orientCard removed — replaced by #leftCol */
+
+
+/* Rebuilt page framing: balanced description / sphere / instructions */
+body{
+  background:
+    radial-gradient(circle at 50% 18%,rgba(37,61,102,.72) 0%,rgba(7,16,29,.98) 42%,#03060b 100%);
+}
+header{
+  padding:14px 18px 26px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+}
+header h1{font-size:28px;letter-spacing:1.8px;font-weight:900;}
+header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
+#stage{
+  inset:78px 0 124px 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#mapWrap{
+  position:relative;
+  width:min(84vh,860px);
+  height:min(84vh,860px);
+}
+/* Stage layout: left text col | sphere | right nav */
+#stage{
+  display:grid !important;
+  grid-template-columns:clamp(160px,18vw,240px) 1fr clamp(120px,14vw,180px);
+  grid-template-rows:1fr;
+  align-items:center;
+  padding:0 clamp(24px,3vw,52px);
+  gap:clamp(12px,2vw,28px);
+}
+#mapWrap{
+  grid-column:2;
+  grid-row:1;
+  position:relative;
+  width:min(76vh,760px) !important;
+  height:min(76vh,760px) !important;
+  justify-self:center;
+  align-self:center;
+}
+
+/* Left description column */
+#leftCol{
+  grid-column:1;
+  grid-row:1;
+  align-self:center;
+  padding:0 8px 0 0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+#leftCol p{
+  font-size:13px;
+  line-height:1.62;
+  color:#aac0d8;
+  margin:0 0 12px;
+}
+#leftCol p:last-child{
+  margin:0;
+  color:#cfe0f4;
+  font-style:italic;
+}
+#leftCol .lc-hint{
+  font-size:11.5px;
+  color:#7a9ab8;
+  margin-top:10px;
+  font-style:normal;
+  letter-spacing:.1px;
+}
+
+/* Right nav: stacked dropdowns */
+#rightNav{
+  grid-column:3;
+  grid-row:1;
+  align-self:flex-start;
+  padding-top:clamp(20px,5vh,52px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  font-family:Arial,Helvetica,sans-serif;
+  position:relative;
+  z-index:80;
+}
+.stage-btn-wrap{
+  position:relative;
+}
+#resourceNav .stage-dropdown-panel{ right:0; left:auto; }
+#instructionsNav .stage-dropdown-panel{ right:0; left:auto; }
+/* Resource dropdown: max-height so it doesn't push instructions off screen */
+#resourceNav .stage-dropdown-panel{
+  max-height:min(380px, 60vh);
+  overflow-y:auto;
+}
+
+.stage-dropdown-btn{
+  display:inline-block;
+  text-align:center;
+  text-decoration:none;
+  background:rgba(9,22,43,.82);
+  border:1px solid rgba(255,255,255,.22);
+  color:#deeeff;
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.25px;
+  cursor:pointer;
+  white-space:nowrap;
+  backdrop-filter:blur(8px);
+  transition:background .15s,border-color .15s;
+}
+.stage-dropdown-btn:hover,
+.stage-dropdown-btn.open{
+  background:rgba(234,245,255,.15);
+  border-color:rgba(255,255,255,.45);
+  color:#fff;
+}
+
+.stage-dropdown-panel{
+  display:none;
+  position:absolute;
+  top:calc(100% + 8px);
+  min-width:260px;
+  max-width:300px;
+  background:rgba(6,14,28,.97);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  padding:14px 16px;
+  box-shadow:0 18px 42px rgba(0,0,0,.62);
+  backdrop-filter:blur(14px);
+  color:#eef6ff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+.stage-dropdown-panel.show{ display:block; }
+#instructionsNav .stage-dropdown-panel{ left:0; }
+#resourceNav .stage-dropdown-panel{ right:0; }
+
+/* Instructions panel content */
+.inst-label{
+  display:block;
+  font-size:9px;font-weight:900;letter-spacing:1.5px;
+  text-transform:uppercase;color:#78a2cf;margin-bottom:10px;
+}
+.inst-steps{
+  list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;
+}
+.inst-steps li{
+  font-size:12.5px;line-height:1.48;color:#c3d7ee;
+  padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.inst-steps li:last-child{border-bottom:none;padding-bottom:0;}
+.inst-steps b{color:#fff;}
+
+/* Resources panel — reuse existing resource-menu styles but static */
+#resourceNav .stage-dropdown-panel .resource-section-label{
+  display:block;padding:6px 0 3px;
+  font-size:9px;font-weight:900;letter-spacing:1.3px;
+  text-transform:uppercase;color:#78a2cf;
+}
+#resourceNav .stage-dropdown-panel a,
+#resourceNav .stage-dropdown-panel .resource-disabled{
+  display:block;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  color:#deeeff;text-decoration:none;
+  font-size:12.5px;font-weight:700;line-height:1.25;
+}
+#resourceNav .stage-dropdown-panel a:last-child{border-bottom:none;}
+#resourceNav .stage-dropdown-panel a span{
+  display:block;margin-top:1px;
+  font-size:10.5px;font-weight:500;color:#8aa5c4;
+}
+#resourceNav .stage-dropdown-panel a:hover{color:#fff;}
+#resourceNav .stage-dropdown-panel .resource-disabled{opacity:.50;cursor:default;}
+.resource-divider{height:1px;background:rgba(255,255,255,.10);margin:4px 0;}
+
+@media(max-width:820px){
+  #instructionsNav{ left:12px; }
+  #resourceNav{ right:12px; }
+  .stage-dropdown-panel{max-width:260px;}
+}
+@media(max-width:600px){
+  .stage-btn-wrap{top:10px;}
+  .stage-dropdown-btn{font-size:11px;padding:7px 12px;}
+}
+#controls{
+  min-height:116px;
+  padding:14px 16px 10px;
+  gap:10px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.user-controls{
+  background:rgba(10,20,38,.84);
+  border-color:rgba(255,255,255,.18);
+  box-shadow:0 12px 30px rgba(0,0,0,.24);
+}
+.user-controls button{min-width:96px}
+#fixedBtn{border-color:rgba(255,255,255,.38)}
+#resetBtn{border-color:rgba(255,255,255,.28)}
+.advancedControls.show{padding-top:2px;}
+@media(max-width:900px){
+  #stage{
+    grid-template-columns:1fr !important;
+    padding:0 10px;
+  }
+  #leftCol{display:none;}
+  #rightNav{
+    position:absolute;
+    top:12px;
+    right:12px;
+    grid-column:unset;
+    align-self:flex-start;
+  }
+  #mapWrap{
+    width:min(76vw,calc(100vh - 220px)) !important;
+    height:min(76vw,calc(100vh - 220px)) !important;
+  }
+  #modeCaption{display:none;}
+  #controls{min-height:240px;align-content:flex-start;overflow-y:auto;}
+}
+@media(max-width:600px){
+  #rightNav{top:6px;right:6px;}
+  .stage-dropdown-btn{font-size:11px;padding:6px 11px;}
+  #mapWrap{
+    width:min(92vw,calc(100vh - 200px)) !important;
+    height:min(92vw,calc(100vh - 200px)) !important;
+  }
+}
+@media(max-width:600px){
+  header h1{font-size:20px}
+  header .sub{font-size:12px}
+  #mapWrap{width:clamp(260px,min(calc(100vw - 16px),calc(100vh - 300px)),500px);height:clamp(260px,min(calc(100vw - 16px),calc(100vh - 300px)),500px);}
+}
+
+
+/* Clinical animation caption */
+#clinCaption{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:60;
+  max-width:560px;
+  width:90%;
+  background:rgba(4,10,22,.90);
+  border:1px solid rgba(255,255,255,.18);
+  border-left:3px solid #d4a840;
+  border-radius:10px;
+  padding:10px 16px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:13px;
+  line-height:1.55;
+  color:#cfe0f4;
+  text-align:left;
+  display:none;
+  pointer-events:none;
+  backdrop-filter:blur(8px);
+}
+#clinCaption b{ color:#fff; }
+#clinCaption .cc-label{
+  display:block;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:#d4a840;
+  margin-bottom:5px;
+}
+
+/* Blink animation for active clinical state */
+@keyframes stateBlink{
+  0%,100%{opacity:1}
+  50%{opacity:0.15}
+}
+.clinBlink rect{ animation: stateBlink 0.7s ease-in-out infinite !important; }
+.clinBlink text{ animation: stateBlink 0.7s ease-in-out infinite !important; }
+.clinActive rect{
+  stroke:#fff7a6 !important;
+  stroke-width:3 !important;
+  fill:rgba(255,255,255,.18) !important;
+  filter:drop-shadow(0 0 12px rgba(255,225,80,.82));
+}
+.clinActive text{
+  fill:#fff7a6 !important;
+  paint-order:stroke;
+  stroke:#02050a;
+  stroke-width:4px;
+}
+
+
+/* One-click threat build stages */
+#buildStageBtn.active{
+  background:#fff2a6;
+  color:#07101d;
+  border-color:#fff7c8;
+}
+.stageBandText{
+  font-size:34px;
+  font-weight:900;
+  fill:#fff;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  paint-order:stroke;
+  stroke:#02050a;
+  stroke-width:5px;
+  stroke-linejoin:round;
+  letter-spacing:.4px;
+}
+.stageCellText{
+  font-size:24px;
+  font-weight:900;
+  fill:#fff;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  paint-order:stroke;
+  stroke:#02050a;
+  stroke-width:4px;
+  stroke-linejoin:round;
+  letter-spacing:.1px;
+}
+.stageCellSub{
+  font-size:18px;
+  font-weight:800;
+  fill:#eef6ff;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  paint-order:stroke;
+  stroke:#02050a;
+  stroke-width:3px;
+  stroke-linejoin:round;
+}
+.stageGhost{
+  stroke:rgba(255,255,255,.90);
+  stroke-width:3;
+  fill:none;
+  vector-effect:non-scaling-stroke;
+}
+
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Meta-strophe Theory — Regulatory Map</h1>
-  <div class="sub">Rotatable sphere · valence mode | demand–supply relation · click affect labels</div>
+  <h1>THE STRUCTURE OF AFFECT</h1>
+  <div class="sub">A map of the regulatory sphere</div>
 </header>
 
-<div id="resourceNav" aria-label="Resource navigation">
-  <button id="resourceToggle" class="resource-toggle" aria-expanded="false" aria-controls="resourceMenu">Resources ▾</button>
-  <div id="resourceMenu" class="resource-menu" aria-hidden="true">
-    <span class="resource-section-label">Overview</span>
-    <a href="index.html">Home / Introduction<span>Return to the splash page</span></a>
-    <div class="resource-divider"></div>
-    <span class="resource-section-label">Biological architecture</span>
-    <a href="pomc-resource.html">POMC Architecture<span>One precursor · three regulatory economies</span></a>
-    <a href="acth-resource.html">ACTH — Mobilization<span>Stress economy, action readiness, HPA axis</span></a>
-    <a href="beta-endorphin-resource.html">β-Endorphin — Conservation<span>Analgesia, endurance, protective withdrawal</span></a>
-    <a href="alpha-msh-resource.html">α-MSH — Recalibration<span>Immune tuning, repair, safe strategy update</span></a>
-    <div class="resource-divider"></div>
-    <span class="resource-section-label">Presentation materials</span>
-    <a href="presentation.pdf">Barcelona Slides PDF<span>Static backup for the live presentation</span></a>
-    <a href="presentation.pptx">Barcelona PowerPoint<span>Editable slide deck</span></a>
-    <a href="working-paper.html">Working Paper<span>Provisional draft hub and future references</span></a>
-    <a href="future-developments.html">Future Developments<span>Extensions, clinical trajectories, formalization</span></a>
-  </div>
-</div>
+
 
 
 <div id="modeCaption">Sphere · Field only</div>
 <main id="stage">
+
+  <!-- LEFT: description column -->
+  <div id="leftCol">
+    <p>The sphere maps thirteen affect states as structural locations in regulatory space. Each reflects a combination of valence, demand, and peptide supply.</p>
+    <p>Threat compresses the field toward speed. Opportunity opens the recalibrative middle.</p>
+    <p><em>Click any affect name on the sphere to learn more about it.</em></p>
+    <p class="lc-hint">See Instructions for additional guidance.</p>
+  </div>
+
+  <!-- RIGHT: stacked dropdowns — Instructions top, Resources bottom -->
+  <div id="rightNav">
+    <div id="instructionsNav" class="stage-btn-wrap">
+      <button id="instructionsToggle" class="stage-dropdown-btn" aria-expanded="false">Instructions ▾</button>
+      <div id="instructionsMenu" class="stage-dropdown-panel" aria-hidden="true">
+        <span class="inst-label">How to use the sphere</span>
+        <ul class="inst-steps">
+          <li><b>Threat / Opportunity</b> — switch between the two hemispheres.</li>
+          <li><b>Fixed View / Rotate</b> — lock the sphere or drag to explore in 3D.</li>
+          <li><b>Click any affect name</b> — opens its address, derivation, function, and clinical note.</li>
+          <li><b>2D Maps</b> — compare flattened hemisphere views side by side.</li>
+          <li><b>Advanced</b> — seams, boundaries, comfort width, staged build, and clinical examples.</li>
+        </ul>
+      </div>
+    </div>
+    <div id="resourceNav" class="stage-btn-wrap">
+      <button id="resourceToggle" class="stage-dropdown-btn" aria-expanded="false">Resources ▾</button>
+      <div id="resourceMenu" class="stage-dropdown-panel" aria-hidden="true">
+        <span class="resource-section-label">Biological architecture</span>
+        <a href="pomc-resource.html">POMC Architecture<span>Gateway to ACTH, β-endorphin, and α-MSH</span></a>
+        <div class="resource-divider"></div>
+        <span class="resource-section-label">Reference / Presentation</span>
+        <a href="working-paper.html">Working Paper<span>Preliminary draft and developing references</span></a>
+        <a href="presentation.pdf" target="_blank" rel="noopener">NPSA Barcelona Presentation PDF<span>Static slide deck; opens in a new tab</span></a>
+        <a href="npsa-barcelona-narrative.html">NPSA Barcelona Presentation Narrative<span>Talk narrative and explanatory text</span></a>
+        <a href="future-developments.html">Future Developments<span>Extensions, clinical trajectories, formalization</span></a>
+      </div>
+    </div>
+    <div id="aboutNav" class="stage-btn-wrap">
+      <a class="stage-dropdown-btn" href="about-dr-slutzky.html">About Dr. Slutzky</a>
+    </div>
+    <div id="homeNav" class="stage-btn-wrap">
+      <a class="stage-dropdown-btn" href="index.html">Home</a>
+    </div>
+  </div>
+
   <div id="mapWrap">
     <canvas id="field" width="900" height="900"></canvas>
     <svg id="overlay" viewBox="0 0 900 900" aria-label="interactive regulatory map"></svg>
     <div id="popout"></div>
   </div>
+  <div id="clinCaption"></div>
 </main>
 
 <section id="fixedPanel">
-  <div class="bar"><h3>2D Fixed Hemisphere Maps</h3><button id="closeFixed">Close</button></div>
+  <div class="bar"><h3>Fixed Hemisphere Maps</h3><button id="closeFixed">Close</button></div>
   <svg id="fixedSvg" viewBox="0 0 1600 1000"></svg>
 </section>
 
@@ -389,11 +772,8 @@ body.fixed-open > #fixedPanel{visibility:visible}
   <div class="group user-controls"><span class="glabel">Main</span>
     <button data-view="threat" class="active">Threat</button>
     <button data-view="opportunity">Opportunity</button>
-    <button id="fixedViewBtn" class="active" aria-pressed="true">Fixed View</button>
-    <button id="freeRotateBtn" aria-pressed="false">Free Rotate</button>
+    <button id="fixedBtn">Fixed Maps</button>
     <button id="resetBtn">Reset</button>
-    <button id="fixedBtn">2D Maps</button>
-    <button id="walkthroughBtn">Guide</button>
     <button id="advancedBtn" aria-expanded="false">Advanced</button>
   </div>
 
@@ -401,9 +781,8 @@ body.fixed-open > #fixedPanel{visibility:visible}
     <div class="group advanced-subgroup display-controls"><span class="glabel">Display</span>
       <button id="labelsToggleBtn" class="active" aria-pressed="true">Labels On</button>
       <button id="supplyBoundaryBtn" class="active" aria-pressed="true">Boundary On</button>
-      <span class="comfortLabel">Comfort</span>
-      <input id="comfort" type="range" min="18" max="72" value="44"/>
-      <span id="comfortVal">44%</span>
+      <button id="fixedViewBtn" class="active" aria-pressed="true">Locked View</button>
+      <button id="freeRotateBtn" aria-pressed="false">Free Rotate</button>
     </div>
 
     <div class="group advanced-subgroup views-controls"><span class="glabel">Seams</span>
@@ -411,6 +790,18 @@ body.fixed-open > #fixedPanel{visibility:visible}
       <button data-view="conserve">Conservation</button>
       <button data-view="under">Under-supplied</button>
       <button data-view="over">Over-supplied</button>
+    </div>
+
+    <div class="group advanced-subgroup stage-controls"><span class="glabel">Build</span>
+      <button id="buildStageBtn">Stages</button>
+    </div>
+
+    <div class="group advanced-subgroup comfort-controls"><span class="glabel">Comfort Zone</span>
+      <div class="comfort-inline">
+        <span class="comfortLabel">Width</span>
+        <input id="comfort" type="range" min="18" max="72" value="44"/>
+        <span id="comfortVal">44%</span>
+      </div>
     </div>
 
     <div class="group advanced-subgroup clinical-controls"><span class="glabel">Clinical Examples</span>
@@ -448,6 +839,8 @@ const cx=450, cy=450, r=330;
 let view='threat', layer='labels', selected=null, comfort=.44, presenterMode=false, advancedOpen=false, rotationLocked=true, supplyBoundary=true;
 let rotX=0, rotY=Math.PI/2, dragging=false, lastX=0,lastY=0, inertiaX=0, inertiaY=0;
 let anim=null, xray=0, flatten=0, demo=null, popoutOpen=false;
+let buildStage=0, buildLastRender=0;
+const BUILD_STAGE_TOTAL=4;
 
 
 const STATES=[
@@ -645,6 +1038,14 @@ function rotateViewToModel(x,y,z){
   return [x2,y1,z2]
 }
 
+
+function stageBandColor(my){
+  // Intro build stage: reduce threat to the two basic demand bands.
+  // my negative = top/mobilize; my positive = bottom/conserve.
+  if(my<0) return [238,34,34];
+  return [28,82,210];
+}
+
 function drawCanvas(){
   const img=ctx.createImageData(canvas.width,canvas.height);
   for(let py=0;py<900;py++){
@@ -656,7 +1057,7 @@ function drawCanvas(){
       const m=rotateViewToModel(dx,dy,vz);
       // m[0]=valence(x), m[1]=demand(neg=top=mobilize), m[2]=supply(neg=D>S left)
       // fieldColorSphere uses model-z for supply so colors track rotation & align with grids
-      let col=fieldColorSphere(m[0],m[1],m[2]);
+      let col=(buildStage===1) ? stageBandColor(m[1]) : fieldColorSphere(m[0],m[1],m[2]);
       let shade=.72+.28*vz;
       const edge=1-clamp((dist-.86)/.14,0,1)*.35;
       let rr=col[0]*shade*edge, gg=col[1]*shade*edge, bb=col[2]*shade*edge;
@@ -666,7 +1067,7 @@ function drawCanvas(){
     }
   }
   ctx.clearRect(0,0,900,900);ctx.putImageData(img,0,0);
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.92)';ctx.lineWidth=4;ctx.stroke();
+  // The outer boundary is drawn once by the SVG overlay.
 }
 function el(name,attrs={},text=''){
   const e=document.createElementNS('http://www.w3.org/2000/svg',name);
@@ -701,18 +1102,25 @@ function isSeamView(){
 
 function drawActiveViewTitle(){
   const av=activeView();
-  let title='';
-  if(av==='threat') title='Threat (speed > accuracy)';
-  else if(av==='opportunity') title='Opportunity (accuracy > speed)';
-  else if(av==='mobilize') title='Dₘ Mobilize seam';
-  else if(av==='conserve') title='Dᶜ Conserve seam';
-  else if(av==='under') title='D > S seam';
-  else if(av==='over') title='D < S seam';
-  if(title) el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},title);
+  if(av==='threat'){
+    el('text',{x:cx,y:cy-r-42,class:'axisTitle','text-anchor':'middle'},'Threat');
+    el('text',{x:cx,y:cy-r-16,class:'axisSub','text-anchor':'middle'},'speed > accuracy');
+  } else if(av==='opportunity'){
+    el('text',{x:cx,y:cy-r-42,class:'axisTitle','text-anchor':'middle'},'Opportunity');
+    el('text',{x:cx,y:cy-r-16,class:'axisSub','text-anchor':'middle'},'accuracy > speed');
+  } else {
+    let title='';
+    if(av==='mobilize') title='Dₘ Mobilize seam';
+    else if(av==='conserve') title='Dᶜ Conserve seam';
+    else if(av==='under') title='D > S seam';
+    else if(av==='over') title='D < S seam';
+    if(title) el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},title);
+  }
 }
 
 function drawOverlay(){
   svg.innerHTML='';
+  if(buildStage>0){ drawBuildStageOverlay(); return; }
   el('circle',{cx,cy,r,fill:'none',stroke:'rgba(255,255,255,.92)','stroke-width':4});
   const av=activeView();
 
@@ -722,6 +1130,7 @@ function drawOverlay(){
     drawProjectedOpportunityGrid();
     if(layer==='labels') drawSphereLabels();
     if(selected) highlightSphereSelected();
+    drawClinArc();
     return;
   }
 
@@ -737,6 +1146,7 @@ function drawOverlay(){
   if(isSeamView()){
     if(layer==='labels') drawStateLabels(statesForCurrentView());
     if(selected) highlightSphereSelected();
+    drawClinArc();
     return;
   }
 
@@ -744,14 +1154,118 @@ function drawOverlay(){
   // In hemisphere views, all visible affect labels remain available as the user rotates.
   if(layer==='labels') drawStateLabels(STATES);
   if(selected) highlightSphereSelected();
+  drawClinArc();
 }
+
+function stageClip(id){
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const clip=document.createElementNS('http://www.w3.org/2000/svg','clipPath');
+  clip.setAttribute('id',id);
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',r);
+  clip.appendChild(c); defs.appendChild(clip); svg.appendChild(defs);
+}
+function addMultilineText(x,y,lines,cls='stageCellText',gap=27){
+  const t=el('text',{x,y,class:cls,'text-anchor':'middle'});
+  lines.forEach((line,i)=>{
+    const sp=document.createElementNS('http://www.w3.org/2000/svg','tspan');
+    sp.setAttribute('x',x);
+    sp.setAttribute('dy',i===0?0:gap);
+    sp.textContent=line;
+    t.appendChild(sp);
+  });
+  return t;
+}
+function threatStagePos(row,col){
+  const y=row==='M'?-.50:.50;
+  const z=col==='under'?-.50:.50;
+  return project(-.72,y,z);
+}
+function threatStageCenter(row){
+  const y=row==='M'?-.50:.50;
+  return project(-.72,y,0);
+}
+function drawThreatStageGrid(showVertical=false){
+  const ptsY=[], ptsZ=[];
+  for(let i=0;i<=240;i++){
+    const a=i/240*Math.PI*2;
+    ptsY.push([-Math.abs(Math.cos(a)),0,Math.sin(a)]);
+    ptsZ.push([-Math.abs(Math.cos(a)),Math.sin(a),0]);
+  }
+  projectedPath(ptsY,'grid');
+  if(showVertical) projectedPath(ptsZ,'grid');
+}
+function drawBuildStageOverlay(){
+  // Lock the teaching sequence to the threat hemisphere.
+  view='threat'; rotX=0; rotY=Math.PI/2; rotationLocked=true;
+  el('circle',{cx,cy,r,fill:'none',stroke:'rgba(255,255,255,.92)','stroke-width':4});
+  el('text',{x:cx,y:cy-r-42,class:'axisTitle','text-anchor':'middle'},'Threat');
+  el('text',{x:cx,y:cy-r-16,class:'axisSub','text-anchor':'middle'},'speed > accuracy');
+
+  const clipId='stageClipCircle';
+  stageClip(clipId);
+  const blinkSlot=Math.floor(Date.now()/650)%2; // 0=red/top, 1=blue/bottom
+  const redOn=blinkSlot===0, blueOn=!redOn;
+
+  if(buildStage===1){
+    // Intro: only the horizontal split, no vertical supply boundary.
+    el('rect',{x:cx-r,y:cy-r,width:2*r,height:r,fill:'#ff2020',opacity:redOn?'.34':'.16','clip-path':`url(#${clipId})`});
+    el('rect',{x:cx-r,y:cy,width:2*r,height:r,fill:'#075dd8',opacity:blueOn?'.36':'.16','clip-path':`url(#${clipId})`});
+    drawThreatStageGrid(false);
+    const mp=threatStageCenter('M'), cp=threatStageCenter('C');
+    el('text',{x:mp.x,y:mp.y,class:'stageBandText',opacity:redOn?'1':'.42'},'MOBILIZE');
+    el('text',{x:cp.x,y:cp.y,class:'stageBandText',opacity:blueOn?'1':'.42'},'CONSERVE');
+  } else {
+    // Later steps: use the sphere colors and reveal the vertical supply split.
+    drawThreatStageGrid(true);
+  }
+
+  if(buildStage===2){
+    const cells=[
+      ['M','under',['Mobilize','under-supplied']],
+      ['M','over',['Mobilize','over-supplied']],
+      ['C','under',['Conserve','under-supplied']],
+      ['C','over',['Conserve','over-supplied']]
+    ];
+    cells.forEach(([row,col,lines])=>{
+      const p=threatStagePos(row,col);
+      addMultilineText(p.x,p.y-12,lines,'stageCellText',30);
+    });
+  }
+
+  if(buildStage===3){
+    const cells=[
+      ['M','under',['Under-supplied','ACTH']],
+      ['M','over',['Over-supplied','ACTH']],
+      ['C','under',['Under-supplied','β-endorphin']],
+      ['C','over',['Over-supplied','β-endorphin']]
+    ];
+    cells.forEach(([row,col,lines])=>{
+      const p=threatStagePos(row,col);
+      addMultilineText(p.x,p.y-12,lines,'stageCellText',30);
+    });
+  }
+
+  if(buildStage===4){
+    const cells=[
+      ['anxiety','Anxiety'],['anger','Anger'],['depression','Depression'],['dissociation','Dissociation']
+    ];
+    cells.forEach(([id,label])=>{
+      const st=byId[id], p=spherePos(st);
+      const accent=stateAccent(st);
+      el('circle',{cx:p.x,cy:p.y,r:42,fill:'rgba(255,255,255,.08)',stroke:accent,'stroke-width':4,style:`filter:drop-shadow(0 0 12px ${accent});`});
+      addSmallTag(p.x,p.y,label,()=>selectState(st),st);
+    });
+  }
+}
+
 function drawSphereAxes(){
   // Only draw the valence seam great circle on sphere/seam views — it reads as a
   // spurious dividing line on the flat snapped hemisphere views.
   const av=activeView();
   if(av==='threat'||av==='opportunity'){
     // skip the great circle, just draw the bottom label
-    el('text',{x:cx,y:cy+r+42,class:'axisSmall','text-anchor':'middle'},'Fixed View locks the sphere · Free Rotate unlocks drag');
+    // rotation hint removed
     return;
   }
   let pts=[];
@@ -763,7 +1277,7 @@ function drawSphereAxes(){
     let d=`M ${pts[0][0]} ${pts[0][1]}`; for(let i=1;i<pts.length;i++) d+=` L ${pts[i][0]} ${pts[i][1]}`;
     el('path',{d,fill:'none',stroke:'rgba(255,255,255,.55)','stroke-width':2.0});
   }
-  el('text',{x:cx,y:cy+r+42,class:'axisSmall','text-anchor':'middle'},'Fixed View locks the sphere · Free Rotate unlocks drag');
+  // rotation hint removed
 }
 function projPoint(x,y,z,scale=1.0){
   const p=rotateModelToView(x,y,z);
@@ -822,7 +1336,13 @@ function drawStateLabels(states){
   states.forEach(st=>{
     const p=spherePos(st);
     if(p.z<-0.18) return;
-    addSmallTag(p.x,p.y,st.displayName || st.name,()=>selectState(st));
+    const active = (typeof clinBlinkIds !== 'undefined' && clinBlinkIds.has(st.id));
+    if(active){
+      const accent=stateAccent(st);
+      el('circle',{cx:p.x,cy:p.y,r:46,fill:'rgba(255,255,255,.08)',stroke:accent,'stroke-width':5,style:`filter:drop-shadow(0 0 18px ${accent});`});
+      el('circle',{cx:p.x,cy:p.y,r:31,fill:'rgba(255,240,120,.09)',stroke:'rgba(255,255,255,.95)','stroke-width':2});
+    }
+    addSmallTag(p.x,p.y,st.displayName || st.name,()=>selectState(st),st);
   });
 }
 function drawHemisphereLabels(av){
@@ -834,17 +1354,32 @@ function project(mx,my,mz){
 }
 function spherePos(st){
   const x=st.hemi*.72;
-  // model y: negative = top = mobilize, positive = bottom = conserve
-  let y=st.row==='M'?-.62:st.row==='R'?0:.62;
-  // model z: negative = D>S (left when facing threat), positive = D<S (right)
-  let z=st.col==='under'?-.62:st.col==='match'?0:.62;
+  if(st.hemi<0){
+    // THREAT: restore original tight spacing — was working fine
+    let y=st.row==='M'?-.62:.62;
+    let z=st.col==='under'?-.62:.62;
+    return project(x,y,z);
+  }
+  // OPPORTUNITY: maximise spread
+  // Outer rows M/C: push y far out; middle row R at 0
+  let y=st.row==='M'?-.82:st.row==='R'?0:.82;
+  // Outer cols: corner states (M/C rows) pushed to 0.88, can bleed past circle
+  // Middle row R: pushed to 0.75 so Overcautious/Overconfident clearly separate
+  //   from Comfort Zone and roughly align with the corner labels above/below
+  const zOuter = st.row==='R' ? 0.88 : 0.88;
+  let z=st.col==='under'?-zOuter:st.col==='match'?0:zOuter;
   return project(x,y,z);
 }
 function drawSphereLabels(){
   STATES.forEach(st=>{
     const p=spherePos(st);
     if(p.z<-0.14) return;
-    addSmallTag(p.x,p.y,st.abbr,()=>selectState(st));
+    const active = (typeof clinBlinkIds !== 'undefined' && clinBlinkIds.has(st.id));
+    if(active){
+      const accent=stateAccent(st);
+      el('circle',{cx:p.x,cy:p.y,r:42,fill:'rgba(255,255,255,.08)',stroke:accent,'stroke-width':5,style:`filter:drop-shadow(0 0 18px ${accent});`});
+    }
+    addSmallTag(p.x,p.y,st.abbr,()=>selectState(st),st);
   });
 }
 function highlightSphereSelected(){
@@ -857,7 +1392,8 @@ function highlightSphereSelected(){
 function drawThreatGrid(){
   el('line',{x1:cx-r,y1:cy,x2:cx+r,y2:cy,class:'grid'});
   el('line',{x1:cx,y1:cy-r,x2:cx,y2:cy+r,class:'grid'});
-  el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},'Threat (speed > accuracy)');
+  el('text',{x:cx,y:cy-r-38,class:'axisTitle','text-anchor':'middle'},'Threat');
+  el('text',{x:cx,y:cy-r-14,class:'axisText','text-anchor':'middle','font-size':16},'speed > accuracy');
   el('text',{x:cx-r-76,y:cy-r*.5,class:'axisText','text-anchor':'middle'},'D<tspan baseline-shift="sub" font-size="12">M</tspan>');
   el('text',{x:cx-r-76,y:cy-r*.5+24,class:'axisSmall','text-anchor':'middle'},'Mobilize');
   el('text',{x:cx-r-76,y:cy+r*.5,class:'axisText','text-anchor':'middle'},'D<tspan baseline-shift="sub" font-size="12">C</tspan>');
@@ -870,7 +1406,8 @@ function drawOpportunityGrid(){
   el('line',{x1:cx-r,y1:cy+off,x2:cx+r,y2:cy+off,class:'grid'});
   el('line',{x1:cx-off,y1:cy-r,x2:cx-off,y2:cy+r,class:'grid'});
   el('line',{x1:cx+off,y1:cy-r,x2:cx+off,y2:cy+r,class:'grid'});
-  el('text',{x:cx,y:cy-r-26,class:'axisText','text-anchor':'middle'},'Opportunity (accuracy > speed)');
+  el('text',{x:cx,y:cy-r-38,class:'axisTitle','text-anchor':'middle'},'Opportunity');
+  el('text',{x:cx,y:cy-r-14,class:'axisText','text-anchor':'middle','font-size':16},'accuracy > speed');
   const yM=cy-(off+r)/2,yR=cy,yC=cy+(off+r)/2;
   [['M','Mobilize',yM],['R','Recalibrate',yR],['C','Conserve',yC]].forEach(([d,label,y])=>{
     el('text',{x:cx-r-76,y,class:'axisText','text-anchor':'middle'},`D<tspan baseline-shift="sub" font-size="12">${d}</tspan>`);
@@ -887,12 +1424,28 @@ function axisBottom(items){
 function regionCenter(st){
   const av=activeView();
   if(av==='threat'){
-    return {x:st.col==='under'?cx-r*.5:cx+r*.5,y:st.row==='M'?cy-r*.5:cy+r*.5};
+    // Push threat labels toward circle edge: 0.72r from center
+    return {x:st.col==='under'?cx-r*.76:cx+r*.76,y:st.row==='M'?cy-r*.76:cy+r*.76};
   }
   const off=comfort/2;
-  const xs={under:-(1+off)/2,match:0,over:(1+off)/2};
-  const ys={M:-(1+off)/2,R:0,C:(1+off)/2};
-  return {x:cx+xs[st.col]*r,y:cy+ys[st.row]*r};
+  // For label positioning:
+  // - outer cols (under/over): push to ~0.80r regardless of comfort
+  // - middle col (match): stay at center x
+  // - outer rows (M/C): push to ~0.80r regardless of comfort
+  // - middle row (R): stay at center y
+  // This maximizes separation between outer and middle labels
+  // Per-row x spread:
+  // - Outer rows M and C use xOuter=0.93 — corner labels pushed far out, may bleed past circle
+  // - Middle row R uses xMid=0.55 — Overcautious/Overconfident pulled well inward
+  //   so they don't stack on top of Anticipation/Exhilaration above them
+  // y: outer rows M/C pushed to 0.88r, middle row R stays at y=0
+  const xOuter = 0.93;
+  const xMid   = 0.55;
+  const yOuter = 0.88;
+  const xSpread = (st.row==='R') ? xMid : xOuter;
+  const xPos = st.col==='under' ? -xSpread : st.col==='over' ? xSpread : 0;
+  const yPos = st.row==='M' ? -yOuter : st.row==='C' ? yOuter : 0;
+  return {x:cx+xPos*r, y:cy+yPos*r};
 }
 function regionBounds(st){
   const av=activeView();
@@ -904,25 +1457,59 @@ function regionBounds(st){
   const ys={M:[-1,-hw],R:[-hw,hw],C:[hw,1]}[st.row];
   return {x1:cx+xs[0]*r,x2:cx+xs[1]*r,y1:cy+ys[0]*r,y2:cy+ys[1]*r};
 }
-function addSmallTag(x,y,label,click){
-  const w=Math.max(90,label.length*9.8+22),h=34;
-  const g=el('g',{class:'labelBtn'});
+function addSmallTag(x,y,label,click,st=null){
+  const w=Math.max(90,label.length*11.6+22),h=36;
+  const active = st && (typeof clinBlinkIds !== 'undefined') && clinBlinkIds.has(st.id);
+  const g=el('g',{class:active?'labelBtn clinActive':'labelBtn'});
   const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
   rect.setAttribute('x',x-w/2);rect.setAttribute('y',y-h/2);rect.setAttribute('width',w);rect.setAttribute('height',h);rect.setAttribute('rx',10);rect.setAttribute('ry',10);
+  if(active){
+    const accent=stateAccent(st);
+    rect.setAttribute('style',`stroke:${accent};stroke-width:3.2;fill:rgba(255,255,255,.19);filter:drop-shadow(0 0 12px ${accent});`);
+  }
   const text=document.createElementNS('http://www.w3.org/2000/svg','text');
   text.setAttribute('x',x);text.setAttribute('y',y+1);text.setAttribute('class','stateText');text.textContent=label;
+  if(active){ text.setAttribute('style','fill:#fff7a6;stroke:#02050a;stroke-width:4px;paint-order:stroke;'); }
   g.appendChild(rect);g.appendChild(text);
   // No click handler here — all clicks handled by svg listener for consistent state
+  return g;
 }
 function addLabelButton(st){
-  const p=regionCenter(st), label=st.displayName || st.name, w=Math.max(100,label.length*9.8+22), h=34;
-  const g=el('g',{class:'labelBtn'});
+  const p=regionCenter(st);
+  const rawLabel=st.displayName || st.name;
+  const twoLine = rawLabel==='Comfort Zone';
+  // Outer states (corners/edges) get a slightly larger font; middle gets standard
+  const isOuter = st.col!=='match' || st.row!=='R';
+  const fontSize = isOuter ? 23 : 22;
+  const lineH = 26;
+  const lines = twoLine ? ['Comfort','Zone'] : [rawLabel];
+  // Width purely based on longest line — never constrained to cell
+  const maxChars = Math.max(...lines.map(l=>l.length));
+  const w = Math.max(twoLine?92:104, maxChars*fontSize*0.56+24);
+  const h = twoLine ? 58 : 38;
+  const g=el('g',{class:'labelBtn',overflow:'visible'});
   const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-  rect.setAttribute('x',p.x-w/2);rect.setAttribute('y',p.y-h/2);rect.setAttribute('width',w);rect.setAttribute('height',h);rect.setAttribute('rx',10);rect.setAttribute('ry',10);
-  const text=document.createElementNS('http://www.w3.org/2000/svg','text');
-  text.setAttribute('x',p.x);text.setAttribute('y',p.y+1.2);text.setAttribute('class','stateText');text.textContent=label;
-  g.appendChild(rect);g.appendChild(text);
-  // No click handler here — all clicks handled by svg listener
+  rect.setAttribute('x',p.x-w/2); rect.setAttribute('y',p.y-h/2);
+  rect.setAttribute('width',w);   rect.setAttribute('height',h);
+  rect.setAttribute('rx',11);     rect.setAttribute('ry',11);
+  g.appendChild(rect);
+  if(twoLine){
+    lines.forEach((line,i)=>{
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      const yOff = (i===0) ? -lineH*0.5+fontSize*0.36 : lineH*0.5+fontSize*0.36;
+      t.setAttribute('x',p.x); t.setAttribute('y',p.y+yOff);
+      t.setAttribute('class','stateText'); t.setAttribute('font-size',fontSize);
+      t.textContent=line;
+      g.appendChild(t);
+    });
+  } else {
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',p.x); t.setAttribute('y',p.y+fontSize*0.38);
+    t.setAttribute('class','stateText'); t.setAttribute('font-size',fontSize);
+    t.textContent=rawLabel;
+    g.appendChild(t);
+  }
+  svg.appendChild(g);
 }
 function highlightSelectedFlat(st){
   const b=regionBounds(st);
@@ -1116,6 +1703,7 @@ function render(){
   caption.textContent=`${viewLabel} · ${layerLabel}${modeLabel}`;
 }
 function setView(v,fromState=false){
+  if(buildStage>0){ buildStage=0; updateBuildStageButton(); if(typeof clinHideCaption==='function') clinHideCaption(); }
   selected=fromState?selected:null;
   hidePopout();
   inertiaX=0; inertiaY=0;
@@ -1156,7 +1744,7 @@ function tickAnim(ts){
   if(p<1)requestAnimationFrame(tickAnim);else{const k=anim.kind;anim=null;progress.style.opacity=0;progress.style.width='0%';if(k==='threat')view='threat';if(k==='opportunity')view='opportunity';if(k==='sphere')view='sphere';render();}
 }
 function pointerPos(e){const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY}}
-function startDrag(e){if(anim||presenterMode||rotationLocked)return;dragging=true;const p=pointerPos(e);lastX=p.x;lastY=p.y;e.preventDefault()}
+function startDrag(e){if(anim||clinSeq||presenterMode||rotationLocked)return;dragging=true;const p=pointerPos(e);lastX=p.x;lastY=p.y;e.preventDefault()}
 function moveDrag(e){if(!dragging||anim)return;const p=pointerPos(e),dx=p.x-lastX,dy=p.y-lastY;lastX=p.x;lastY=p.y;inertiaY=dx*.008;inertiaX=dy*.008;rotY+=inertiaY;rotX=clamp(rotX+inertiaX,-1.25,1.25);hidePopout();render();e.preventDefault()}
 function endDrag(){dragging=false}
 canvas.addEventListener('mousedown',startDrag);svg.addEventListener('mousedown',startDrag);
@@ -1164,6 +1752,7 @@ window.addEventListener('mousemove',moveDrag);window.addEventListener('mouseup',
 canvas.addEventListener('touchstart',startDrag,{passive:false});svg.addEventListener('touchstart',startDrag,{passive:false});
 window.addEventListener('touchmove',moveDrag,{passive:false});window.addEventListener('touchend',endDrag);
 function handleMapClick(e, element){
+  if(buildStage>0) return;
   if(layer!=='labels') return;
   const rect=element.getBoundingClientRect();
   const mx=(e.clientX-rect.left)/rect.width*900;
@@ -1199,12 +1788,49 @@ function setLayer(l){
 document.querySelectorAll('[data-layer]').forEach(b=>b.addEventListener('click',()=>setLayer(b.dataset.layer)));
 document.getElementById('labelsToggleBtn').addEventListener('click',()=>setLayer(layer==='labels'?'field':'labels'));
 
+
+// One-click threat build stages
+function updateBuildStageButton(){
+  const b=document.getElementById('buildStageBtn');
+  if(!b) return;
+  b.classList.toggle('active', buildStage>0);
+  b.textContent = buildStage>0 ? `Stage ${buildStage}/${BUILD_STAGE_TOTAL}` : 'Stages';
+}
+function buildStageCaption(){
+  if(typeof clinShowCaption!=='function') return;
+  const label='Threat build sequence';
+  const bodies={
+    1:'<b>Step 1.</b> Begin with the binary demand split: mobilize in red, conserve in blue. The field alternates to show the two fast threat options before supply is introduced.',
+    2:'<b>Step 2.</b> Add the vertical supply axis. Threat now separates into four demand–supply quadrants: mobilize/conserve by under-supplied/over-supplied.',
+    3:'<b>Step 3.</b> Reveal the peptide economy: ACTH carries mobilization supply; β-endorphin carries conservation supply.',
+    4:'<b>Step 4.</b> The functional addresses become the four threat affects: anxiety, anger, depression, and dissociation.'
+  };
+  clinShowCaption(label,bodies[buildStage]||'');
+}
+function advanceBuildStage(){
+  // Stop any clinical animation and force a clean threat teaching view.
+  clinSeq=null; clinArcActive=false; clinArcPts=[]; clinArcP=0; clinClearBlink();
+  anim=null; selected=null; hidePopout();
+  progress.style.opacity=0; progress.style.width='0%';
+  rotationLocked=true; updateRotationButtons();
+  layer='labels'; view='threat'; rotX=0; rotY=Math.PI/2; inertiaX=0; inertiaY=0;
+  buildStage = buildStage>=BUILD_STAGE_TOTAL ? 0 : buildStage+1;
+  updateBuildStageButton();
+  if(buildStage>0) buildStageCaption();
+  else clinHideCaption();
+  render();
+}
+const buildStageBtn=document.getElementById('buildStageBtn');
+if(buildStageBtn) buildStageBtn.addEventListener('click',advanceBuildStage);
+updateBuildStageButton();
+
 // Reset
 document.getElementById('resetBtn').addEventListener('click',()=>{
   comfort=0.44;
   document.getElementById('comfort').value=44;
   document.getElementById('comfortVal').textContent='44%';
   selected=null; hidePopout();
+  buildStage=0; updateBuildStageButton(); if(typeof clinHideCaption==='function') clinHideCaption();
   supplyBoundary=true;
   updateSupplyBoundaryButton();
   rotationLocked=true;
@@ -1291,6 +1917,7 @@ document.getElementById('closeFixed').addEventListener('click',()=>{
   document.getElementById('fixedPanel').classList.remove('show');
   document.body.classList.remove('fixed-open');
   document.getElementById('fixedBtn').classList.remove('active');
+  render();
 });
 window.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
@@ -1298,36 +1925,278 @@ window.addEventListener('keydown',e=>{
     document.body.classList.remove('fixed-open');
     document.getElementById('fixedBtn').classList.remove('active');
     closeWalkthrough();
+    render();
   }
 });
 
 // Overlays
-function runDemo(ids){
-  hidePopout(); selected=null;
-  let i=0; selectState(byId[ids[0]]); progress.style.opacity=1;
-  const int=setInterval(()=>{
-    i++; progress.style.width=(i/ids.length*100)+'%';
-    if(i>=ids.length){clearInterval(int);progress.style.opacity=0;progress.style.width='0%';return}
-    selectState(byId[ids[i]]);
-  },900);
+
+
+// ── Clinical trajectory system ──────────────────────────────
+// This keeps the newer 13-state sphere and layout, but restores the older,
+// cleaner clinical-demo behavior: frame-based sequencing, alternating PTSD
+// blink, bipolar diagonal traversal, and fast borderline rotation.
+
+const clinCaption = document.getElementById('clinCaption');
+let clinSeq = null;   // {steps, step, t, total}
+let clinBlinkIds = new Set();
+let clinArcPts=[], clinArcP=0, clinArcActive=false;
+
+function clinSetBlink(ids){
+  clinBlinkIds = new Set(ids.filter(Boolean));
 }
-document.getElementById('bipolarBtn').addEventListener('click',()=>runDemo(['exhilaration','anger','depression','contentment']));
-document.getElementById('ptsdBtn').addEventListener('click',()=>runDemo(['anxiety','anger','dissociation','depression']));
-document.getElementById('bpdBtn').addEventListener('click',()=>runDemo(['comfortZone','anger','anxiety','overconfident','dissociation']));
+function clinClearBlink(){
+  clinBlinkIds = new Set();
+}
+function clinBlinkSingle(id,t,frames=20){
+  clinSetBlink((Math.floor(t/frames)%2===0)?[id]:[]);
+}
+function clinBlinkAlternate(ids,t,frames=20){
+  if(!ids || !ids.length){clinClearBlink(); return;}
+  const slot=Math.floor(t/frames)%ids.length;
+  const on=Math.floor(t/(frames/2))%2===0;
+  clinSetBlink(on?[ids[slot]]:[]);
+}
+function clinShowCaption(label,html){
+  clinCaption.innerHTML=`<span class="cc-label">${label}</span>${html}`;
+  clinCaption.style.display='block';
+}
+function clinHideCaption(){
+  clinCaption.style.display='none';
+}
+
+// Arc geometry — geodesic slerp between two unit vectors
+function buildArc(ax,ay,az,bx,by,bz,N){
+  const la=Math.hypot(ax,ay,az),lb=Math.hypot(bx,by,bz);
+  ax/=la;ay/=la;az/=la;bx/=lb;by/=lb;bz/=lb;
+  const dot=Math.min(1,Math.max(-1,ax*bx+ay*by+az*bz));
+  const pts=[];
+
+  // Antipodal endpoints have infinitely many great circles; ordinary slerp
+  // divides by sin(pi) and can numerically explode far beyond the sphere.
+  // For the bipolar demo, choose a stable perpendicular corridor on the sphere.
+  if(dot < -0.999){
+    // Antipodal points can be joined by either half of the same great circle.
+    // Use the FRONT-FACING corridor for the bipolar demo so the traversal stays
+    // visible while the view rotates from opportunity to threat.
+    let ox=-1, oy=-1, oz=0; // opposite of the previous corridor; keeps arc on visible side
+    const proj=ox*ax+oy*ay+oz*az;
+    ox-=proj*ax; oy-=proj*ay; oz-=proj*az;
+    let lo=Math.hypot(ox,oy,oz);
+    if(lo<0.001){ ox=-ay; oy=ax; oz=0; lo=Math.hypot(ox,oy,oz); }
+    ox/=lo; oy/=lo; oz/=lo;
+    for(let i=0;i<=N;i++){
+      const t=i/N, a=Math.PI*t;
+      pts.push([Math.cos(a)*ax + Math.sin(a)*ox,
+                Math.cos(a)*ay + Math.sin(a)*oy,
+                Math.cos(a)*az + Math.sin(a)*oz]);
+    }
+    return pts;
+  }
+
+  const omega=Math.acos(dot), denom=Math.sin(omega);
+  for(let i=0;i<=N;i++){
+    const t=i/N;
+    if(omega<0.001){pts.push([ax,ay,az]);continue;}
+    const sa=Math.sin((1-t)*omega)/denom;
+    const sb=Math.sin(t*omega)/denom;
+    pts.push([sa*ax+sb*bx,sa*ay+sb*by,sa*az+sb*bz]);
+  }
+  return pts;
+}
+// New model convention: x=valence, y=demand (mobilize=-), z=supply (under=-, over=+).
+// Bipolar: Exhilaration = (+,-,+) → Depression = (-,+,-)
+const ARC_BIPOLAR = buildArc(1,-1,1,-1,1,-1,140);
+
+function drawClinArc(){
+  if(!clinArcActive||clinArcPts.length<2) return;
+  const N=clinArcPts.length-1;
+  const endIndex=Math.max(1,Math.min(Math.floor(clinArcP*N),N));
+  let seg=[];
+  for(let i=0;i<=endIndex;i++){
+    const [mx,my,mz]=clinArcPts[i];
+    const p=rotateModelToView(mx,my,mz);
+    if(p[2]>-0.06){
+      const sx=cx+p[0]*r, sy=cy+p[1]*r;
+      // Defensive clamp: the bipolar path should never draw outside the sphere.
+      if(Math.hypot(sx-cx,sy-cy) <= r+1) seg.push([sx,sy]);
+    } else {
+      if(seg.length>1){
+        let d=`M ${seg[0][0]} ${seg[0][1]}`;
+        for(let j=1;j<seg.length;j++) d+=` L ${seg[j][0]} ${seg[j][1]}`;
+        el('path',{d,fill:'none',stroke:'rgba(255,210,60,.62)','stroke-width':'3.2',
+          'stroke-dasharray':'8 5','stroke-linecap':'round'});
+      }
+      seg=[];
+    }
+  }
+  if(seg.length>1){
+    let d=`M ${seg[0][0]} ${seg[0][1]}`;
+    for(let j=1;j<seg.length;j++) d+=` L ${seg[j][0]} ${seg[j][1]}`;
+    el('path',{d,fill:'none',stroke:'rgba(255,210,60,.62)','stroke-width':'3.2',
+      'stroke-dasharray':'8 5','stroke-linecap':'round'});
+  }
+  const di=endIndex;
+  const [mx,my,mz]=clinArcPts[di];
+  const p=rotateModelToView(mx,my,mz);
+  if(p[2]>-0.06){
+    const dx=cx+p[0]*r,dy=cy+p[1]*r;
+    const pulse=0.72+0.28*Math.sin(Date.now()*0.018);
+    const col=clinArcP<0.5?'255,80,35':'80,140,255';
+    el('circle',{cx:dx,cy:dy,r:17,fill:`rgba(${col},${0.16*pulse})`,stroke:'none'});
+    el('circle',{cx:dx,cy:dy,r:9,fill:`rgba(${col},${0.92*pulse})`,
+      stroke:'rgba(255,255,255,.96)','stroke-width':'2.2'});
+  }
+}
+
+function tickClinSeq(){
+  if(!clinSeq) return;
+  const step=clinSeq.steps[clinSeq.step];
+  if(clinSeq.t===0 && step.onStart) step.onStart();
+  clinSeq.t++;
+  const p=Math.min(1,clinSeq.t/step.frames);
+  let elapsed=0;
+  for(let i=0;i<clinSeq.step;i++) elapsed+=clinSeq.steps[i].frames;
+  progress.style.width=(Math.min(1,(elapsed+clinSeq.t)/clinSeq.total)*100)+'%';
+  step.fn(p,clinSeq.t);
+  render();
+  if(clinSeq.t>=step.frames){
+    if(step.onDone) step.onDone();
+    clinSeq.step++;
+    clinSeq.t=0;
+    if(clinSeq.step>=clinSeq.steps.length){
+      clinSeq=null;
+      progress.style.opacity=0; progress.style.width='0%';
+      clinArcActive=false; clinArcPts=[]; clinArcP=0;
+      clinHideCaption();
+      clinClearBlink();
+      render();
+    }
+  }
+}
+
+function startClinSeq(steps, progressColor){
+  buildStage=0; updateBuildStageButton();
+  clinSeq=null; clinArcActive=false; clinArcPts=[]; clinArcP=0; clinClearBlink(); clinHideCaption();
+  anim=null;
+  progress.style.background=progressColor||'linear-gradient(90deg,#d4622a,#4466cc)';
+  progress.style.opacity=1; progress.style.width='0%';
+  hidePopout(); selected=null;
+  clinSeq={steps,step:0,t:0,total:steps.reduce((a,s)=>a+s.frames,0)};
+}
+
+function easeIO(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+function seqRotTo(fromX,fromY,toX,toY,p){
+  const e=easeIO(p);
+  let dy=toY-fromY;
+  while(dy>Math.PI)dy-=2*Math.PI;
+  while(dy<-Math.PI)dy+=2*Math.PI;
+  rotX=fromX+(toX-fromX)*e;
+  rotY=fromY+dy*e;
+}
+
+// ── BIPOLAR ───────────────────────────────────────────────────
+document.getElementById('bipolarBtn').addEventListener('click',()=>{
+  const LB='Bipolar I — full diagonal traversal';
+  const oppX=0, oppY=-Math.PI/2;
+  const thrX=0, thrY= Math.PI/2;
+  const startX=rotX, startY=rotY;
+
+  startClinSeq([
+    {frames:55, fn(p){ seqRotTo(startX,startY,oppX,oppY,p); view='opportunity'; }},
+    {frames:70,
+     onStart(){ rotX=oppX;rotY=oppY;view='opportunity'; clinShowCaption(LB,'<b>Exhilaration.</b> Opportunity, mobilization over-supplied — expansion, acceleration, risk tolerance.'); },
+     fn(p,t){ rotX=oppX;rotY=oppY; clinBlinkSingle('exhilaration',t,18); }
+    },
+    {frames:280,
+     onStart(){
+       view='sphere';
+       clinArcPts=ARC_BIPOLAR; clinArcActive=true; clinArcP=0;
+       clinShowCaption(LB,'<b>Crossing the diagonal.</b> The point traverses from opportunity over-supply toward threat under-supplied conservation — the manic peak toward the depressive crash.');
+     },
+     fn(p,t){
+       seqRotTo(oppX,oppY,thrX,thrY,p);
+       clinArcP=p;
+       clinBlinkSingle(p<0.5?'exhilaration':'depression',t,18);
+     },
+     onDone(){clinArcActive=false;}
+    },
+    {frames:80,
+     onStart(){ rotX=thrX;rotY=thrY;view='threat'; clinShowCaption(LB,'<b>Depression.</b> Threat, conservation under-supplied — rest is required but does not restore.'); },
+     fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkSingle('depression',t,18); }
+    }
+  ], 'linear-gradient(90deg,#ff8800,#8899ff)');
+});
+
+// ── PTSD ──────────────────────────────────────────────────────
+document.getElementById('ptsdBtn').addEventListener('click',()=>{
+  const LB='PTSD — oscillation within threat';
+  const thrX=0, thrY=Math.PI/2;
+  const startX=rotX, startY=rotY;
+
+  startClinSeq([
+    {frames:50, fn(p){ seqRotTo(startX,startY,thrX,thrY,p); view='threat'; }},
+    {frames:300,
+     onStart(){ rotX=thrX;rotY=thrY;view='threat'; clinShowCaption(LB,'<b>Anxiety ↔ Anger.</b> Threat mobilization oscillates between under-supplied alarm and over-supplied fight.'); },
+     fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkAlternate(['anxiety','anger'],t,20); },
+     onDone(){ clinClearBlink(); }
+    },
+    {frames:35, fn(){ rotX=thrX;rotY=thrY; clinClearBlink(); }},
+    {frames:300,
+     onStart(){ clinShowCaption(LB,'<b>Dissociation ↔ Depression.</b> Threat conservation oscillates between analgesic shielding and depleted non-restorative collapse.'); },
+     fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkAlternate(['dissociation','depression'],t,20); }
+    }
+  ], 'linear-gradient(90deg,#ff2222,#ff9999,#4455ff,#8899ff)');
+});
+
+// ── BORDERLINE PD ─────────────────────────────────────────────
+document.getElementById('bpdBtn').addEventListener('click',()=>{
+  const LB='Borderline PD — rapid valence oscillation';
+  let bpdT=0, bpdNext=0, bpdActive='overconfident';
+  const oppPool=['overconfident','exhilaration','engagement','comfortZone','anticipation'];
+  const threatPool=['anger','anxiety','dissociation','depression'];
+  let useOpp=false;
+
+  startClinSeq([
+    {frames:520,
+     onStart(){
+       view='sphere';
+       clinShowCaption(LB,'<b>Rapid valence oscillation.</b> Watch the sphere keep moving while state highlights jump unpredictably between opportunity and threat — no stable corridor.');
+     },
+     fn(p,t){
+       bpdT++;
+       if(bpdT>=bpdNext){
+         const interval=5+Math.floor(Math.random()*9);
+         bpdNext=bpdT+interval;
+         useOpp=!useOpp;
+         const pool=useOpp?oppPool:threatPool;
+         bpdActive=pool[Math.floor(Math.random()*pool.length)];
+       }
+       clinBlinkSingle(bpdActive,t,10);
+       rotY += 0.0105;
+       rotX = clamp(rotX + Math.sin(bpdT*0.07)*0.004,-0.95,0.95);
+     }
+    }
+  ], 'linear-gradient(90deg,#cc44ff,#ff44ff,#ffcc00,#ff2222)');
+});
 
 // Walkthrough
 const WT_STEPS=[
   {
-    title:'The Regulatory Map',
-    body:'This sphere maps affect as a regulatory readout — not as emotion labels, but as positions in a coordinate system. The left hemisphere (V−) is threat: speed dominates accuracy. The right hemisphere (V+) is opportunity: accuracy can exceed speed. Every affective state is a location, not a category.'
+    title:'Start with the split',
+    body:'The map opens in V− threat. Threat is deliberately compressed: the system tends to mobilize or conserve quickly because speed matters more than accuracy. Switch to Opportunity to see the expanded triphasic field.'
   },
   {
-    title:'Three Peptides, Three Axes',
-    body:'Three POMC-derived peptides implement the space. ACTH governs mobilization (D_M): how much force the system deploys. α-MSH governs recalibration (D_R): how accurately the system updates its model of the world. β-Endorphin governs conservation (D_C): how completely the system can rest and restore. Each axis runs from demand exceeding supply (D > S) through supply balanced (D ≈ S) to supply exceeding demand (D < S).'
+    title:'Read every state as an address',
+    body:'An affective state is derived from valence, demand, and supply relation. For example, anxiety is threat + mobilization demand greater than ACTH supply. Anger is threat + mobilization supply greater than demand.'
   },
   {
-    title:'Click to Explore',
-    body:'Switch to Labels mode and click any affect state to see its valence mode, demand–supply state, formal address, functional description, and clinical note. Drag to rotate the sphere and view the same structure from any angle. The seam views let you compare states across valence — for example, all mobilization states, or all under-supplied states, together.'
+    title:'Use labels as explanations, not decoration',
+    body:'Labels are on by default. Click any state to open its formal address, derivation, function, and clinical note. Click elsewhere to dismiss the popout.'
+  },
+  {
+    title:'Use the fixed maps when teaching',
+    body:'Fixed Maps opens a clean two-dimensional backup view of the threat and opportunity hemispheres. Advanced contains rotation, seam views, the supply-boundary toggle, the comfort-zone width, and clinical example sequences.'
   }
 ];
 let wtCurrent=0;
@@ -1347,7 +2216,7 @@ function showWtStep(){
   document.getElementById('wtPrev').disabled=wtCurrent===0;
   document.getElementById('wtNext').textContent=wtCurrent===WT_STEPS.length-1?'Done':'Next →';
 }
-document.getElementById('walkthroughBtn').addEventListener('click',openWalkthrough);
+const _wtBtn=document.getElementById('walkthroughBtn'); if(_wtBtn) _wtBtn.addEventListener('click',openWalkthrough);
 document.getElementById('wtPrev').addEventListener('click',()=>{if(wtCurrent>0){wtCurrent--;showWtStep();}});
 document.getElementById('wtNext').addEventListener('click',()=>{
   if(wtCurrent<WT_STEPS.length-1){wtCurrent++;showWtStep();}
@@ -1356,7 +2225,7 @@ document.getElementById('wtNext').addEventListener('click',()=>{
 document.getElementById('walkthrough').addEventListener('click',e=>{if(e.target===document.getElementById('walkthrough'))closeWalkthrough();});
 function drawFixed(){
   const S=document.getElementById('fixedSvg');
-  S.innerHTML=`<defs><style>.t{font:850 43px Arial;fill:#081734}.subt{font:italic 31px Arial;fill:#111827}.axT{font:850 32px Arial;fill:#081734}.ax{font:850 28px Arial;fill:#081734}.axm{font:650 20px Arial;fill:#111827}.name{font:850 26px Arial;fill:#060b16}.nameW{font:850 26px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:3px}.form{font:650 21px Arial;fill:#0b1220}.formW{font:700 21px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:2px}.grid{stroke:#111827;stroke-width:2.4;fill:none}.inner{stroke:#111827;stroke-width:1.8}</style></defs>
+  S.innerHTML=`<defs><style>.t{font:850 43px Arial;fill:#081734}.subt{font:italic 31px Arial;fill:#111827}.axT{font:850 32px Arial;fill:#081734}.ax{font:850 28px Arial;fill:#081734}.axm{font:650 20px Arial;fill:#111827}.name{font:850 26px Arial;fill:#060b16}.nameW{font:850 26px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:3px}.form{font:650 21px Arial;fill:#0b1220}.formW{font:700 21px Arial;fill:white;paint-order:stroke;stroke:#07111f;stroke-width:2px}.fg{stroke:#111827;stroke-width:2.4;fill:none}.fi{stroke:#111827;stroke-width:1.8}</style></defs>
 <rect width="1600" height="1000" fill="#fff"/>
 <text x="380" y="72" text-anchor="middle" class="t">V− Threat Mode</text><text x="380" y="114" text-anchor="middle" class="subt">4 regions · speed &gt; accuracy</text>
 <text x="1210" y="72" text-anchor="middle" class="t">V+ Opportunity Mode</text><text x="1210" y="114" text-anchor="middle" class="subt">9 regions · accuracy &gt; speed</text>
@@ -1368,7 +2237,7 @@ function rgbHex(arr){return '#'+arr.map(v=>Math.max(0,Math.min(255,Math.round(v)
 function fixedCellColor(mx,my,mz){ return rgbHex(fieldColorSphere(mx,my,mz)); }
 function flatLeft(){
   const cTL=fixedCellColor(-0.5,-0.5,-0.5), cTR=fixedCellColor(-0.5,-0.5,0.5), cBL=fixedCellColor(-0.5,0.5,-0.5), cBR=fixedCellColor(-0.5,0.5,0.5);
-  return `<text x="38" y="488" class="axT" transform="rotate(-90 38 488)" text-anchor="middle">Demand (D)</text><text x="78" y="292" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="78" y="327" class="axm" text-anchor="middle">Mobilize</text><text x="78" y="606" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="78" y="641" class="axm" text-anchor="middle">Conserve</text><g transform="translate(130,160)"><rect width="560" height="600" class="grid"/><rect width="280" height="300" fill="${cTL}" class="inner"/><rect x="280" width="280" height="300" fill="${cTR}" class="inner"/><rect y="300" width="280" height="300" fill="${cBL}" class="inner"/><rect x="280" y="300" width="280" height="300" fill="${cBR}" class="inner"/>${flatCell(140,148,'Anxiety','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>')}${flatCell(420,148,'Anger','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>',true)}${flatCell(140,448,'Depression','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>')}${flatCell(420,448,'Dissociation','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>',true)}</g><text x="270" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="270" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="550" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="550" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="410" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
+  return `<text x="54" y="488" class="axT" transform="rotate(-90 54 488)" text-anchor="middle">Demand (D)</text><text x="78" y="292" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="78" y="327" class="axm" text-anchor="middle">Mobilize</text><text x="78" y="606" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="78" y="641" class="axm" text-anchor="middle">Conserve</text><g transform="translate(130,160)"><rect width="560" height="600" class="grid"/><rect width="280" height="300" fill="${cTL}" class="inner"/><rect x="280" width="280" height="300" fill="${cTR}" class="inner"/><rect y="300" width="280" height="300" fill="${cBL}" class="inner"/><rect x="280" y="300" width="280" height="300" fill="${cBR}" class="inner"/>${flatCell(140,148,'Anxiety','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>')}${flatCell(420,148,'Anger','V− | D<tspan baseline-shift="sub" font-size="15">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="15">ACTH</tspan>',true)}${flatCell(140,448,'Depression','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>')}${flatCell(420,448,'Dissociation','V− | D<tspan baseline-shift="sub" font-size="15">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="13">β-endorphin</tspan>',true)}</g><text x="270" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="270" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="550" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="550" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="410" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
 function flatRight(){
   const hw=comfort/2;
   const rowY=[-(1+hw)/2,0,(1+hw)/2];
@@ -1381,9 +2250,36 @@ function flatRight(){
       rects += `<rect x="${col*186.666}" y="${row*200}" width="186.667" height="200" fill="${fill}" class="inner"/>`;
     }
   }
-  return `<text x="770" y="488" class="axT" transform="rotate(-90 770 488)" text-anchor="middle">Demand (D)</text><text x="808" y="246" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="808" y="281" class="axm" text-anchor="middle">Mobilize</text><text x="808" y="446" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">R</tspan></text><text x="808" y="486" class="axm" text-anchor="middle">Recalibrate</text><text x="808" y="646" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="808" y="681" class="axm" text-anchor="middle">Conserve</text><g transform="translate(860,160)"><rect width="560" height="600" class="grid"/>${rects}${flatCell(93.333,96,'Anticipation','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(280,96,'Engagement','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(466.666,96,'Exhilaration','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',true,24,19)}${flatCell(93.333,296,'Overcautious','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(280,296,'Comfort Zone','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(466.666,296,'Overconfident','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',true,21,18)}${flatCell(93.333,496,'Complacency','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',false,22,18)}${flatCell(280,496,'Contentment','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> ≈ S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,22,18)}${flatCell(466.666,496,'Bliss','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,24,19)}</g><text x="953.333" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="953.333" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="1140" y="828" text-anchor="middle" class="ax">D ≈ S</text><text x="1140" y="858" text-anchor="middle" class="axm">Supply balanced</text><text x="1326.666" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="1326.666" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="1140" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
+  return `<text x="815" y="488" class="axT" transform="rotate(-90 815 488)" text-anchor="middle">Demand (D)</text><text x="865" y="246" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">M</tspan></text><text x="865" y="281" class="axm" text-anchor="middle">Mobilize</text><text x="865" y="446" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">R</tspan></text><text x="865" y="486" class="axm" text-anchor="middle" style="font-size:16px">Recalibrate</text><text x="865" y="646" class="ax" text-anchor="middle">D<tspan baseline-shift="sub" font-size="18">C</tspan></text><text x="865" y="681" class="axm" text-anchor="middle">Conserve</text><g transform="translate(930,160)"><rect width="560" height="600" class="grid"/>${rects}${flatCell(93.333,96,'Anticipation','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(280,96,'Engagement','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',false,24,19)}${flatCell(466.666,96,'Exhilaration','V+ | D<tspan baseline-shift="sub" font-size="14">M</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">ACTH</tspan>',true,24,19)}${flatCell(93.333,296,'Overcautious','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &gt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(280,296,'Comfort Zone','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> ≈ S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',false,22,18)}${flatCell(466.666,296,'Overconfident','V+ | D<tspan baseline-shift="sub" font-size="14">R</tspan> &lt; S<tspan baseline-shift="sub" font-size="14">α-MSH</tspan>',true,21,18)}${flatCell(93.333,496,'Complacency','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &gt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',false,22,18)}${flatCell(280,496,'Contentment','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> ≈ S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,22,18)}${flatCell(466.666,496,'Bliss','V+ | D<tspan baseline-shift="sub" font-size="14">C</tspan> &lt; S<tspan baseline-shift="sub" font-size="12">β-endorphin</tspan>',true,24,19)}</g><text x="1023.333" y="828" text-anchor="middle" class="ax">D &gt; S</text><text x="1023.333" y="858" text-anchor="middle" class="axm">Under-supplied</text><text x="1210" y="828" text-anchor="middle" class="ax">D ≈ S</text><text x="1210" y="858" text-anchor="middle" class="axm">Supply balanced</text><text x="1396.666" y="828" text-anchor="middle" class="ax">D &lt; S</text><text x="1396.666" y="858" text-anchor="middle" class="axm">Over-supplied</text><text x="1210" y="920" text-anchor="middle" class="axT">Supply relation (S)</text>`}
 
 
+
+// Instructions dropdown
+const instructionsToggle = document.getElementById('instructionsToggle');
+const instructionsMenu = document.getElementById('instructionsMenu');
+function closeInstructionsMenu(){
+  if(!instructionsToggle||!instructionsMenu) return;
+  instructionsMenu.classList.remove('show');
+  instructionsMenu.setAttribute('aria-hidden','true');
+  instructionsToggle.setAttribute('aria-expanded','false');
+  instructionsToggle.classList.remove('open');
+}
+function toggleInstructionsMenu(e){
+  if(e) e.stopPropagation();
+  closeResourceMenu();
+  const open = instructionsMenu.classList.toggle('show');
+  instructionsMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+  instructionsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  instructionsToggle.classList.toggle('open', open);
+}
+if(instructionsToggle){
+  // Instructions button opens the walkthrough overlay (full step-by-step guide)
+  instructionsToggle.addEventListener('click', e=>{
+    e.stopPropagation();
+    closeResourceMenu();
+    openWalkthrough();
+  });
+}
 
 // Resource dropdown
 const resourceToggle = document.getElementById('resourceToggle');
@@ -1393,24 +2289,30 @@ function closeResourceMenu(){
   resourceMenu.classList.remove('show');
   resourceMenu.setAttribute('aria-hidden','true');
   resourceToggle.setAttribute('aria-expanded','false');
-  resourceToggle.classList.remove('active');
+  resourceToggle.classList.remove('open');
 }
 function toggleResourceMenu(e){
   if(e) e.stopPropagation();
+  closeInstructionsMenu();
   const open = resourceMenu.classList.toggle('show');
   resourceMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
   resourceToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  resourceToggle.classList.toggle('active', open);
+  resourceToggle.classList.toggle('open', open);
 }
 if(resourceToggle && resourceMenu){
   resourceToggle.addEventListener('click', toggleResourceMenu);
   resourceMenu.addEventListener('click', e => e.stopPropagation());
-  document.addEventListener('click', closeResourceMenu);
-  window.addEventListener('keydown', e => { if(e.key === 'Escape') closeResourceMenu(); });
+  document.addEventListener('click', ()=>{closeResourceMenu();closeInstructionsMenu();});
+  window.addEventListener('keydown', e => { if(e.key==='Escape'){closeResourceMenu();closeInstructionsMenu();} });
 }
 
 function loop(){
-  if(!dragging&&!anim&&!rotationLocked){rotX=clamp(rotX+inertiaX,-1.25,1.25);rotY+=inertiaY;inertiaX*=.94;inertiaY*=.94;if(Math.abs(inertiaX)+Math.abs(inertiaY)>0.0004)render();}
+  if(clinSeq){tickClinSeq();}
+  else if(buildStage>0){
+    const now=performance.now();
+    if(now-buildLastRender>120){buildLastRender=now; render();}
+  }
+  else if(!dragging&&!anim&&!rotationLocked){rotX=clamp(rotX+inertiaX,-1.25,1.25);rotY+=inertiaY;inertiaX*=.94;inertiaY*=.94;if(Math.abs(inertiaX)+Math.abs(inertiaY)>0.0004)render();}
   requestAnimationFrame(loop);
 }
 updateRotationButtons();

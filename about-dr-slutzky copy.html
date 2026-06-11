@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About Dr. Slutzky — Meta-strophe Theory</title>
+<style>
+:root {
+  --bg:#07101d;
+  --ink:#eef6ff;
+  --muted:#9ab8d4;
+  --soft:#6a8faa;
+  --line:rgba(255,255,255,.12);
+  --gold:#d4a840;
+  --button:#eaf5ff;
+  --button-ink:#07101d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at 50% 0%,#132840 0%,#07101d 50%,#03060b 100%);
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.65;
+}
+header{
+  max-width:980px;
+  margin:0 auto;
+  padding:38px 24px 16px;
+  text-align:center;
+}
+.kicker{
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--soft);
+  font-weight:800;
+  margin-bottom:10px;
+}
+h1{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(34px,5vw,54px);
+  font-style:italic;
+  font-weight:600;
+  line-height:1.02;
+  color:#fff;
+  margin-bottom:10px;
+}
+.sub{
+  color:var(--muted);
+  font-size:15px;
+}
+.rule{
+  width:64px;
+  height:1px;
+  background:var(--gold);
+  margin:10px auto 0;
+}
+main{
+  max-width:900px;
+  margin:0 auto;
+  padding:22px 24px 42px;
+}
+.bio-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(255,255,255,.035);
+  box-shadow:0 18px 48px rgba(0,0,0,.32);
+  padding:clamp(24px,4vw,42px);
+}
+.bio-card p{
+  color:#cfe0f4;
+  font-size:clamp(16px,1.6vw,18px);
+  margin-bottom:18px;
+}
+.bio-card p:last-child{margin-bottom:0}
+.nav{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:24px;
+}
+.nav a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:96px;
+  text-decoration:none;
+  color:var(--button-ink);
+  background:var(--button);
+  border-radius:999px;
+  padding:10px 18px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.2px;
+  box-shadow:0 12px 32px rgba(0,0,0,.28);
+}
+.nav a.secondary{
+  color:#eaf5ff;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:none;
+}
+.nav a:hover{filter:brightness(1.06);transform:translateY(-1px)}
+footer{
+  border-top:1px solid rgba(255,255,255,.16);
+  text-align:center;
+  padding:14px 24px;
+  color:rgba(255,255,255,.68);
+  font-size:13px;
+  letter-spacing:.04em;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">meta-strophe.com</div>
+  <h1>About Dr. Slutzky</h1>
+  <div class="sub">Clinical psychologist · Meta-strophe Theory</div>
+  <div class="rule"></div>
+</header>
+
+<main>
+  <section class="bio-card" aria-label="Biography">
+        <p>Dr. Mitchell Slutzky is a clinical psychologist whose four decades of practice span the full human lifespan—from preterm infants to patients with advanced dementia—often in medically and neurologically complex settings. Early in his career, he provided psychological services at The New York Foundling&#x27;s Pediatric Center, now Elizabeth Seton Children&#x27;s Center in Yonkers, New York.</p>
+        <p>He served as Director of Clinical and Patient Services at CHE Behavioral Health Services, where he oversaw psychological care across more than 1,000 facilities, representing over 10% of the nation&#x27;s skilled nursing beds. Across those settings, he developed treatment approaches at the intersection of traumatic affect states and serious neurological illness, integrating affect regulation, neuroplasticity, and interpersonal neurobiology.</p>
+        <p>That clinical breadth forms the empirical foundation for his current theoretical work. Meta-strophe Theory offers a molecules-to-mind framework linking neuropeptide dynamics to consciousness and affect regulation, distilled from sustained contact with the full range of human psychological experience across development, illness, and decline.</p>
+        <p>Dr. Slutzky received his Ph.D. in Clinical Psychology from the California School of Professional Psychology, San Diego, and completed postdoctoral training in the Freudian sequence at NYU&#x27;s Postdoctoral Program in Psychoanalysis. A Distinguished Fellow of the New York State Psychological Association, he received NYSPA&#x27;s President&#x27;s Award in 2022. He is based in Athens, Georgia, and continues to see New York patients via telehealth.</p>
+  </section>
+
+  <nav class="nav" aria-label="Site navigation">
+    <a href="index.html">Home</a>
+    <a href="sphere.html" class="secondary">Sphere</a>
+    <a href="working-paper.html" class="secondary">Working Paper</a>
+  </nav>
+</main>
+
+<footer>© 2026 Mitchell Slutzky, PhD · Meta-strophe Theory · meta-strophe.com</footer>
+</body>
+</html>
