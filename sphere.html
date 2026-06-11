@@ -696,6 +696,386 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
   vector-effect:non-scaling-stroke;
 }
 
+
+/* =========================================================
+   Mobile layout patch
+   Desktop behavior is unchanged. On phones, the page becomes
+   normal document flow: nav above sphere, controls below sphere,
+   Advanced below main controls, and landscape gets an advisory.
+   ========================================================= */
+
+@media (max-width: 900px) {
+  html,
+  body {
+    height: auto !important;
+    min-height: 100%;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    padding: 16px 12px 12px !important;
+    background: linear-gradient(180deg,rgba(3,8,16,.94),rgba(3,8,16,.35)) !important;
+  }
+
+  header h1 {
+    font-size: clamp(21px, 5.4vw, 30px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: 1.4px !important;
+  }
+
+  header .sub {
+    font-size: 13px !important;
+  }
+
+  #stage {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 10px 12px 0 !important;
+    gap: 12px !important;
+  }
+
+  #leftCol {
+    display: none !important;
+  }
+
+  #rightNav {
+    order: 1;
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    max-width: 560px !important;
+    padding: 0 8px 2px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    z-index: 120 !important;
+  }
+
+  .stage-btn-wrap {
+    position: relative !important;
+    top: auto !important;
+    width: 100% !important;
+  }
+
+  .stage-dropdown-btn {
+    width: 100% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: clamp(12px, 3.3vw, 15px) !important;
+    padding: 8px 10px !important;
+    min-height: 38px !important;
+  }
+
+  #instructionsNav .stage-dropdown-panel,
+  #resourceNav .stage-dropdown-panel {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    top: calc(env(safe-area-inset-top, 0px) + 92px) !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: 62vh !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+  }
+
+  #mapWrap {
+    order: 2;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: min(88vw, 520px) !important;
+    height: min(88vw, 520px) !important;
+    min-width: 0 !important;
+    margin: 4px auto 8px !important;
+    justify-self: auto !important;
+    align-self: center !important;
+  }
+
+  #clinCaption {
+    order: 3;
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: min(94vw, 560px) !important;
+    margin: 2px auto 8px !important;
+  }
+
+  #controls {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    padding: 12px 10px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    overflow: visible !important;
+    background: linear-gradient(180deg,rgba(2,4,9,.20),rgba(2,4,9,.92)) !important;
+  }
+
+  .user-controls {
+    width: min(96vw, 760px) !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 9px !important;
+  }
+
+  .user-controls button {
+    min-width: 0 !important;
+    flex: 1 1 118px !important;
+    max-width: 210px !important;
+    padding: 10px 9px !important;
+    font-size: 14px !important;
+  }
+
+  #advancedControls {
+    flex-basis: 100% !important;
+    width: min(96vw, 760px) !important;
+    max-width: 760px !important;
+    margin: 8px auto 0 !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    overflow: visible !important;
+  }
+
+  #advancedControls.show {
+    display: flex !important;
+  }
+
+  .advanced-subgroup {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+
+  .advanced-subgroup .glabel {
+    flex: 0 0 100% !important;
+    text-align: left !important;
+    margin: 0 0 2px !important;
+  }
+
+  .display-controls button,
+  .views-controls button,
+  .clinical-controls button,
+  .stage-controls button {
+    flex: 1 1 138px !important;
+    min-width: 0 !important;
+    max-width: 220px !important;
+    padding: 10px 9px !important;
+    font-size: 14px !important;
+  }
+
+  .comfort-controls {
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+  }
+
+  .comfort-controls .glabel {
+    flex: 0 0 auto !important;
+    margin-right: 2px !important;
+  }
+
+  .comfort-inline {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+  }
+
+  .comfortLabel {
+    margin-left: 0 !important;
+  }
+
+  #comfort {
+    width: min(42vw, 180px) !important;
+    max-width: 180px !important;
+  }
+
+  #comfortVal {
+    width: auto !important;
+    min-width: 38px !important;
+  }
+
+  #fixedPanel {
+    padding: 6px !important;
+  }
+
+  #fixedPanel .bar {
+    margin: -6px -6px 6px !important;
+    padding: 10px !important;
+  }
+
+  #fixedSvg {
+    border-radius: 8px !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 540px) {
+  body::before {
+    content: "Best on desktop, tablet, or phone portrait. Full rotation, staged animations, and clinical examples may require a larger screen.";
+    display: block;
+    padding: 8px 14px;
+    text-align: center;
+    font: 700 12px/1.35 Arial, Helvetica, sans-serif;
+    color: #f1e7c6;
+    background: rgba(212,168,64,.12);
+    border-bottom: 1px solid rgba(212,168,64,.24);
+    position: relative;
+    z-index: 500;
+  }
+
+  header {
+    padding: 10px 10px 8px !important;
+  }
+
+  header h1 {
+    font-size: 20px !important;
+    letter-spacing: 1.2px !important;
+  }
+
+  header .sub {
+    font-size: 12px !important;
+  }
+
+  #stage {
+    padding: 7px 10px 0 !important;
+    gap: 8px !important;
+  }
+
+  #rightNav {
+    max-width: 760px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .stage-dropdown-btn {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+    min-height: 34px !important;
+  }
+
+  #instructionsNav .stage-dropdown-panel,
+  #resourceNav .stage-dropdown-panel {
+    top: calc(env(safe-area-inset-top, 0px) + 70px) !important;
+    max-height: 70vh !important;
+  }
+
+  #mapWrap {
+    width: min(78vw, 380px) !important;
+    height: min(78vw, 380px) !important;
+    margin: 2px auto 6px !important;
+  }
+
+  #controls {
+    padding: 8px 8px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .user-controls {
+    width: min(96vw, 900px) !important;
+    padding: 8px !important;
+  }
+
+  .user-controls button {
+    flex: 1 1 108px !important;
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+  }
+
+  .advanced-subgroup {
+    padding: 8px !important;
+  }
+
+  .display-controls button,
+  .views-controls button,
+  .clinical-controls button,
+  .stage-controls button {
+    flex: 1 1 120px !important;
+    padding: 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+
+/* =========================================================
+   Mobile left-description restoration
+   On mobile, the former left column becomes a compact
+   orientation card above the sphere instead of disappearing.
+   ========================================================= */
+
+@media (max-width: 900px) {
+  #leftCol {
+    order: 2;
+    display: block !important;
+    width: min(92vw, 560px) !important;
+    padding: 12px 14px !important;
+    margin: 0 auto 2px !important;
+    background: rgba(6,14,28,.58);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    backdrop-filter: blur(8px);
+  }
+
+  #leftCol p {
+    font-size: 12.8px !important;
+    line-height: 1.45 !important;
+    margin: 0 0 7px !important;
+    color: #b9cde4 !important;
+  }
+
+  #leftCol p:nth-child(2) {
+    color: #d8e7f6 !important;
+    font-weight: 700;
+  }
+
+  #leftCol p:nth-child(3),
+  #leftCol .lc-hint {
+    display: none !important;
+  }
+
+  #mapWrap {
+    order: 3;
+  }
+
+  #clinCaption {
+    order: 4;
+  }
+}
+
+/* In short landscape, hide the orientation card again to preserve usable space. */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 540px) {
+  #leftCol {
+    display: none !important;
+  }
+
+  #mapWrap {
+    order: 2;
+  }
+}
+
 </style>
 </head>
 <body>
