@@ -1191,6 +1191,16 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
     <button id="advancedBtn" aria-expanded="false">Advanced</button>
   </div>
 
+  <div class="group stage-controls"><span class="glabel">Build</span>
+    <button id="buildStageBtn">Stages</button>
+  </div>
+
+  <div class="group clinical-controls"><span class="glabel">Demonstration</span>
+    <button id="bipolarBtn" class="clinicalBtn">Bipolar</button>
+    <button id="ptsdBtn" class="clinicalBtn">PTSD</button>
+    <button id="bpdBtn" class="clinicalBtn">Borderline</button>
+  </div>
+
   <div id="advancedControls" class="advancedControls" aria-hidden="true">
     <div class="group advanced-subgroup display-controls"><span class="glabel">Display</span>
       <button id="labelsToggleBtn" class="active" aria-pressed="true">Labels On</button>
@@ -1206,22 +1216,12 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
       <button data-view="over">Over-supplied</button>
     </div>
 
-    <div class="group advanced-subgroup stage-controls"><span class="glabel">Build</span>
-      <button id="buildStageBtn">Stages</button>
-    </div>
-
     <div class="group advanced-subgroup comfort-controls"><span class="glabel">Comfort Zone</span>
       <div class="comfort-inline">
         <span class="comfortLabel">Width</span>
         <input id="comfort" type="range" min="18" max="72" value="44"/>
         <span id="comfortVal">44%</span>
       </div>
-    </div>
-
-    <div class="group advanced-subgroup clinical-controls"><span class="glabel">Clinical Examples</span>
-      <button id="bipolarBtn" class="clinicalBtn">Bipolar</button>
-      <button id="ptsdBtn" class="clinicalBtn">PTSD</button>
-      <button id="bpdBtn" class="clinicalBtn">Borderline</button>
     </div>
   </div>
 
