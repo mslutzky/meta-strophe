@@ -476,6 +476,16 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
   border-color:rgba(255,255,255,.45);
   color:#fff;
 }
+.stage-dropdown-btn.contact-cta{
+  background:rgba(212,168,64,.16);
+  border-color:rgba(212,168,64,.55);
+  color:#f0d894;
+}
+.stage-dropdown-btn.contact-cta:hover{
+  background:rgba(212,168,64,.28);
+  border-color:rgba(212,168,64,.9);
+  color:#fff;
+}
 
 .stage-dropdown-panel{
   display:none;
@@ -616,6 +626,26 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
   pointer-events:none;
   backdrop-filter:blur(8px);
 }
+#clinStopBtn{
+  display:none;
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:99999;
+  background:#c0392b;
+  color:#fff;
+  border:2px solid #fff;
+  border-radius:999px;
+  padding:11px 24px;
+  font-family:'Inter',Arial,Helvetica,sans-serif;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.3px;
+  cursor:pointer;
+  box-shadow:0 8px 28px rgba(0,0,0,.55);
+}
+#clinStopBtn:active{ background:#e74c3c; }
 #clinCaption b{ color:#fff; }
 #clinCaption .cc-label{
   display:block;
@@ -1130,6 +1160,9 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
     <div id="aboutNav" class="stage-btn-wrap">
       <a class="stage-dropdown-btn" href="about-dr-slutzky.html">About Dr. Slutzky</a>
     </div>
+    <div id="contactNav" class="stage-btn-wrap">
+      <a class="stage-dropdown-btn contact-cta" href="contact.html">Contact &#9993;</a>
+    </div>
     <div id="homeNav" class="stage-btn-wrap">
       <a class="stage-dropdown-btn" href="index.html">Home</a>
     </div>
@@ -1141,6 +1174,7 @@ header .sub{font-size:13.5px;color:#bad0e9;letter-spacing:.15px}
     <div id="popout"></div>
   </div>
   <div id="clinCaption"></div>
+  <button id="clinStopBtn" aria-label="Stop animation">&#9632;&nbsp; Stop animation</button>
 </main>
 
 <section id="fixedPanel">
@@ -2083,6 +2117,7 @@ function render(){
   caption.textContent=`${viewLabel} · ${layerLabel}${modeLabel}`;
 }
 function setView(v,fromState=false){
+  if(typeof clinSeq!=='undefined' && clinSeq) stopClin();
   if(buildStage>0){ buildStage=0; updateBuildStageButton(); if(typeof clinHideCaption==='function') clinHideCaption(); }
   selected=fromState?selected:null;
   hidePopout();
@@ -2206,6 +2241,7 @@ updateBuildStageButton();
 
 // Reset
 document.getElementById('resetBtn').addEventListener('click',()=>{
+  stopClin();
   comfort=0.44;
   document.getElementById('comfort').value=44;
   document.getElementById('comfortVal').textContent='44%';
@@ -2229,6 +2265,8 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
   setLayer('labels');
   setView('threat');
 });
+const _clinStop=document.getElementById('clinStopBtn');
+if(_clinStop) _clinStop.addEventListener('click', stopClin);
 
 // Advanced panel
 const advancedBtn=document.getElementById('advancedBtn');
@@ -2385,8 +2423,10 @@ function buildArc(ax,ay,az,bx,by,bz,N){
   return pts;
 }
 // New model convention: x=valence, y=demand (mobilize=-), z=supply (under=-, over=+).
-// Bipolar: Exhilaration = (+,-,+) → Depression = (-,+,-)
-const ARC_BIPOLAR = buildArc(1,-1,1,-1,1,-1,140);
+// Bipolar circuit: Exhilaration (+,-,+) → Depression (-,+,-) → Comfort Zone (+,0,0) → back up.
+const ARC_BIPOLAR = buildArc(1,-1,1,-1,1,-1,140);   // leg 1: Exhilaration → Depression (diagonal)
+const ARC_BIP_DC  = buildArc(-1,1,-1, 1,0,0, 120);  // leg 2: Depression → Comfort Zone (recovery)
+const ARC_BIP_CE  = buildArc(1,0,0, 1,-1,1, 120);   // leg 3: Comfort Zone → Exhilaration (re-ascent)
 
 function drawClinArc(){
   if(!clinArcActive||clinArcPts.length<2) return;
@@ -2429,40 +2469,61 @@ function drawClinArc(){
   }
 }
 
+let clinLastTs=0;
+const CLIN_SPEED=1.0;   // global speed for ALL clinical demos: >1 faster, <1 slower
 function tickClinSeq(){
   if(!clinSeq) return;
+  const now=performance.now();
+  if(!clinLastTs) clinLastTs=now;
+  let df=(now-clinLastTs)/1000*60*CLIN_SPEED;  // advance in 60fps-equivalent frames
+  clinLastTs=now;
+  if(df>8) df=8;                               // clamp big gaps (tab switch) so motion can't jump
   const step=clinSeq.steps[clinSeq.step];
   if(clinSeq.t===0 && step.onStart) step.onStart();
-  clinSeq.t++;
+  clinSeq.t+=df;
   const p=Math.min(1,clinSeq.t/step.frames);
   let elapsed=0;
   for(let i=0;i<clinSeq.step;i++) elapsed+=clinSeq.steps[i].frames;
   progress.style.width=(Math.min(1,(elapsed+clinSeq.t)/clinSeq.total)*100)+'%';
-  step.fn(p,clinSeq.t);
+  step.fn(p,clinSeq.t,df);
   render();
   if(clinSeq.t>=step.frames){
     if(step.onDone) step.onDone();
     clinSeq.step++;
     clinSeq.t=0;
     if(clinSeq.step>=clinSeq.steps.length){
-      clinSeq=null;
-      progress.style.opacity=0; progress.style.width='0%';
-      clinArcActive=false; clinArcPts=[]; clinArcP=0;
-      clinHideCaption();
-      clinClearBlink();
-      render();
+      if(clinSeq.loop){
+        // Restart the circuit. Each circuit ends where it begins, so the
+        // first step's onStart re-seats the view with no visible jump.
+        clinSeq.step=0; clinSeq.t=0;
+      } else {
+        stopClin();
+      }
     }
   }
 }
 
-function startClinSeq(steps, progressColor){
+// Single teardown for any clinical animation. Reachable from the Stop button,
+// Reset, and every view button, so a looping demo can always be stopped.
+function stopClin(){
+  clinSeq=null; clinLastTs=0;
+  clinArcActive=false; clinArcPts=[]; clinArcP=0;
+  clinClearBlink(); clinHideCaption();
+  progress.style.opacity=0; progress.style.width='0%';
+  const sb=document.getElementById('clinStopBtn'); if(sb) sb.style.display='none';
+  render();
+}
+
+function startClinSeq(steps, progressColor, loop){
   buildStage=0; updateBuildStageButton();
   clinSeq=null; clinArcActive=false; clinArcPts=[]; clinArcP=0; clinClearBlink(); clinHideCaption();
   anim=null;
   progress.style.background=progressColor||'linear-gradient(90deg,#d4622a,#4466cc)';
   progress.style.opacity=1; progress.style.width='0%';
   hidePopout(); selected=null;
-  clinSeq={steps,step:0,t:0,total:steps.reduce((a,s)=>a+s.frames,0)};
+  clinLastTs=performance.now();
+  const sb=document.getElementById('clinStopBtn'); if(sb) sb.style.display='block';
+  clinSeq={steps,step:0,t:0,total:steps.reduce((a,s)=>a+s.frames,0),loop:!!loop};
 }
 
 function easeIO(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
@@ -2476,88 +2537,118 @@ function seqRotTo(fromX,fromY,toX,toY,p){
 }
 
 // ── BIPOLAR ───────────────────────────────────────────────────
+// Looping circuit, ~15s/cycle: Exhilaration → Depression → Comfort Zone → (repeat).
+// Holds ~2.5s each; the diagonal crash gets the most traversal time. The arc is
+// traced on all three legs, one leg at a time. Loops until another disorder or Reset.
 document.getElementById('bipolarBtn').addEventListener('click',()=>{
-  const LB='Bipolar I — full diagonal traversal';
+  const LB='Bipolar I — manic–depressive circuit';
   const oppX=0, oppY=-Math.PI/2;
   const thrX=0, thrY= Math.PI/2;
-  const startX=rotX, startY=rotY;
 
   startClinSeq([
-    {frames:55, fn(p){ seqRotTo(startX,startY,oppX,oppY,p); view='opportunity'; }},
-    {frames:70,
-     onStart(){ rotX=oppX;rotY=oppY;view='opportunity'; clinShowCaption(LB,'<b>Exhilaration.</b> Opportunity, mobilization over-supplied — expansion, acceleration, risk tolerance.'); },
+    // Exhilaration hold (~2.5s)
+    {frames:150,
+     onStart(){ rotX=oppX;rotY=oppY;view='opportunity'; clinArcActive=false;clinArcPts=[];clinArcP=0;
+       clinShowCaption(LB,'<b>Exhilaration.</b> Opportunity, mobilization over-supplied — expansion, acceleration, risk tolerance.'); },
      fn(p,t){ rotX=oppX;rotY=oppY; clinBlinkSingle('exhilaration',t,18); }
     },
-    {frames:280,
-     onStart(){
-       view='sphere';
-       clinArcPts=ARC_BIPOLAR; clinArcActive=true; clinArcP=0;
-       clinShowCaption(LB,'<b>Crossing the diagonal.</b> The point traverses from opportunity over-supply toward threat under-supplied conservation — the manic peak toward the depressive crash.');
-     },
-     fn(p,t){
-       seqRotTo(oppX,oppY,thrX,thrY,p);
-       clinArcP=p;
-       clinBlinkSingle(p<0.5?'exhilaration':'depression',t,18);
-     },
-     onDone(){clinArcActive=false;}
+    // Leg 1 — the crash: Exhilaration → Depression (~3.7s), view rotates opportunity → threat
+    {frames:222,
+     onStart(){ view='sphere'; clinArcPts=ARC_BIPOLAR; clinArcActive=true; clinArcP=0;
+       clinShowCaption(LB,'<b>The crash.</b> The point traverses the diagonal from manic over-supply toward depressive collapse.'); },
+     fn(p,t){ seqRotTo(oppX,oppY,thrX,thrY,p); clinArcP=p; clinBlinkSingle(p<0.5?'exhilaration':'depression',t,18); },
+     onDone(){ clinArcActive=false; }
     },
-    {frames:80,
-     onStart(){ rotX=thrX;rotY=thrY;view='threat'; clinShowCaption(LB,'<b>Depression.</b> Threat, conservation under-supplied — rest is required but does not restore.'); },
+    // Depression hold (~2.5s)
+    {frames:150,
+     onStart(){ rotX=thrX;rotY=thrY;view='threat'; clinArcActive=false;clinArcPts=[];clinArcP=0;
+       clinShowCaption(LB,'<b>Depression.</b> Threat, conservation under-supplied — rest is required but does not restore.'); },
      fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkSingle('depression',t,18); }
+    },
+    // Leg 2 — recovery: Depression → Comfort Zone (~2.3s), view rotates threat → opportunity
+    {frames:138,
+     onStart(){ view='sphere'; clinArcPts=ARC_BIP_DC; clinArcActive=true; clinArcP=0;
+       clinShowCaption(LB,'<b>Toward recovery.</b> The system climbs back across the valence boundary toward the balanced center.'); },
+     fn(p,t){ seqRotTo(thrX,thrY,oppX,oppY,p); clinArcP=p; clinBlinkSingle(p<0.5?'depression':'comfortZone',t,18); },
+     onDone(){ clinArcActive=false; }
+    },
+    // Comfort Zone rest (~2.3s)
+    {frames:138,
+     onStart(){ rotX=oppX;rotY=oppY;view='opportunity'; clinArcActive=false;clinArcPts=[];clinArcP=0;
+       clinShowCaption(LB,'<b>Comfort Zone.</b> A brief return to balance — recalibration matched, all three fuels available — before the next cycle.'); },
+     fn(p,t){ rotX=oppX;rotY=oppY; clinBlinkSingle('comfortZone',t,18); }
+    },
+    // Leg 3 — re-ascent: Comfort Zone → Exhilaration (~1.7s), view stays on opportunity
+    {frames:102,
+     onStart(){ view='sphere'; rotX=oppX;rotY=oppY; clinArcPts=ARC_BIP_CE; clinArcActive=true; clinArcP=0;
+       clinShowCaption(LB,'<b>Rising again.</b> Mobilization climbs back toward over-supply — the next manic ascent.'); },
+     fn(p,t){ rotX=oppX;rotY=oppY; clinArcP=p; clinBlinkSingle(p<0.5?'comfortZone':'exhilaration',t,18); },
+     onDone(){ clinArcActive=false; }
     }
-  ], 'linear-gradient(90deg,#ff8800,#8899ff)');
+  ], 'linear-gradient(90deg,#ff8800,#8899ff)', true);
 });
 
 // ── PTSD ──────────────────────────────────────────────────────
+// 8s/cycle, looping. Eight ~1s beats: the mobilization pair (Anger↔Anxiety)
+// alternated twice, then the conservation pair (Dissociation↔Depression)
+// alternated twice. Each beat shows two quick flashes. To slow to 10s, change
+// each beat's frames from 60 to 75. Loops until another disorder or Reset.
 document.getElementById('ptsdBtn').addEventListener('click',()=>{
   const LB='PTSD — oscillation within threat';
   const thrX=0, thrY=Math.PI/2;
-  const startX=rotX, startY=rotY;
+  const MOB='<b>Anger ↔ Anxiety.</b> Threat mobilization oscillates between over-supplied fight and under-supplied alarm.';
+  const CON='<b>Dissociation ↔ Depression.</b> Threat conservation oscillates between analgesic shielding and depleted, non-restorative collapse.';
+  const beat=(state,cap)=>({frames:60,
+    onStart(){ rotX=thrX;rotY=thrY;view='threat'; if(cap) clinShowCaption(LB,cap); },
+    fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkSingle(state,t,15); }
+  });
 
   startClinSeq([
-    {frames:50, fn(p){ seqRotTo(startX,startY,thrX,thrY,p); view='threat'; }},
-    {frames:300,
-     onStart(){ rotX=thrX;rotY=thrY;view='threat'; clinShowCaption(LB,'<b>Anxiety ↔ Anger.</b> Threat mobilization oscillates between under-supplied alarm and over-supplied fight.'); },
-     fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkAlternate(['anxiety','anger'],t,20); },
-     onDone(){ clinClearBlink(); }
-    },
-    {frames:35, fn(){ rotX=thrX;rotY=thrY; clinClearBlink(); }},
-    {frames:300,
-     onStart(){ clinShowCaption(LB,'<b>Dissociation ↔ Depression.</b> Threat conservation oscillates between analgesic shielding and depleted non-restorative collapse.'); },
-     fn(p,t){ rotX=thrX;rotY=thrY; clinBlinkAlternate(['dissociation','depression'],t,20); }
-    }
-  ], 'linear-gradient(90deg,#ff2222,#ff9999,#4455ff,#8899ff)');
+    beat('anger',MOB), beat('anxiety'), beat('anger'), beat('anxiety'),
+    beat('dissociation',CON), beat('depression'), beat('dissociation'), beat('depression')
+  ], 'linear-gradient(90deg,#ff2222,#ff9999,#4455ff,#8899ff)', true);
 });
 
 // ── BORDERLINE PD ─────────────────────────────────────────────
+// Unstable, fast: ~1s on each threat state with the sphere continuously moving,
+// plus brief (~0.3s) spikes into the adjacent opportunity twin (same demand/supply
+// corner, valence flipped) that snap straight back to threat. Mostly threat. Loops.
 document.getElementById('bpdBtn').addEventListener('click',()=>{
-  const LB='Borderline PD — rapid valence oscillation';
-  let bpdT=0, bpdNext=0, bpdActive='overconfident';
-  const oppPool=['overconfident','exhilaration','engagement','comfortZone','anticipation'];
+  const LB='Borderline PD — unstable valence, rapid shifts';
   const threatPool=['anger','anxiety','dissociation','depression'];
-  let useOpp=false;
+  const twin={anger:'exhilaration', anxiety:'anticipation', dissociation:'bliss', depression:'complacency'};
+  let active='anger', lastThreat='anger', isSpike=false, tick=0;
 
   startClinSeq([
-    {frames:520,
-     onStart(){
-       view='sphere';
-       clinShowCaption(LB,'<b>Rapid valence oscillation.</b> Watch the sphere keep moving while state highlights jump unpredictably between opportunity and threat — no stable corridor.');
-     },
-     fn(p,t){
-       bpdT++;
-       if(bpdT>=bpdNext){
-         const interval=5+Math.floor(Math.random()*9);
-         bpdNext=bpdT+interval;
-         useOpp=!useOpp;
-         const pool=useOpp?oppPool:threatPool;
-         bpdActive=pool[Math.floor(Math.random()*pool.length)];
+    {frames:600,
+     onStart(){ view='sphere';
+       clinShowCaption(LB,'<b>Unstable valence.</b> The sphere never settles — the state jumps rapidly, mostly through threat, with brief spikes into the adjacent opportunity twin before snapping back.'); },
+     fn(p,t,df){
+       if(tick<=0){
+         if(isSpike){
+           // a spike just ended — return to a threat state
+           isSpike=false;
+           active=threatPool[Math.floor(Math.random()*threatPool.length)];
+           lastThreat=active;
+           tick=48+Math.floor(Math.random()*30);          // ~0.8–1.3s threat dwell
+         } else if(Math.random()<0.25){
+           // brief spike to the twin adjacent to the current threat state
+           isSpike=true;
+           active=twin[lastThreat];
+           tick=14+Math.floor(Math.random()*8);           // ~0.23–0.37s spike
+         } else {
+           active=threatPool[Math.floor(Math.random()*threatPool.length)];
+           lastThreat=active;
+           tick=48+Math.floor(Math.random()*30);
+         }
        }
-       clinBlinkSingle(bpdActive,t,10);
-       rotY += 0.0105;
-       rotX = clamp(rotX + Math.sin(bpdT*0.07)*0.004,-0.95,0.95);
+       tick-=df;
+       clinSetBlink([active]);
+       rotY += 0.013*df;
+       rotX = clamp(rotX + Math.sin(t*0.09)*0.006*df, -0.95, 0.95);
      }
     }
-  ], 'linear-gradient(90deg,#cc44ff,#ff44ff,#ffcc00,#ff2222)');
+  ], 'linear-gradient(90deg,#cc44ff,#ff44ff,#ffcc00,#ff2222)', true);
 });
 
 // Walkthrough
@@ -2700,6 +2791,6 @@ updateSupplyBoundaryButton();
 setLayer('labels');
 render();loop();
 </script>
-<footer style="border-top:1px solid rgba(255,255,255,.15);text-align:center;padding:14px 24px;font-family:'Inter',Arial,Helvetica,sans-serif;font-size:13px;color:rgba(255,255,255,.60);letter-spacing:.04em;">&#169; 2026 Mitchell Slutzky, PhD &nbsp;&middot;&nbsp; Meta-strophe Theory &nbsp;&middot;&nbsp; meta-strophe.com &nbsp;&middot;&nbsp; <a href="contact.html" style="color:rgba(255,255,255,.45);text-decoration:none;">Contact</a></footer>
+<footer style="border-top:1px solid rgba(255,255,255,.15);text-align:center;padding:14px 24px;font-family:'Inter',Arial,Helvetica,sans-serif;font-size:13px;color:rgba(255,255,255,.60);letter-spacing:.04em;">&#169; 2026 Mitchell Slutzky, PhD &nbsp;&middot;&nbsp; Meta-strophe Theory &nbsp;&middot;&nbsp; meta-strophe.com &nbsp;&middot;&nbsp; <a href="contact.html" style="color:#d4a840;font-weight:700;text-decoration:none;">Contact</a></footer>
 </body>
 </html>
