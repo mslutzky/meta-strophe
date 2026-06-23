@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NPSA Barcelona Narrative &mdash; Meta-strophe Theory</title>
+<style>
+:root{--bg:#07101d;--ink:#eef6ff;--muted:#9ab8d4;--soft:#6a8faa;--line:rgba(255,255,255,.10);--gold:#d4a840;--button:#eaf5ff;--button-ink:#07101d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(circle at 50% 0%,#132840 0%,#07101d 50%,#03060b 100%);background-attachment:fixed;color:var(--ink);font-family:'Inter',Arial,Helvetica,sans-serif;line-height:1.6;min-height:100vh}
+
+/* top return strip */
+.topbar{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:16px 20px 0}
+.topbar a{font-size:12px;letter-spacing:.06em;text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 16px;transition:border-color .15s,color .15s}
+.topbar a:hover{color:#fff;border-color:rgba(255,255,255,.35)}
+.topbar a.gold{color:var(--gold);border-color:rgba(212,168,64,.5)}
+.topbar a.gold:hover{color:#fff;border-color:rgba(212,168,64,.9)}
+
+header{max-width:760px;margin:0 auto;padding:30px 24px 6px;text-align:center}
+.kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);font-weight:600;margin-bottom:14px}
+h1.title{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:600;font-size:clamp(30px,5vw,48px);line-height:1.08;color:#fff;letter-spacing:.01em;margin-bottom:14px}
+.subt{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(17px,2.4vw,21px);color:var(--muted);font-weight:600;letter-spacing:.02em}
+.partl{color:var(--soft);font-size:14px;font-style:italic;margin-top:6px}
+.rule{width:64px;height:1px;background:var(--gold);margin:20px auto 0}
+
+main{max-width:760px;margin:0 auto;padding:14px 24px 56px}
+h2.beat{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(22px,3vw,28px);color:#fff;margin:48px 0 14px;padding-top:22px;border-top:1px solid var(--line)}
+h2.beat:first-of-type{border-top:none;padding-top:0;margin-top:18px}
+h2.beat .bn{color:var(--gold);font-style:italic}
+h3{font-family:'Inter',Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:30px 0 10px}
+main p{font-size:17px;line-height:1.78;color:#cfe0f4;margin-bottom:18px}
+main p strong{color:#fff;font-weight:600}
+main p em{font-style:italic;color:#e6f0fb}
+sub{font-size:.72em;line-height:0}
+
+.cta{margin:44px 0 8px;text-align:center}
+.cta a{display:inline-block;background:var(--gold);color:#07101d;text-decoration:none;font-weight:900;font-size:15px;letter-spacing:.3px;padding:13px 30px;border-radius:999px;box-shadow:0 12px 32px rgba(0,0,0,.35);transition:transform .15s,filter .15s}
+.cta a:hover{transform:translateY(-2px);filter:brightness(1.06)}
+
+nav.foot{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:760px;margin:0 auto;padding:8px 24px 36px}
+nav.foot a{display:inline-flex;align-items:center;text-decoration:none;color:#eaf5ff;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:10px 20px;font-size:13px;font-weight:700;letter-spacing:.02em;transition:background .15s,border-color .15s}
+nav.foot a:hover{background:rgba(30,55,100,.6);border-color:rgba(255,255,255,.4)}
+nav.foot a.gold{color:#f0d894;border-color:rgba(212,168,64,.55)}
+nav.foot a.gold:hover{background:rgba(212,168,64,.18);border-color:rgba(212,168,64,.9);color:#fff}
+
+footer{border-top:1px solid rgba(255,255,255,.16);text-align:center;padding:16px 24px;color:rgba(255,255,255,.70);font-size:13px;letter-spacing:.04em}
+footer a{color:var(--gold);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&larr; Home</a>
+  <a href="sphere.html">Interactive Sphere</a>
+  <a href="contact.html" class="gold">Contact</a>
+</div>
+
+<header>
+  <div class="kicker">NPSA Barcelona Presentation &middot; Talk Narrative</div>
+  <h1 class="title">The Architecture of Affect: Threat, Opportunity, and Repair</h1>
+  <div class="subt">Regulated by Three Neuropeptides of POMC</div>
+  <div class="partl">Introduction to Meta-strophe Theory, Part 1</div>
+  <div class="rule"></div>
+</header>
+
+<main>
+      <h2 class="beat"><span class="bn">Beat 1</span> &mdash; Congress framing and the missing pieces</h2>
+      <p>This congress has made its central claim: Affect is not peripheral to body or mind—it is the organizing core, involved in managing everything from autonomic functions and elemental reactions to behavior, thought, and consciousness.</p>
+      <p>Friston and Solms have defined the most important current questions. If affect is central, how does it regulate? What is its functional architecture? How are affect states communicated and optimal responses coordinated throughout the body? And how might understanding that architecture improve clinicians’ diagnosis and treatment?</p>
+      <p>I argue that we already have a strong biological candidate that reveals affect’s functional architecture. It is not cortical but much more ancient, conserved across half a billion years of evolution. That candidate is the portmanteau molecule <strong>POMC, proopiomelanocortin, and three fundamental neuropeptides cleaved from it.</strong></p>
+      <h2 class="beat"><span class="bn">Beat 2</span> &mdash; The problem as old as life</h2>
+      <p>The problem is older than psychology, older than cognition, older than the nervous system. The pattern is fractal. Every living thing must solve it: how to maintain viability and reproductive capacity in a changing world at minimum cost. The answer is self-regulation of all systems, self-similar at all levels within them. Regulation determines how scarce bodily resources are parceled out.</p>
+      <p>Self-regulation has three strategies. Sometimes the organism must <em>mobilize</em>. Sometimes it must <em>conserve</em>. These responses are fast and autonomic, therefore energy efficient, but with decreased accuracy. And when neither response is sufficient, it must <em>recalibrate</em>, updating its regulatory strategy. Recalibration, while more expensive, is the only strategy that allows genuine adaptation to changed conditions rather than continuing with the automated biphasic response.</p>
+      <p>Early life forms mainly alternated between mobilization and conservation; they had limited options for adaptation, and, consequently, had reduced viability. But changes in regulatory strategy are costly in terms of energy and other bodily resources. A better way of managing bodies had to wait on evolution.</p>
+      <h2 class="beat"><span class="bn">Beat 3</span> &mdash; POMC and the three regulatory fuels</h2>
+      <p>Around 525 million years ago, during the “Cambrian explosion,” vertebrates emerged. Bodies evolved, becoming larger and more differentiated. Brains changed along with them, offering greater regulatory capacity. But how could the new life forms coordinate mobilization, conservation, and recalibration across a complex body and a complex brain without loss of efficiency?</p>
+      <p>The solution that evolved was the POMC neuropeptides, their creation and communication of affect. Preexisting life forms almost certainly possessed structurally or functionally similar molecules. In vertebrates, regulatory molecules came together into a single molecule that splits various ways. In the thermo-economic logic of the body, POMC is an elegant solution: one portmanteau precursor molecule cleaves to form three neuropeptide molecules, each a major regulator with its own metabolic strategy (mobilization, conservation, or recalibration) and its own associated peptide budget. The three neuropeptides’ interactions generate condensed communication throughout the body that vertebrates feel as <em>affect</em>. Almost simultaneously, affect instructs the neuropeptides through the same feedback loops on current bodily need for regulation. The regulatory coordination enabled by the POMC peptides works so well that it has been conserved, with local variations, across vertebrate evolution for some 500 million years.</p>
+      <p>Three neuropeptides cleaved from POMC embody the three regulatory strategies and serve as their fuel:</p>
+      <p><strong>ACTH organizes mobilization: </strong>cortisol release, glucose availability, cardiovascular activation, the body’s capacity to act under pressure.</p>
+      <p><strong>β-endorphin organizes conservation: </strong>pain reduction, endurance, protective withdrawal, the body’s capacity to shield itself when action is too costly or impossible.</p>
+      <p><strong>α-MSH organizes recalibration and repair: </strong>energy balance and appetite, immune-system and inflammatory tuning, tissue maintenance and repair, the body’s capacity to reset its settings safely instead of being locked into one mode or biphasic alternation.</p>
+      <h2 class="beat"><span class="bn">Beat 4</span> &mdash; The sphere and Meta-strophe Theory</h2>
+      <p>What I am about to show you is a map.</p>
+      <p>Not a diagram of named states, not a taxonomy of emotions, not a classification system imposed from the outside. A map of regulatory space—the interior regulatory space through which every organism moves as it tries to stay viable in a changing world. Underlying this map are the interactions of the three regulatory neuropeptides of POMC detailed above.</p>
+      <p>The map has three axes. Each axis represents an important factor the organism must register and act on. Together, the three axes generate a geometry. That geometry is a sphere.</p>
+      <p>I am going to build that sphere one axis at a time. Each dimension follows from the one before. By the time the sphere is complete, you will be able to locate any affect state as a structural address within it: three coordinates that specify exactly how the organism, under the conditions it is currently facing, is being regulated at fundamental levels.</p>
+      <p>The framework I am introducing today to describe a fractal process of regulation, adaptation, and growth within any self-organizing system—and how that system turns beyond failure into new viable patterns—I call Meta-strophe Theory. From meta, <em>beyond, </em>and <em>strophē,</em> the turn.</p>
+      <p>You hear “catastrophe” in it, and you should. <em>Catastrophe</em> is a turn downward—in this context, when a system's current organization can no longer hold. <em>Meta-strophe</em> is the turn beyond—the organism's attempt to move past that failure into something that works again. This process is simple, elegant and fractal.</p>
+      <p>Today I am presenting Part One of the theory: The structure of affect: the map of the space through which the turn occurs.</p>
+      <p>Let me show you that sphere.</p>
+      <h2 class="beat"><span class="bn">Beat 5</span> &mdash; Building the sphere: axis one and axis two</h2>
+      <h3>5.1 — Axis one: the Demand axis</h3>
+      <p>What you are looking at is the beginning of the affect map.</p>
+      <p>Every self-regulating system — from a single cell to a human nervous system — faces the same basic question. Do I need more, or less? Act, or withdraw? Spend energy, or conserve it?</p>
+      <p>On the sphere, red at the top is mobilization — do more, spend energy, act. Blue at the bottom is conservation — do less, shield, endure. A single bipolar vertical axis divides them. But read the center as zero, not the bottom: conservation is not the absence of mobilization, it is a distinct process with its own fuel. Like a car — braking is not the absence of acceleration; it's a separate system. The two halves of the axis are controlled by different neuropeptides.</p>
+      <p>Alternation between mobilization and conservation is the oldest regulatory solution in biology. It is fast, and it is cheap. But it is only half the story.</p>
+      <h3>5.2 — Axis two: Supply relative to Demand</h3>
+      <p>For an organism, registering a need is not the same as being able to meet it. The system has to gauge not only what the situation demands, but what it has available to meet that demand. That is the second axis: supply.</p>
+      <p>Add supply, and mobilize-or-conserve splits into four. The organism can mobilize with more than enough fuel for the situation, or with less than enough. It can conserve with intact reserves, or with depleted ones.</p>
+      <h3>5.3 — Supply means peptide-specific fuel</h3>
+      <p>Supply does not mean energy in general. It means the specific regulatory fuel the chosen strategy runs on.</p>
+      <p>For mobilization, that fuel is ACTH — driving the HPA axis, cortisol, glucose, cardiovascular activation, readiness for action. For conservation, it is β-endorphin — analgesia, endurance, withdrawal, and the capacity to lower demand when action is too costly. High or low is always relative to the demand on that specific peptide: a mobilization demand can be over- or under-supplied with ACTH, a conservation demand over- or under-supplied with β-endorphin. Too much or too little of the relevant fuel changes the affect state.</p>
+      <h3>5.4 — The four configurations become clinical states</h3>
+      <p>Watch what appears, from nothing but the intersection of two axes.</p>
+      <p>Mobilization over-fueled — <strong>anger and attack</strong>. Under-fueled — <strong>anxiety</strong>. Conservation over-fueled — <strong>dissociation</strong>. Under-fueled — <strong>depression</strong>.</p>
+      <p>Not random symptom clusters, not diagnostic conventions, but regulatory-fuel states — each one a demand meeting the supply of the peptide responsible for it. These are the configurations that walk into the consulting room every day. And they are not arbitrary lines on a sphere; they fall out of the thermoeconomics of supply and demand.</p>
+      <h3>5.5 — The ceiling of the biphasic system</h3>
+      <p>What you have just seen is a two-axis system. It is ancient, efficient, and under the right conditions it works remarkably well. But it has a ceiling.</p>
+      <p>It can act or it can shield. What it cannot do is update. It has no mechanism for asking whether the strategy it is running is still the right one — whether the calibration that worked last time still fits now. It can alternate mobilization and conservation indefinitely, but if the world has changed enough that neither fits, the alternation itself becomes the problem.</p>
+      <p>When that happens, something more is needed: a third move. More expensive than either mobilization or conservation, but able to do what neither can — reset the system's regulatory settings to fit changed conditions.</p>
+      <h2 class="beat"><span class="bn">Beat 6</span> &mdash; Valence, the full sphere, and the address notation</h2>
+      <p>The third move is recalibration — and when it is available it permits a second regime that is beyond automated fast and cheap solutions.</p>
+      <p>Recalibration does not add more mobilization or conservation. It is a correction to the settings those two run on. And it never interrupts them: the biphasic system cannot stop — survival depends on continuous automatic regulation — so adding recalibration creates a regime that runs <em>in parallel</em>, updating the settings while the automatic layer keeps executing. This is why the three peptide economies are non-interchangeable. They have to draw on separate budgets, because a recalibrative process competing for the same resources could stall continuous regulation at the worst possible moment — exactly when the organism is under pressure and needs the automatic layer most.</p>
+      <p>But recalibration is expensive, and it cannot run under immediate threat — not because the machinery is missing, but because threat reallocates resources toward the automatic layer and crowds the recalibrative budget out. So whether the third move is available depends on the organism's read of its situation.</p>
+      <p>That read is valence. Valence is the organism's assessment of whether it faces a threat or an opportunity. It is determined upstream of POMC — a black box for this model — but its output determines whether recalibration is even possible. Threat shifts resources toward the biphasic layer and fast automatic responding. Opportunity opens the conditions under which the recalibrative budget can operate.</p>
+      <p>This is where α-MSH enters. It runs recalibration in parallel with ACTH and β-endorphin, coordinating the conditions under which the automatic alternation can be <em>updated</em> rather than merely executed. It makes the third regulatory regime possible.</p>
+      <p>So the opportunity face adds a third band. Each of the three strategies — mobilize, recalibrate, conserve — now carries its own supply status: undersupplied, matched, or oversupplied. Three strategies, three supply states, nine regions — falling out of the same logic that gave us the four threat states. I won't walk all nine here; that is what the QR code is for. But I want to show you the key address.</p>
+      <p>At the center of the opportunity face is the matched zone: mobilization, conservation, and recalibration all matched to demand, all running in parallel, all adequately supplied. This is what I call the Comfort Zone — and by comfort I do not mean passivity or the absence of affect. The ideal regulatory state is not affectless calm. It is <em>maximum regulatory freedom</em>: the address where the organism can read risk accurately, mobilize when action is needed, conserve when expenditure is too costly, and recalibrate when the old pattern fails — without any one process monopolizing the budget. Recalibration occurs across the whole middle band, but only at the matched center is the recalibration itself accurate. Undersupply of α-MSH produces excessive caution — the organism recalibrates but won't commit. Oversupply produces overconfidence — it recalibrates but overshoots, trusting its own read without checking.</p>
+      <p>Now we have the full sphere, and we can write any state in it as a compact address. Valence sets the hemisphere. Demand selects the band. Supply of the relevant peptide, relative to that demand, selects the region within the band.</p>
+      <p>In notation: V | D relation S. V is valence — V⁻ threat, V⁺ opportunity. D is the demand strategy — D<sub>M </sub>mobilize, D<sub>R</sub> recalibrate, D<sub>C</sub> conserve. The relation — greater than, equal to, or less than — fixes whether that peptide is undersupplied, matched, or oversupplied. So anxiety is V⁻ | D<sub>M</sub> &gt; S<sub>ACTH</sub>: threat, mobilization demand, ACTH undersupplied. The Comfort Zone is V⁺ | D<sub>R</sub> = S<sub>α-MSH</sub>: opportunity, recalibration matched — with mobilization and conservation matched alongside it.</p>
+      <p>One clarification: these addresses name sectors, not points. Each sector holds a continuous range; pinning the exact coordinate inside it needs a quantitative measure of demand and supply, and that formalization belongs to Part Two. For clinical work, the sector is precise enough. Every named affect state is a location in this space, not a label.</p>
+      <p>Now let me show you what this looks like clinically.</p>
+      <h2 class="beat"><span class="bn">Beat 7</span> &mdash; Clinical ramifications</h2>
+      <p>If affect states are regulatory addresses, what is a diagnosis?</p>
+      <p>In this model, a diagnosis is not primarily a symptom cluster; it is a trajectory through the sphere driven by repeated mismatches between regulatory demand and available fuel.</p>
+      <p>I can show you the trajectories of three basic disorders one typically encounters in patients.</p>
+      <p><strong>Bipolar Disorder: </strong>The coordinates shift from oversupplied mobilization under opportunity—Exhilaration—diagonally across to depleted conservation under threat—Depression. A diagonal traversal of the sphere, driven by the exhaustion of mobilization fuel and its collapse into conservation deficit. And this cycle repeats, sometimes without a quiescent period sometimes with periods of stability in between cycles.</p>
+      <p><strong>PTSD: </strong>The patient stays on the threat face, cycling between mobilization and conservation, unable to access recalibration. Threat-lock. The organism cannot afford to update because threat never fully lifts.</p>
+      <p><strong>Borderline Organization: </strong>Rapid shifts in affect across valences, with great difficulty stabilizing in the matched zone. The patient cannot commit to any particular state and is repeatedly expelled from recalibration back into threat.</p>
+      <h2 class="beat"><span class="bn">Beat 8</span> &mdash; Extensions</h2>
+      <p>Meta-strophe Theory was built over decades. It was derived independently, from clinical observation and readings in molecular biology. It was influenced by the work of Curt Sandman on how POMC peptide dissociate under stress, as well as by Porges and Siegel’s Window of Tolerance concept. And once the architecture was complete, the convergences to and extension of many other great models of the day, including FEP, were striking.</p>
+      <p>Freud’s three major frameworks map directly onto this regulatory logic. The pleasure principle—the drive toward discharge and relief—is biphasic: mobilization and conservation alternating in service of tension reduction. The reality principle—the ego’s capacity to delay, plan, and tolerate—is triphasic: recalibration in service of longer-term viability. The Nirvana principle—the drive toward zero tension—can be situated at the origin of the coordinate space, where regulatory demand across all three strategies approaches zero and supply becomes irrelevant. It is a theoretical limit, not an attainable state. Pre-Oedipal relating is biphasic; Oedipal development requires the triphasic capacity. Regression is a return to an earlier regulatory regime. These are not metaphors. They are the same architecture described in a different language.</p>
+      <p>Panksepp’s primary emotional systems—SEEKING, RAGE, FEAR, LUST, CARE, GRIEF, PLAY—map onto specific regions of the coordinate space. Each is a motivational vector with a direction, an intensity, and a resource signature.</p>
+      <p>Polyvagal Theory (PVT) correctly identifies mobilization and shutdown as distinct threat strategies. But it does not distinguish anger from anxiety, or dissociation from depression—states that look similar behaviorally but are produced by different peptide-supply configurations. Meta-strophe Theory (MT) makes that distinction structural: anger is mobilization with ACTH oversupply; anxiety is mobilization with undersupply of ACTH; dissociation is conservation with β-endorphin oversupply; depression is conservation with β-endorphin undersupply. PVT also lacks a grammar for the opportunity state. Social engagement in Porges's model is safety—but safety is not a regulatory address. MT specifies what becomes available when threat lifts: the full triphasic range, with over- and under-calibration as failure modes on either side of the matched center.</p>
+      <p>Friston's Free Energy Principle separates perceptual inference — updating beliefs to fit the world — from active inference — acting on the world to fit prediction. MT proposes a complementary distinction: the biphasic layer runs inference on fixed priors, fast and cheap; the triphasic layer is the regime in which the priors themselves are revised — expensive, and possible only when recalibrative fuel, α-MSH, is available. FEP specifies the computation but not its biological grammar. MT proposes POMC as the biological implementation of that grammar.</p>
+      <p>Each of these extensions is a separate paper in preparation. Stubs and fuller explanations for each will appear on the website as I have time to add them; the QR code will take you there.</p>
+      <h2 class="beat"><span class="bn">Beat 9</span> &mdash; Program, falsification, and QR code</h2>
+      <p>This talk has presented Part One of a larger theoretical framework—the molecular-affective layer where the regulatory grammar of Meta-strophe Theory becomes visible in the workings of POMC and its neuropeptide products.</p>
+      <p><strong>First, </strong>I’ve proposed that affect states can be treated as regulatory addresses: three-part messages—valence, demand, and peptide-specific supply—that the body uses to coordinate regulation throughout itself.</p>
+      <p><strong>Second, </strong>I’ve proposed that our familiar clinical categories can be modeled as paths through this sphere rather than viewed as flat symptom clusters.</p>
+      <p><strong>Third, </strong>I’ve proposed that treatment can be reframed as altering those trajectories: restoring access to recalibration, reducing chronic threat-lock, and rebuilding the patient’s capacity to move flexibly through regulatory space.</p>
+      <p>If this triphasic pattern really does repeat across levels—molecules, circuitry, body, relationships, symbolization—then recursive regulation is not just housekeeping. It becomes a plausible engine for affective consciousness itself, as the system comes to feel its own attempts to keep itself viable.</p>
+      <p>Parts Two and Three are already in preparation. Part Two will formalize the mathematics of viable range. Part Three will ask what happens when a system becomes complex enough that it needs to track its own regulatory patterns recursively—and will argue that this is one way to understand consciousness: not as an all-or-nothing attribute but as a sliding scale of intentional regulation.</p>
+      <p>The psychotherapy arc is the clearest clinical instantiation: The patient begins in regression, threat-locked; the therapist provides external co-regulation; and the goal is to restore and expand the patient’s capacity for intentional self-regulation, to make conscious what was unconscious. That is not a metaphor; it is a description of what this affect sphere, set in motion, actually does.</p>
+      <p>These are all falsifiable claims. Test them against your patients, your animal models, your computational work. If the trajectories I have sketched do not fit your cases, the model should change. If they hold up under pressure, then this may be one version of what this congress asked for: a working architecture of affect.</p>
+      <p>The QR code on your screen will take you directly to the sphere, where you can rotate between threat and opportunity, click on the regions, see the peptide systems and references behind each address, and follow clinical trajectories through the space. I invite you to enter the sphere, learn the proposed structure of affect, and see whether it helps you view your own work differently.</p>
+
+  <div class="cta">
+    <a href="sphere.html">Enter the interactive sphere &rarr;</a>
+  </div>
+</main>
+
+<nav class="foot" aria-label="Site navigation">
+  <a href="index.html">Home</a>
+  <a href="sphere.html">Sphere</a>
+  <a href="about-dr-slutzky.html">About Dr. Slutzky</a>
+  <a href="working-paper.html">Working Paper</a>
+  <a href="contact.html" class="gold">Contact &#9993;</a>
+</nav>
+
+<footer>&#169; 2026 Mitchell Slutzky, PhD &middot; Meta-strophe Theory &middot; <a href="index.html">meta-strophe.com</a> &middot; <a href="contact.html">Contact</a></footer>
+
+</body>
+</html>
